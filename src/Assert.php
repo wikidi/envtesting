@@ -10,8 +10,9 @@ class Assert {
 	 *
 	 * @param mixed $actual
 	 * @param mixed $expected
-	 * @param null $message
+	 * @param string|null $message
 	 * @throws Error
+	 * @return void
 	 */
 	public static function same($actual, $expected, $message = null) {
 		if ($actual !== $expected) {
@@ -20,20 +21,19 @@ class Assert {
 	}
 
 	/**
-	 *
 	 * @param string|null $message
 	 * @throws Error
+	 * @return void
 	 */
 	public static function fail($message = null) {
 		throw new Error($message);
 	}
 
 	/**
-	 * Throw
-	 *
-	 * @param $value
+	 * @param mixed $value
 	 * @param null|string $message
 	 * @throws Error
+	 * @return void
 	 */
 	public static function true($value, $message = null) {
 		if ($value !== true) {
