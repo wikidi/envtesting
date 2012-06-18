@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project basedir="." default="build" name="Envtesting">
+	<description>Envtesting build script</description>
+	<!-- @see http://stackoverflow.com/questions/3145778/what-are-good-ant-target-naming-conventions -->
+
+	<target name="build" description="Concat all envtesting files to one file and minify content">
+		<echo>Concat all *.php files from src to Envtesting.php</echo>
+		<concat destfile="Envtesting.php">
+			<header filtering="no" trimleading="yes">&lt;?php
+				namespace envtesting;
+
+				/**
+				 * Envtesting concated version
+				 *
+				 * @see https://github.com/wikidi/envtesting
+				 *
+				 * !!! Don't edit this file it's generated !!!
+				 */
+			</header>
+			<path>
+				<fileset dir="src" includes="*.php"/>
+			</path>
+			<filterchain>
+				<replaceregex pattern="&lt;\?php" replace="" flags="gim"/>
+				<replaceregex pattern="namespace src\\envtesting;" replace="" flags="gim"/>
+			</filterchain>
+		</concat>
+	</target>
+
+</project>
