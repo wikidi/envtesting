@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Roman Ozana <roman@wikidi.com>
+ * @author Roman Ozana <roman@omdesign.cz>
  */
 require_once __DIR__ . '/../Envtesting.php';
 
