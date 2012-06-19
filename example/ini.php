@@ -36,9 +36,7 @@ $suit->addTest(
 echo $suit->run();
 
 
-echo '--------------------------------------------------------------------------------' . PHP_EOL;
-
-// or KISS way
+echo '--------------------------------------------------------------------------------' . PHP_EOL; // or KISS way
 
 try {
 	Assert::true(Check::ini('post_max_size') > 10000, 'post_max_size is smaller then 10000 MB');
