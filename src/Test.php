@@ -6,54 +6,149 @@ namespace src\envtesting;
  */
 class Test {
 	/** @var string */
-	public $name = '';
+	protected $name = '';
+	/** @var callable|null */
+	protected $callback = null;
 	/** @var null */
-	public $callback = null;
-	/** @var null */
-	public $type = null;
+	protected $type = null;
 	/** @var array */
-	public $options = array();
+	protected $options = array();
 	/** @var null|\Exception */
-	public $result = false;
+	protected $result = false;
 
-	public function __construct($callback, $name = '', $type = 'app', array $options = array()) {
-		$this->callback = $callback;
+	/**
+	 * @param string $name
+	 * @param mixed $callback
+	 */
+	public function __construct($name, $callback) {
 		$this->name = $name;
-		$this->type = $type;
-		$this->options = $options;
+		$this->callback = $callback;
 	}
 
 	/**
+	 * Set test options given in callback call
+	 *
+	 * @param array $array
 	 * @return Test
 	 */
-	public function run() {
-		call_user_func($this->callback);
+	public function setOptions(array $array) {
+		$this->options = $array;
 		return $this;
 	}
 
 	/**
+	 * Set test type (
+	 *
+	 * @param string $type
+	 * @return Test
+	 */
+	public function setType($type) {
+		$this->type = $type;
+		return $this;
+	}
+
+	/**
+	 * Set test result
+	 *
 	 * @param mixed|string|\Exception $result
+	 * @return void
 	 */
 	public function setResult($result) {
 		$this->result = $result;
 	}
 
 	/**
-	 * @return string
+	 * Execute test
+	 *
+	 * @throws \Exception
+	 * @return Test
 	 */
-	public function getStatus() {
-		if (is_string($this->result)) return $this->result;
-		if ($this->result instanceof \envtesting\Error) return 'ERROR';
-		if ($this->result instanceof \envtesting\Warning) return 'WARNING';
-		if ($this->result instanceof \Exception) return $this->result->getMessage();
+	public function run() {
+		if (is_callable($this->callback)) {
+			call_user_func($this->callback, $this->options);
+		} else {
+			throw new \Exception('Given callback is not callable');
+		}
+		return $this;
 	}
 
 	/**
+	 * Return test status string
+	 *
+	 * @throws \Exception
+	 * @return string|null
+	 */
+	public function getStatus() {
+		if (is_scalar($this->result)) return (string)$this->result;
+		if ($this->result instanceof Error) return 'ERROR';
+		if ($this->result instanceof Warning) return 'WARNING';
+		if ($this->result instanceof \Exception) return 'EXCEPTION';
+		throw new \Exception('Invalid result type: ' . gettype($this->result)); // array, resource, unknown object
+	}
+
+	/**
+	 * Return status message
+	 *
+	 * @return string
+	 * @throws \Exception
+	 */
+	public function getStatusMessage() {
+		if ($this->result instanceof \Exception) return $this->result->getMessage();
+		return '';
+	}
+
+
+	/**
+	 * Return test name
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
+	 * Return test type
+	 *
+	 * @return string
+	 */
+	public function getType() {
+		return $this->type;
+	}
+
+	/**
+	 * Return callback
+	 *
+	 * @return mixed|null|callable
+	 */
+	public function getCallback() {
+		return $this->callback;
+	}
+
+	/**
+	 * Return Test result
+	 *
+	 * @return bool|\Exception|null
+	 */
+	public function getReult() {
+		return $this->result;
+	}
+
+
+	/**
+	 * Convert test to string
+	 *
 	 * @return string
 	 */
 	public function __toString() {
-		return $this->getStatus() . ' | ' . $this->name . ' | ' . $this->type . ' | ' . implode(
-			', ', $this->options
+		$response = array(
+			'status' => $this->getStatus(),
+			'name' => $this->getName(),
+			'type' => $this->getType(),
+			'options' => empty($this->options) ? ' - ' : json_encode((object)$this->options),
+			'message' => $this->getStatusMessage(),
 		);
+
+		return implode($response, ' | ');
 	}
 }

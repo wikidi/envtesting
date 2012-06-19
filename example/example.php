@@ -44,12 +44,6 @@ $suit->call(
 	}, 'AAA', 'library'
 );
 
-/* ------------------------------------------------------------------------- *
- * Even simple require_once file test
- * ------------------------------------------------------------------------- */
-$suit->call(Check::useFile('tests/library/Apc.php'), 'APC', 'library');
-$suit->call(Check::useFile('tests/library/Bzip2.php'), 'bzip2', 'library');
-$suit->call(Check::useFile('tests/library/Curl.php'), 'curl', 'library');
 
 
 /* ------------------------------------------------------------------------- *

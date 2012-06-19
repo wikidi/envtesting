@@ -7,10 +7,10 @@ namespace src\envtesting;
 class TestSuit implements \ArrayAccess, \IteratorAggregate {
 
 	/** @var array */
-	private $tests = array();
+	protected $tests = array();
 
 	/** @var string */
-	private $name = __CLASS__;
+	protected $name = __CLASS__;
 
 	/**
 	 * @param string $name
@@ -20,20 +20,9 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	/**
-	 * @param $callback
-	 * @param $name
-	 * @param array $options
-	 * @throws \Exception
-	 */
-	public function call($callback, $name, $type, array $options = array()) {
-		if (is_callable($callback)) {
-			$this->tests[] = new Test($callback, $name, $type, $options);
-		} else {
-			throw new \Exception('Given callback not callable');
-		}
-	}
-
-	/**
+	 * Randomize tests order in suit
+	 * does not matter on test groups
+	 *
 	 * @return TestSuit
 	 */
 	public function shuffle() {
@@ -42,13 +31,14 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	/**
+	 * Run all tests in test suit
+	 *
 	 * @return TestSuit
 	 */
 	public function run() {
-		foreach ($this->tests as $key => $test) {
-			/** @var \envtesting\Test $test */
+		foreach ($this->tests as $key => $test/** @var \envtesting\Test $test */) {
 			try {
-				$test->run()->setResult('OK');
+				$test->run()->setResult('OK'); // result is OK
 			} catch (Error $error) {
 				$test->setResult($error);
 			} catch (Warning $warning) {
@@ -59,6 +49,39 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 		}
 		return $this;
 	}
+
+	/**
+	 * Return testSuit name
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
+	 * Add new callback test to suit
+	 *
+	 * @param string $name
+	 * @param string $group
+	 * @param mixed $callback
+	 * @return Test
+	 */
+	public function addTest($name, $callback) {
+		return $this->tests[] = new Test($name, $callback);
+	}
+
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		return str_repeat(':', 80) . PHP_EOL . str_pad($this->name, 80, ' ', STR_PAD_BOTH) . PHP_EOL . str_repeat(':', 80) .
+			PHP_EOL . implode(PHP_EOL, $this->tests) . PHP_EOL;
+	}
+
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Interfaces implementation
+	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	/**
 	 * @param mixed $offset
@@ -77,8 +100,16 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	}
 
 
+	/**
+	 * @param mixed $offset
+	 * @param mixed $value
+	 * @throws \Exception
+	 */
 	public function offsetSet($offset, $value) {
-		if (!$value instanceof Test) throw new \Exception('Usupported type');
+		if (!$value instanceof Test) {
+			throw new \Exception('Usupported test type');
+		}
+
 		if ($offset === null) {
 			$this->tests[] = $value;
 		} else {
@@ -88,22 +119,17 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 
 	/**
 	 * @param mixed $offset
+	 * @return void
 	 */
 	public function offsetUnset($offset) {
-		if (isset($this->tests[$offset])) unset($this->tests[$offset]);
+		if (isset($this->tests[$offset])) {
+			unset($this->tests[$offset]);
+		}
 	}
 
 	/**
-	 * @return string
+	 * @return \ArrayIterator|\Traversable
 	 */
-	public function __toString() {
-		return str_repeat(':', 80) . PHP_EOL . str_pad($this->name, 80, ' ', STR_PAD_BOTH) . PHP_EOL . str_repeat(
-			':', 80
-		) . PHP_EOL . implode(
-			PHP_EOL, $this->tests
-		) . PHP_EOL;
-	}
-
 	public function getIterator() {
 		return new \ArrayIterator($this->tests);
 	}

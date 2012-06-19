@@ -30,14 +30,29 @@ class Check {
 	}
 
 	/**
-	 * Use file for checking result
+	 * Check php.ini
 	 *
-	 * @param $file
-	 * @return closure
+	 * - check value and return boolean response if same or
+	 * - return value of variable
+	 *
+	 * @param mixed $variable
+	 * @param null|mixed $value
+	 * @return bool
 	 */
-	public static function useFile($file, $dir = __DIR__) {
+	public static function ini($variable, $value = null) {
+		return ($value === null) ? ini_get($variable) : $value === ini_get($variable);
+	}
+
+	/**
+	 * Use PHP file for checking result
+	 *
+	 * @param string $file
+	 * @param string $dir
+	 * @return mixed callback
+	 */
+	public static function file($file, $dir = __DIR__) {
 		return function () use ($file, $dir) {
-			require_once $dir . DIRECTORY_SEPARATOR . $file;
+			include $dir . DIRECTORY_SEPARATOR . $file;
 		};
 	}
 }
