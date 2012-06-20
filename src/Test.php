@@ -68,7 +68,7 @@ class Test {
 	 * @return string|null
 	 */
 	public function getStatus() {
-		if (is_scalar($this->result)) return (string)$this->result;
+		if (is_scalar($this->getResult())) return (string)$this->getResult();
 
 		if ($this->isError()) return 'ERROR';
 		if ($this->isWarning()) return 'WARNING';
@@ -97,7 +97,7 @@ class Test {
 	 * @return bool
 	 */
 	public function isWarning() {
-		return $this->result instanceof Warning;
+		return $this->getResult() instanceof Warning;
 	}
 
 	/**

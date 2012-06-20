@@ -4,21 +4,18 @@ require_once __DIR__ . '/../Envtesting.php';
 use \envtesting\Check;
 use \envtesting\TestSuit;
 
+
 /* ------------------------------------------------------------------------- *
  * Create new test suit
  * ------------------------------------------------------------------------- */
 
-$suit = new TestSuit();
+$suit = new TestSuit('Example test suit');
+function apcRequireTest() { require_once 'tests/library/Apc.php'; }
+$suit->addTest('APC', 'apcRequireTest', 'library');
 
-/* ------------------------------------------------------------------------- *
- * Callback tests
- * ------------------------------------------------------------------------- */
 
-function apcRequireTest() {
-	require_once 'tests/library/Apc.php';
-}
-
-$suit->call('apcRequireTest', 'APC', 'callback library test');
+echo $suit;
+die();
 
 class TestCollection {
 	public static function apcRequireTest() {
@@ -43,7 +40,6 @@ $suit->call(
 		throw new \envtesting\Warning('Something wrong');
 	}, 'AAA', 'library'
 );
-
 
 
 /* ------------------------------------------------------------------------- *
