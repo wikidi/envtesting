@@ -337,9 +337,9 @@ class Test {
 	 */
 	public function __toString() {
 		$response = array(
-			'status' => $this->getStatus(),
-			'name' => $this->getName(),
-			'type' => $this->getType(),
+			'status' => str_pad($this->getStatus(), 10, ' '),
+			'name' => str_pad($this->getName(), 20, ' '),
+			'type' => str_pad($this->getType(), 10, ' '),
 			'options' => empty($this->options) ? ' - ' : json_encode((object)$this->options),
 			'message' => $this->getStatusMessage(),
 		);

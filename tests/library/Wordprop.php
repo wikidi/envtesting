@@ -1,9 +1,21 @@
 <?php
+namespace envtesting\tests;
 require_once __DIR__ . '/../../Envtesting.php';
 
+/**
+ * Check wordProb classes
+ *
+ * @author Roman Ozana <ozana@omdesign.cz>
+ */
+
+
 \envtesting\Assert::true(
-	\envtesting\Check::cls('wikidi_webDataSearch_categorizer_wordProb_Client') &&
-		\envtesting\Check::cls('wikidi_webDataSearch_categorizer_wordProb_ClientFactory'),
-	'Class wikidi_webDataSearch_categorizer_wordProb_Client or wikidi_webDataSearch_categorizer_wordProb_ClientFactory not found'
+	\envtesting\Check::cls('wikidi_webDataSearch_categorizer_wordProb_Client'),
+	'Class "wikidi_webDataSearch_categorizer_wordProb_Client" not found'
 );
+\envtesting\Assert::true(
+	\envtesting\Check::cls('wikidi_webDataSearch_categorizer_wordProb_ClientFactory'),
+	'Class "wikidi_webDataSearch_categorizer_wordProb_ClientFactory" not found'
+);
+
 
