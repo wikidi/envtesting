@@ -13,7 +13,7 @@ use envtesting\SuitGroup;
 // KISS example
 echo TestSuit::instance('All libs autoloaded')->fromDir(__DIR__ . '/../tests/library', 'library')->shuffle()->run();
 
-// grou example
+// group example
 $group = new SuitGroup('Autoloaded tests');
 $group->addSuit(
 	'library',
