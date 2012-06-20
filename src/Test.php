@@ -69,9 +69,11 @@ class Test {
 	 */
 	public function getStatus() {
 		if (is_scalar($this->result)) return (string)$this->result;
-		if ($this->result instanceof Error) return 'ERROR';
-		if ($this->result instanceof Warning) return 'WARNING';
-		if ($this->result instanceof \Exception) return 'EXCEPTION';
+
+		if ($this->isError()) return 'ERROR';
+		if ($this->isWarning()) return 'WARNING';
+		if ($this->isException()) return 'EXCEPTION';
+
 		throw new \Exception('Invalid result type: ' . gettype($this->result)); // array, resource, unknown object
 	}
 
@@ -113,7 +115,16 @@ class Test {
 	 * @return bool
 	 */
 	public function isOk() {
-		return !$this->getResult() instanceof \Exception;
+		return !$this->isException();
+	}
+
+	/**
+	 * Return true when test generate Exception
+	 *
+	 * @return bool
+	 */
+	public function isException() {
+		return $this->getResult() instanceof \Exception;
 	}
 
 	/**
@@ -182,7 +193,7 @@ class Test {
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * @param $name
+	 * @param string $name
 	 * @return Test
 	 */
 	public function setName($name) {
@@ -205,7 +216,7 @@ class Test {
 	}
 
 	/**
-	 * @param null $type
+	 * @param string|null $type
 	 * @return Test
 	 */
 	public function setType($type) {
