@@ -1,4 +1,5 @@
 <?php
+namespace envtesting\tests;
 require_once __DIR__ . ' /../../Envtesting.php';
 
 /**
@@ -6,25 +7,26 @@ require_once __DIR__ . ' /../../Envtesting.php';
  *
  * @author Roman Ozana <roman@wikidi.com>
  */
-class MemcachedTest {
+class Memcached {
 
-	public static function connection($serverName, $dsn) {
+	public static function connection($host, $port) {
 		try {
 			$memcache = new \Memcache();
-			$memcache->addServer($server->host, $server->port, true, $server->weight);
+			$memcache->connect($host, $port, true);
 
 			if ($memcache->getStats() == false) {
-
-				throw new \envtesting\Error('Memcached connection faild: ' . $serverName, $dsn
-				));
+				throw new \envtesting\Error('Memcached connection faild: ' . $host . ':' . $port);
 			}
-			$mc->setCompressThreshold(2097152, 0.1);
 		} catch (\Exception $e) {
-			throw new \envtesting\Error('Memcached connection faild' . $e->getMessage());
+			throw new \envtesting\Error('Memcached connection faild: ' . $host . ':' . $port . ' with ' . $e->getMessage());
 		}
 	}
 
+	/**
+	 * @param string $host
+	 * @param string|integer $port
+	 */
+	public function __invoke($host, $port) {
+		$this->connection($host, $port);
+	}
 }
-
-
-MemcachedTest::connection('local', 'a');

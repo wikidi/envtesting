@@ -37,15 +37,7 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 */
 	public function run() {
 		foreach ($this->tests as $key => $test/** @var \envtesting\Test $test */) {
-			try {
-				$test->run()->setResult('OK'); // result is OK
-			} catch (Error $error) {
-				$test->setResult($error);
-			} catch (Warning $warning) {
-				$test->setResult($warning);
-			} catch (\Exception $e) {
-				$test->setResult($e);
-			}
+			$test->run();
 		}
 		return $this;
 	}
@@ -63,12 +55,12 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 * Add new callback test to suit
 	 *
 	 * @param string $name
-	 * @param string $group
 	 * @param mixed $callback
-	 * @return Test
+	 * @param null $type
+	 * @return \src\envtesting\Test
 	 */
-	public function addTest($name, $callback) {
-		return $this->tests[] = new Test($name, $callback);
+	public function addTest($name, $callback, $type = null) {
+		return $this->tests[] = Test::instance($name, $callback, $type);
 	}
 
 	/**
@@ -79,9 +71,34 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 			PHP_EOL . implode(PHP_EOL, $this->tests) . PHP_EOL;
 	}
 
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// -------------------------------------------------------------------------------------------------------------------
+	// Autoloading
+	// -------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Autoload all PHP tests from directory
+	 *
+	 * @param string $dir
+	 * @param string $type
+	 * @return TestSuit
+	 */
+	public function fromDir($dir, $type = '') {
+		$iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)), '/\.php$/i');
+
+		foreach ($iterator as $filePath => $fileInfo/** @var SplFileInfo $fileInfo */) {
+			// add tests to test suit
+			$this->addTest(
+				$fileInfo->getBasename('.php'),
+				Check::file($filePath, '')
+			)->setType($type);
+		}
+
+		return $this;
+	}
+
+	// -------------------------------------------------------------------------------------------------------------------
 	// Interfaces implementation
-	// - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * @param mixed $offset
@@ -132,5 +149,19 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 */
 	public function getIterator() {
 		return new \ArrayIterator($this->tests);
+	}
+
+
+	// -------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * @static
+	 * @param string $name
+	 * @param mixed $callback
+	 * @param string|null $type
+	 * @return TestSuit
+	 */
+	public static function instance($name) {
+		return new self($name);
 	}
 }

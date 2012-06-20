@@ -1,42 +1,27 @@
 <?php
 require_once __DIR__ . '/../Envtesting.php';
 
-use \envtesting\Check;
-use \envtesting\TestSuit;
+use envtesting\TestSuit;
+use envtesting\SuitGroup;
 
 /**
- * Example show how to autoload all test files and check them
+ * Autoload all PHP tests from directory
  *
- * @author Roman Ozana <roman@wikidi.com>
+ * @author Roman Ozana <roman@omdesign.cz>
  */
 
-// ---------------------------------------------------------------------------------------------------------------------
+// KISS example
+echo TestSuit::instance('All libs autoloaded')->fromDir(__DIR__ . '/../tests/library', 'library')->shuffle()->run();
 
-class PhpFilterIterator extends RecursiveFilterIterator {
-	/**
-	 * @return bool
-	 */
-	public function accept() {
-		return $this->current()->getExtension() === 'php';
-	}
-}
-
-$iterator = new RecursiveIteratorIterator(
-	new PhpFilterIterator(
-		new RecursiveDirectoryIterator($dir = __DIR__ . '/../tests/library')
-	), RecursiveIteratorIterator::SELF_FIRST
+// grou example
+$group = new SuitGroup('Autoloaded tests');
+$group->addSuit(
+	'library',
+	TestSuit::instance('one')->fromDir(__DIR__ . '/../tests/library', 'something')
+);
+$group->addSuit(
+	'library2',
+	TestSuit::instance('two suffle')->fromDir(__DIR__ . '/../tests/library', 'something')->shuffle()
 );
 
-// ---------------------------------------------------------------------------------------------------------------------
-
-$suit = new TestSuit('All librarys autoload');
-
-foreach ($iterator as $filePath => $fileInfo/** @var SplFileInfo $fileInfo */) {
-	// add tests to test suit
-	$suit->addTest(
-		$fileInfo->getBasename('.php'),
-		Check::file($filePath, '')
-	)->setType('library');
-}
-
-echo $suit->run();
+echo $group->run();

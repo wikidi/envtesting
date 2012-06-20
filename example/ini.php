@@ -1,5 +1,7 @@
 <?php
 /**
+ * Test chek php.ini variables
+ *
  * @author Roman Ozana <roman@omdesign.cz>
  */
 require_once __DIR__ . '/../Envtesting.php';

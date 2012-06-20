@@ -10,6 +10,15 @@ class SuitGroup implements \IteratorAggregate {
 
 	/** @var array */
 	protected $suits = array();
+	/** @var string */
+	protected $name = __CLASS__;
+
+	/**
+	 * @param string $name
+	 */
+	public function __construct($name = __CLASS__) {
+		$this->name = $name;
+	}
 
 	/**
 	 * Randomize order in test suits
@@ -21,19 +30,19 @@ class SuitGroup implements \IteratorAggregate {
 		return $this;
 	}
 
-
 	/**
 	 * Add testSuit to group
 	 *
 	 * @param string $name
-	 * @return TestSuit
+	 * @param TestSuit|null $suit
 	 * @throws \Exception
+	 * @return \src\envtesting\TestSuit
 	 */
-	public function addSuit($name) {
+	public function addSuit($name, $suit = null) {
 		if (array_key_exists($name, $this->suits)) {
 			throw new \Exception('TestSuit "' . $name . '" already exists');
 		}
-		return $this->suits[$name] = new TestSuit($name);
+		return $this->suits[$name] = $suit ? $suit : TestSuit::instance($name);
 	}
 
 	/**
@@ -59,7 +68,8 @@ class SuitGroup implements \IteratorAggregate {
 	 * @return string
 	 */
 	public function __toString() {
-		return implode($this->suits, PHP_EOL) . PHP_EOL;
+		return str_repeat('#', 80) . PHP_EOL . str_pad($this->name, 80, ' ', STR_PAD_BOTH) . PHP_EOL .
+			implode($this->suits, PHP_EOL) . PHP_EOL . str_repeat('#', 80) . PHP_EOL;
 	}
 
 }
