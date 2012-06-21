@@ -1,18 +1,12 @@
 <?php
-namespace envtesting\tests;
-
-require_once __DIR__ . ' /../../Envtesting.php';
-
-use \envtesting\Error;
-use \envtesting\Warning;
-use \envtesting\IsExecutable;
+namespace envtesting\tests\services;
 
 /**
  * Test memcached service connection
  *
  * @author Roman Ozana <roman@wikidi.com>
  */
-class MemcacheConnection implements IsExecutable {
+class MemcacheConnection {
 
 	/** @var string */
 	private $host = '127.0.0.1';
@@ -37,11 +31,13 @@ class MemcacheConnection implements IsExecutable {
 			$memcache->connect($this->host, $this->port, true);
 
 			if ($memcache->getStats() == false) {
-				throw new Error('Memcached connection faild: ' . $this->host . ':' . $this->port);
+				throw new \envtesting\Error('Memcached connection faild: ' . $this->host . ':' . $this->port);
 			}
 
 		} catch (\Exception $e) {
-			throw new Error('Memcached connection faild: ' . $this->host . ':' . $this->port . ' with ' . $e->getMessage());
+			throw new \envtesting\Error(
+				'Memcached connection faild: ' . $this->host . ':' . $this->port . ' with ' . $e->getMessage()
+			);
 		}
 	}
 }

@@ -4,7 +4,7 @@ namespace src\envtesting;
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Test implements IsExecutable {
+class Test {
 	/** @var string */
 	protected $name = '';
 	/** @var callable|null */

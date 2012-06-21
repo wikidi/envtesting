@@ -21,6 +21,13 @@ class SuitGroup implements \IteratorAggregate {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
 	 * Randomize order in test suits
 	 *
 	 * @return SuitGroup

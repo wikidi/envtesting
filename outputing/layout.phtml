@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en-us" dir="ltr">
+<head>
+	<meta charset="UTF-8">
+	<title>Envtesting: <?= $title ?></title>
+	<link rel="stylesheet" type="text/css" media="all"
+	      href="//current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"/>
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script src="//current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"></script>
+	<style type="text/css">
+		tr.warning {
+			background: #F89406;
+		}
+
+		tr.error, tr.eception {
+			background: #BD362F;
+		}
+
+		tr.ok {
+			background: #5BB75B;
+		}
+	</style>
+</head>
+<body data-spy="scroll">
+
+<table class="table">
+	<thead>
+	<tr>
+		<th>status</th>
+		<th>name</th>
+		<th>notice</th>
+		<th>type</th>
+		<th>options</th>
+		<th>message</th>
+	</tr>
+	</thead>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+	<? foreach ($elements as $element) { ?>
+	<? foreach ($element as $test/** @var \envtesting\Test $test */) { ?>
+		<tr class="<?= strtolower($test->getStatus())?>">
+			<td><?= $test->getStatus(); ?></td>
+			<td><?= $test->getName(); ?></td>
+			<td><?= $test->getNotice(); ?></td>
+			<td><?= $test->getType(); ?></td>
+			<td><code><?= json_encode($test->getOptions()); ?></code></td>
+			<td><?= $test->getStatusMessage(); ?></td>
+		</tr>
+		<? } ?>
+	<? } ?>
+
+	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+</table>
+
+</body>
+</html>

@@ -152,6 +152,13 @@ class SuitGroup implements \IteratorAggregate {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
 	 * Randomize order in test suits
 	 *
 	 * @return SuitGroup
@@ -209,7 +216,7 @@ class SuitGroup implements \IteratorAggregate {
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Test implements IsExecutable {
+class Test {
 	/** @var string */
 	protected $name = '';
 	/** @var callable|null */
@@ -647,6 +654,20 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	}
 }
 
+spl_autoload_register(
+	function ($className) {
+		$className = ltrim($className, '\\');
+		$fileName = '';
+		$namespace = '';
+		if ($lastNsPos = strripos($className, '\\')) {
+			$namespace = substr($className, 0, $lastNsPos);
+			$className = substr($className, $lastNsPos + 1);
+			$fileName = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR; //namespace replace
+		}
+		$fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php'; //pear replace on classname only
+		return (bool)@include_once dirname(__DIR__) . DIRECTORY_SEPARATOR . $fileName;
+	}
+);
 
 
 /**
