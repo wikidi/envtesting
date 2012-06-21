@@ -10,10 +10,12 @@ use envtesting\SuitGroup;
  * @author Roman Ozana <roman@omdesign.cz>
  */
 
-// KISS example
-echo TestSuit::instance('All libs autoloaded')->fromDir(__DIR__ . '/../tests/library', 'library')->shuffle()->run();
+echo TestSuit::instance('All libs autoloaded')->fromDir(__DIR__ . '/../tests/library', 'library')->run(); // KISS
 
+// ---------------------------------------------------------------------------------------------------------------------
 // group example
+// ---------------------------------------------------------------------------------------------------------------------
+
 $group = new SuitGroup('Autoloaded tests');
 $group->addSuit(
 	'library',

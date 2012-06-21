@@ -44,7 +44,7 @@
 			<td><?= $test->getName(); ?></td>
 			<td><?= $test->getNotice(); ?></td>
 			<td><?= $test->getType(); ?></td>
-			<td><code><?= json_encode($test->getOptions()); ?></code></td>
+			<td><code><?= json_encode((array)$test->getOptions()); ?></code></td>
 			<td><?= $test->getStatusMessage(); ?></td>
 		</tr>
 		<? } ?>

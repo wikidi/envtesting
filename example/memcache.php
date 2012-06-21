@@ -5,10 +5,10 @@
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 require_once __DIR__ . '/../Envtesting.php';
-require_once __DIR__ . '/../tests/services/Memcache.php';
+require_once __DIR__ . '/../tests/services/MemcacheConnection.php';
 
-use \envtesting\TestSuit;
-use \envtesting\tests\MemcacheConnection;
+use envtesting\TestSuit;
+use envtesting\tests\services\MemcacheConnection;
 
 $suit = new TestSuit('memcached');
 $suit->addTest('memcache', new MemcacheConnection('127.0.0.1', 11211), 'service'); // KISS

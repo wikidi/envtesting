@@ -1,5 +1,5 @@
 <?php
-namespace envtesting\tests;
+namespace envtesting\tests\library;
 require_once __DIR__ . '/../../Envtesting.php';
 
 /**
