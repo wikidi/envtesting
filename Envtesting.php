@@ -209,7 +209,7 @@ class SuitGroup implements \IteratorAggregate {
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Test {
+class Test implements IsExecutable {
 	/** @var string */
 	protected $name = '';
 	/** @var callable|null */
@@ -260,14 +260,10 @@ class Test {
 		} catch (\Exception $e) {
 			$this->setResult($e);
 		}
-
 		return $this;
 	}
 
 	/**
-	 * Execute test same as run
-	 *
-	 * @throws \Exception
 	 * @return Test
 	 */
 	public function __invoke() {
@@ -344,15 +340,17 @@ class Test {
 	 * @return bool|\Exception|null
 	 */
 	public function getResult() {
-		if ($this->result === null) $this->run(); // run when result not set
+		if ($this->result === null) $this->run();
 		return $this->result;
 	}
 
 	/**
-	 * @param \Exception|null $result
+	 * @param \Exception|string|null $result
+	 * @return Test
 	 */
 	public function setResult($result) {
 		$this->result = $result;
+		return $this;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -378,13 +376,6 @@ class Test {
 	// -------------------------------------------------------------------------------------------------------------------
 	// Setters and getters
 	// -------------------------------------------------------------------------------------------------------------------
-
-	/**
-	 * @param null|\src\envtesting\callable $callback
-	 */
-	public function setCallback($callback) {
-		$this->callback = $callback;
-	}
 
 	/**
 	 * Return callback
@@ -487,7 +478,7 @@ class Test {
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class TestSuit implements \ArrayAccess, \IteratorAggregate, IsExecutable {
+class TestSuit implements \ArrayAccess, \IteratorAggregate {
 
 	/** @var array */
 	protected $tests = array();
@@ -516,7 +507,7 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate, IsExecutable {
 	/**
 	 * Run all tests in test suit
 	 *
-	 * @return TestSuit|mixed
+	 * @return TestSuit
 	 */
 	public function run() {
 		foreach ($this->tests as $key => $test/** @var \envtesting\Test $test */) {
@@ -526,9 +517,7 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate, IsExecutable {
 	}
 
 	/**
-	 * Run test
-	 *
-	 * @return mixed
+	 * @return TestSuit
 	 */
 	public function __invoke() {
 		return $this->run();
@@ -674,58 +663,4 @@ class Error extends \Exception {
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 class Warning extends \Exception {
-}
-
-
-/**
- * Test has
- *
- * @author Roman Ozana <ozana@omdesign.cz>
- */
-interface HasParams {
-	/**
-	 * Return test options
-	 *
-	 * @abstract
-	 * @return array
-	 */
-	public function getOptions();
-
-	/**
-	 * Return test name as string
-	 *
-	 * @abstract
-	 * @return string
-	 */
-	public function getName();
-
-}
-
-/**
- * Executable test, suit or group produce response as string
- *
- * @author Roman Ozana <ozana@omdesign.cz>
- */
-interface IsExecutable {
-
-	/**
-	 * Run test same as run();
-	 *
-	 * <code>
-	 * echo $test()
-	 * </code>
-	 *
-	 * @abstract
-	 * @return mixed|IsExecutable
-	 */
-	public function __invoke();
-
-	/**
-	 * Generate response
-	 *
-	 * @abstract
-	 * @return string
-	 */
-	public function __toString();
-
 }
