@@ -1,5 +1,7 @@
 <?php
 /**
+ * Example how to test Memcached connection
+ *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 require_once __DIR__ . '/../Envtesting.php';

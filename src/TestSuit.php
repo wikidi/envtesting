@@ -43,6 +43,13 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	/**
+	 * @return TestSuit
+	 */
+	public function __invoke() {
+		return $this->run();
+	}
+
+	/**
 	 * Return testSuit name
 	 *
 	 * @return string
@@ -57,7 +64,7 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 * @param string $name
 	 * @param mixed $callback
 	 * @param null $type
-	 * @return \src\envtesting\Test
+	 * @return Test
 	 */
 	public function addTest($name, $callback, $type = null) {
 		return $this->tests[] = Test::instance($name, $callback, $type);
@@ -155,10 +162,10 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
+	 * Return new instance of TestSuit
+	 *
 	 * @static
 	 * @param string $name
-	 * @param mixed $callback
-	 * @param string|null $type
 	 * @return TestSuit
 	 */
 	public static function instance($name) {

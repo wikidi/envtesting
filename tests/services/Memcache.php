@@ -5,13 +5,14 @@ require_once __DIR__ . ' /../../Envtesting.php';
 
 use \envtesting\Error;
 use \envtesting\Warning;
+use \envtesting\IsExecutable;
 
 /**
  * Test memcached service connection
  *
  * @author Roman Ozana <roman@wikidi.com>
  */
-class MemcacheConnection {
+class MemcacheConnection implements IsExecutable {
 
 	/** @var string */
 	private $host = '127.0.0.1';

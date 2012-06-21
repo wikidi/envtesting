@@ -4,7 +4,7 @@ namespace src\envtesting;
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Test {
+class Test implements IsExecutable {
 	/** @var string */
 	protected $name = '';
 	/** @var callable|null */
@@ -40,9 +40,8 @@ class Test {
 	}
 
 	/**
-	 * Execute test
+	 * Perform test
 	 *
-	 * @throws \Exception
 	 * @return Test
 	 */
 	public function run() {
@@ -56,9 +55,14 @@ class Test {
 		} catch (\Exception $e) {
 			$this->setResult($e);
 		}
-
-
 		return $this;
+	}
+
+	/**
+	 * @return Test
+	 */
+	public function __invoke() {
+		return $this->run();
 	}
 
 	/**
@@ -131,15 +135,17 @@ class Test {
 	 * @return bool|\Exception|null
 	 */
 	public function getResult() {
-		if ($this->result === null) $this->run(); // run when result not set
+		if ($this->result === null) $this->run();
 		return $this->result;
 	}
 
 	/**
-	 * @param \Exception|null $result
+	 * @param \Exception|string|null $result
+	 * @return Test
 	 */
 	public function setResult($result) {
 		$this->result = $result;
+		return $this;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -165,13 +171,6 @@ class Test {
 	// -------------------------------------------------------------------------------------------------------------------
 	// Setters and getters
 	// -------------------------------------------------------------------------------------------------------------------
-
-	/**
-	 * @param null|\src\envtesting\callable $callback
-	 */
-	public function setCallback($callback) {
-		$this->callback = $callback;
-	}
 
 	/**
 	 * Return callback

@@ -133,21 +133,6 @@ class Check {
 
 
 /**
- * @todo concept of post metadata interface can share data from TestClass to Test and TestSuit
- * @author Roman Ozana <ozana@omdesign.cz>
- */
-interface TestMeta {
-	/**
-	 * Return test options
-	 *
-	 * @abstract
-	 * @return array
-	 */
-	public function getOptions();
-}
-
-
-/**
  * Group of test suits
  *
  * @author Roman Ozana <roman@wikidi.com>
@@ -260,9 +245,8 @@ class Test {
 	}
 
 	/**
-	 * Execute test
+	 * Perform test
 	 *
-	 * @throws \Exception
 	 * @return Test
 	 */
 	public function run() {
@@ -277,8 +261,17 @@ class Test {
 			$this->setResult($e);
 		}
 
-
 		return $this;
+	}
+
+	/**
+	 * Execute test same as run
+	 *
+	 * @throws \Exception
+	 * @return Test
+	 */
+	public function __invoke() {
+		return $this->run();
 	}
 
 	/**
@@ -494,7 +487,7 @@ class Test {
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class TestSuit implements \ArrayAccess, \IteratorAggregate {
+class TestSuit implements \ArrayAccess, \IteratorAggregate, IsExecutable {
 
 	/** @var array */
 	protected $tests = array();
@@ -523,13 +516,22 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	/**
 	 * Run all tests in test suit
 	 *
-	 * @return TestSuit
+	 * @return TestSuit|mixed
 	 */
 	public function run() {
 		foreach ($this->tests as $key => $test/** @var \envtesting\Test $test */) {
 			$test->run();
 		}
 		return $this;
+	}
+
+	/**
+	 * Run test
+	 *
+	 * @return mixed
+	 */
+	public function __invoke() {
+		return $this->run();
 	}
 
 	/**
@@ -547,7 +549,7 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 * @param string $name
 	 * @param mixed $callback
 	 * @param null $type
-	 * @return \src\envtesting\Test
+	 * @return Test
 	 */
 	public function addTest($name, $callback, $type = null) {
 		return $this->tests[] = Test::instance($name, $callback, $type);
@@ -645,10 +647,10 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
+	 * Return new instance of TestSuit
+	 *
 	 * @static
 	 * @param string $name
-	 * @param mixed $callback
-	 * @param string|null $type
 	 * @return TestSuit
 	 */
 	public static function instance($name) {
@@ -672,4 +674,58 @@ class Error extends \Exception {
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 class Warning extends \Exception {
+}
+
+
+/**
+ * Test has
+ *
+ * @author Roman Ozana <ozana@omdesign.cz>
+ */
+interface HasParams {
+	/**
+	 * Return test options
+	 *
+	 * @abstract
+	 * @return array
+	 */
+	public function getOptions();
+
+	/**
+	 * Return test name as string
+	 *
+	 * @abstract
+	 * @return string
+	 */
+	public function getName();
+
+}
+
+/**
+ * Executable test, suit or group produce response as string
+ *
+ * @author Roman Ozana <ozana@omdesign.cz>
+ */
+interface IsExecutable {
+
+	/**
+	 * Run test same as run();
+	 *
+	 * <code>
+	 * echo $test()
+	 * </code>
+	 *
+	 * @abstract
+	 * @return mixed|IsExecutable
+	 */
+	public function __invoke();
+
+	/**
+	 * Generate response
+	 *
+	 * @abstract
+	 * @return string
+	 */
+	public function __toString();
+
 }
