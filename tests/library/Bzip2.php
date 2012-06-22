@@ -1,6 +1,5 @@
 <?php
-namespace envtesting\tests\library;
-require_once __DIR__ . '/../../Envtesting.php';
+namespace tests\library;
 
 /**
  * Check if bz2 library is loaded

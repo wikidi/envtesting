@@ -1,5 +1,6 @@
 <?php
 namespace envtesting;
+
 /**
  * Envtesting application
  *

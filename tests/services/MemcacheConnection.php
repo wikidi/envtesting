@@ -1,5 +1,5 @@
 <?php
-namespace envtesting\tests\services;
+namespace tests\services;
 
 /**
  * Test memcached service connection

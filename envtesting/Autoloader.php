@@ -51,7 +51,6 @@ final class Autoloader {
 			$fileName = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR; //namespace replace
 		}
 		$fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php'; //pear replace on classname only
-		var_dump($fileName);
 		return (bool)@include_once $fileName;
 	}
 }

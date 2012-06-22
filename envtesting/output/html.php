@@ -10,10 +10,10 @@ use envtesting\SuitGroup;
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 class Html {
-	/** @var null|string */
-	private $layout = null;
+
 	/** @var array */
 	public $elements = array();
+
 	/** @var string */
 	public $title = 'Envtesting';
 
@@ -26,7 +26,7 @@ class Html {
 
 	/**
 	 * @param TestSuit|SuitGroup $element
-	 * @return \envtesting\outputing\Html
+	 * @return Html
 	 */
 	public function add($element) {
 		$this->elements[] = $element;
@@ -37,6 +37,7 @@ class Html {
 	 * Render HTML output
 	 *
 	 * @throws \Exception
+	 * @return void
 	 */
 	public function render() {
 		extract((array)$this);

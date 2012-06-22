@@ -46,10 +46,7 @@ class ShrinkPHP {
 		$iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)), '/\.php$/i');
 		foreach ($iterator as $filePath => $fileInfo/** @var SplFileInfo $fileInfo */) {
 			$this->addFile($filePath);
-			var_dump($filePath);
 		}
-
-		die();
 	}
 
 

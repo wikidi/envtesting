@@ -1,13 +1,11 @@
 <?php
-namespace envtesting\tests\library;
-require_once __DIR__ . '/../../Envtesting.php';
+namespace tests\library;
 
 /**
  * Check wordProb classes
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-
 
 \envtesting\Assert::true(
 	\envtesting\Check::cls('wikidi_webDataSearch_categorizer_wordProb_Client'),
