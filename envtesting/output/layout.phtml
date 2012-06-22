@@ -2,7 +2,8 @@
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
-	<title>Envtesting: <?= $title ?></title>
+	<title><?= $title ?></title>
+	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
 	<link rel="stylesheet" type="text/css" media="all"
 	      href="//current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"/>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -19,40 +20,52 @@
 		tr.ok {
 			background: #5BB75B;
 		}
+
 	</style>
 </head>
 <body data-spy="scroll">
 
-<table class="table">
+<table class="table table-condensed">
 	<thead>
 	<tr>
-		<th>status</th>
-		<th>name</th>
-		<th>notice</th>
-		<th>type</th>
-		<th>options</th>
-		<th>message</th>
+		<th colspan="2">Status</th>
+		<th title="Unique test name">Name</th>
+		<th title="Notice eg. stable server">Notice</th>
+		<th title="Test type">Type</th>
+		<th title="Test parameters">Options</th>
+		<th title="Response message">Message</th>
 	</tr>
 	</thead>
 
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<tbody>
 
 	<? foreach ($elements as $element) { ?>
-	<? foreach ($element as $test/** @var \envtesting\Test $test */) { ?>
+		<? foreach ($element as $order => $test/** @var \envtesting\Test $test */) { ?>
 		<tr class="<?= strtolower($test->getStatus())?>">
-			<td><?= $test->getStatus(); ?></td>
+			<td>
+				</a><span class="icon-<?= $test->isOk() ? 'ok' : 'remove' ?>"></span>
+			</td>
+			<td></span><?= $test->getStatus(); ?></td>
 			<td><?= $test->getName(); ?></td>
 			<td><?= $test->getNotice(); ?></td>
 			<td><?= $test->getType(); ?></td>
-			<td><code><?= json_encode((array)$test->getOptions()); ?></code></td>
+			<td>
+				<? if ($test->hasOptions()) { ?>
+				<code><?= json_encode((array)$test->getOptions()); ?></code>
+				<? } ?>
+			</td>
 			<td><?= $test->getStatusMessage(); ?></td>
 		</tr>
+			<? } ?>
 		<? } ?>
-	<? } ?>
 
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+	</tbody>
 </table>
 
 </body>
+<!--
+	Generated at <?= date('j.n.Y H:i:s')?> by Envtesting
+	https://github.com/wikidi/envtesting
+-->
 </html>

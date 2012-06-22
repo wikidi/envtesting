@@ -1,8 +1,8 @@
 <?php
 require_once __DIR__ . '/../Envtesting.php';
 
-use envtesting\TestSuit;
-use envtesting\SuitGroup;
+use envtesting\Tests;
+use envtesting\Check;
 
 /**
  * Autoload all PHP tests from directory
@@ -10,20 +10,35 @@ use envtesting\SuitGroup;
  * @author Roman Ozana <roman@omdesign.cz>
  */
 
-echo TestSuit::instance('All libs autoloaded')->fromDir(__DIR__ . '/../tests/library', 'library')->run(); // KISS
+// run tests and show result
+echo $tests = Tests::instance('All libs autoloaded')->addFromDir(__DIR__ . '/../tests/library', 'library')->run();
+
+// change fitst test
+$tests[0] = new \envtesting\Test('NEW TEST', function() {
+	throw new \envtesting\Error('Black Hawk Down');
+});
+
+// unset something
+unset($tests[1]);
+unset($tests[2]);
+unset($tests[3]);
+
+// shuffle and run all tests again
+echo $tests->shuffle()->run();
 
 // ---------------------------------------------------------------------------------------------------------------------
 // group example
 // ---------------------------------------------------------------------------------------------------------------------
 
-$group = new SuitGroup('Autoloaded tests');
-$group->addSuit(
-	'library',
-	TestSuit::instance('one')->fromDir(__DIR__ . '/../tests/library', 'something')
-);
-$group->addSuit(
-	'library2',
-	TestSuit::instance('two suffle')->fromDir(__DIR__ . '/../tests/library', 'something')->shuffle()
-);
+$group = Tests::instance('Groups');
+
+// autoload tests to group
+$group->to('Autoloaded dir')->addFromDir(__DIR__ . '/../tests/library', 'something');
+
+// add tests to new Group
+$group->newGroup->addTest('APC', Check::file('tests/library/Apc.php'), 'apc');
+$group->newGroup->addTest('GETTEXT', Check::file('tests/library/Gettext.php'), 'apc');
+
+$group->shuffle(false);
 
 echo $group->run();

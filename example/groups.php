@@ -6,7 +6,7 @@ require_once __DIR__ . '/../Envtesting.php';
 
 use \envtesting\Check;
 use \envtesting\SuitGroup;
-use \envtesting\TestSuit;
+use \envtesting\Tests;
 
 $group = new SuitGroup();
 

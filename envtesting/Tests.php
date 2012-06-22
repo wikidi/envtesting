@@ -4,13 +4,16 @@ namespace envtesting;
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class TestSuit implements \ArrayAccess, \IteratorAggregate {
+class Tests implements \ArrayAccess, \IteratorAggregate {
 
 	/** @var array */
 	protected $tests = array();
 
 	/** @var string */
 	protected $name = __CLASS__;
+
+	/** @var null|string */
+	protected $group = null;
 
 	/**
 	 * @param string $name
@@ -21,29 +24,41 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 
 	/**
 	 * Randomize tests order in suit
-	 * does not matter on test groups
 	 *
-	 * @return TestSuit
+	 * - when there is only one group of test shuffle inner test
+	 * - on multiple groups shuffle only groups not test inside
+	 *
+	 * @return Tests
 	 */
-	public function shuffle() {
-		shuffle($this->tests);
+	public function shuffle($deep = false) {
+		if (count($this->tests) === 1 || $deep) {
+			//$this->tests =
+			array_filter($this->tests, 'shuffle');
+
+			//shuffle($this->tests);
+		} else {
+			shuffle($this->tests); // shuffle group
+		}
+
 		return $this;
 	}
 
 	/**
 	 * Run all tests in test suit
 	 *
-	 * @return TestSuit
+	 * @return Tests
 	 */
 	public function run() {
-		foreach ($this->tests as $key => $test/** @var \envtesting\Test $test */) {
-			$test->run();
+		foreach ($this->tests as $tests) {
+			foreach ($tests as $test/** @var Test $test */) {
+				$test->run(); // TODO break group cycle after firs error / warning / exception
+			}
 		}
 		return $this;
 	}
 
 	/**
-	 * @return TestSuit
+	 * @return Tests
 	 */
 	public function __invoke() {
 		return $this->run();
@@ -64,18 +79,21 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 * @param string $name
 	 * @param mixed $callback
 	 * @param null $type
-	 * @return Test
+	 * @return \envtesting\Test
 	 */
 	public function addTest($name, $callback, $type = null) {
-		return $this->tests[] = Test::instance($name, $callback, $type);
+		return $this->tests[$this->getGroup()][] = Test::instance($name, $callback, $type);
 	}
 
 	/**
 	 * @return string
 	 */
 	public function __toString() {
-		return str_repeat(':', 80) . PHP_EOL . str_pad($this->name, 80, ' ', STR_PAD_BOTH) . PHP_EOL . str_repeat(':', 80) .
-			PHP_EOL . implode(PHP_EOL, $this->tests) . PHP_EOL;
+		$results = \envtesting\App::header($this->name);
+		foreach ($this->tests as $group => $tests) {
+			$results .= implode(PHP_EOL, $tests) . PHP_EOL;
+		}
+		return $results . PHP_EOL;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -87,9 +105,9 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 *
 	 * @param string $dir
 	 * @param string $type
-	 * @return TestSuit
+	 * @return Tests
 	 */
-	public function fromDir($dir, $type = '') {
+	public function addFromDir($dir, $type = '') {
 		$iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)), '/\.php$/i');
 
 		foreach ($iterator as $filePath => $fileInfo/** @var SplFileInfo $fileInfo */) {
@@ -112,7 +130,7 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 * @return bool
 	 */
 	public function offsetExists($offset) {
-		return array_key_exists($offset, $this->tests);
+		return array_key_exists($offset, $this->tests[$this->getGroup()]);
 	}
 
 	/**
@@ -120,7 +138,7 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 * @return Test
 	 */
 	public function offsetGet($offset) {
-		return $this->tests[$offset];
+		return $this->tests[$this->getGroup()][$offset];
 	}
 
 
@@ -135,9 +153,9 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 		}
 
 		if ($offset === null) {
-			$this->tests[] = $value;
+			$this->tests[$this->getGroup()][] = $value;
 		} else {
-			$this->tests[$offset] = $value;
+			$this->tests[$this->getGroup()][$offset] = $value;
 		}
 	}
 
@@ -146,8 +164,8 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	 * @return void
 	 */
 	public function offsetUnset($offset) {
-		if (isset($this->tests[$offset])) {
-			unset($this->tests[$offset]);
+		if (isset($this->tests[$this->getGroup()][$offset])) {
+			unset($this->tests[$this->getGroup()][$offset]);
 		}
 	}
 
@@ -159,14 +177,61 @@ class TestSuit implements \ArrayAccess, \IteratorAggregate {
 	}
 
 
+	/**
+	 * @param string $name
+	 * @return Tests
+	 */
+	public function __get($name) {
+		return $this->to($name);
+
+	}
+
+	/**
+	 * Begin new tests group
+	 *
+	 * @param string $name
+	 * @param string $title
+	 * @return Tests
+	 */
+	public function to($name) {
+		$this->group = $name;
+		return $this;
+	}
+
+	/**
+	 * @return null|string
+	 */
+	public function getGroup() {
+		return $this->group ? $this->group : 'main';
+	}
+
+	/**
+	 * Return groups names
+	 *
+	 * @param string $name
+	 * @return array
+	 */
+	public function getGroups($name) {
+		return array_keys($this->tests);
+	}
+
+	/**
+	 * Has tests groups
+	 *
+	 * @return bool
+	 */
+	public function hasGroups() {
+		return count($this->tests) === 1;
+	}
+
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Return new instance of TestSuit
+	 * Return new instance of Tests
 	 *
 	 * @static
 	 * @param string $name
-	 * @return TestSuit
+	 * @return Tests
 	 */
 	public static function instance($name) {
 		return new self($name);

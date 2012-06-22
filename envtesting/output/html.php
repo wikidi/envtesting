@@ -1,7 +1,7 @@
 <?php
 namespace envtesting\output;
 
-use envtesting\TestSuit;
+use envtesting\Tests;
 use envtesting\SuitGroup;
 
 /**
@@ -9,7 +9,7 @@ use envtesting\SuitGroup;
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Html {
+final class Html {
 
 	/** @var array */
 	public $elements = array();
@@ -25,7 +25,7 @@ class Html {
 	}
 
 	/**
-	 * @param TestSuit|SuitGroup $element
+	 * @param Tests|SuitGroup $element
 	 * @return Html
 	 */
 	public function add($element) {
@@ -43,4 +43,13 @@ class Html {
 		extract((array)$this);
 		require __DIR__ . '/layout.phtml';
 	}
+
+	/**
+	 * @param string $title
+	 * @return Html
+	 */
+	public static function instance($title = 'Envtesting') {
+		return new self($title);
+	}
+
 }

@@ -7,10 +7,10 @@
 require_once __DIR__ . '/../Envtesting.php';
 
 use \envtesting\Check;
-use \envtesting\TestSuit;
+use \envtesting\Tests;
 use \envtesting\Assert;
 
-$suit = new TestSuit('php.ini settings');
+$suit = new Tests('php.ini settings');
 
 // check log_errors
 $suit->addTest(

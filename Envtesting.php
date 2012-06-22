@@ -11,7 +11,10 @@ namespace envtesting{/**
 
 class
 App{public
-static$root=__DIR__;}class
+static$root=__DIR__;static
+function
+header($text,$ch=':'){return
+str_repeat($ch,80).PHP_EOL.str_pad($text,80,' ',STR_PAD_BOTH).PHP_EOL.str_repeat($ch,80).PHP_EOL;}}class
 Assert{static
 function
 same($actual,$expected,$message=null){if($actual!==$expected){throw
@@ -52,8 +55,9 @@ file($file,$dir=__DIR__){return
 function()use($file,$dir){ include $dir . DIRECTORY_SEPARATOR . $file;};}}class
 Error
 extends\Exception{}}namespace envtesting\output{use
-envtesting\TestSuit;use
-envtesting\SuitGroup;class
+envtesting\Tests;use
+envtesting\SuitGroup;final
+class
 Html{public$elements=array();public$title='Envtesting';function
 __construct($title='Envtesting'){$this->title=$title;}function
 add($element){$this->elements[]=$element;return$this;}function
@@ -61,7 +65,8 @@ render(){extract((array)$this);?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
-	<title>Envtesting: <?=$title?></title>
+	<title><?=$title?></title>
+	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
 	<link rel="stylesheet" type="text/css" media="all"
 	      href="//current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"/>
 	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
@@ -78,58 +83,61 @@ render(){extract((array)$this);?><!DOCTYPE html>
 		tr.ok {
 			background: #5BB75B;
 		}
+
 	</style>
 </head>
 <body data-spy="scroll">
 
-<table class="table">
+<table class="table table-condensed">
 	<thead>
 	<tr>
-		<th>status</th>
-		<th>name</th>
-		<th>notice</th>
-		<th>type</th>
-		<th>options</th>
-		<th>message</th>
+		<th colspan="2">Status</th>
+		<th title="Unique test name">Name</th>
+		<th title="Notice eg. stable server">Notice</th>
+		<th title="Test type">Type</th>
+		<th title="Test parameters">Options</th>
+		<th title="Response message">Message</th>
 	</tr>
 	</thead>
 
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+	<tbody>
 
 	<?foreach($elements
 as$element){?>
-	<?foreach($element
-as$test){?>
+		<?foreach($element
+as$order=>$test){?>
 		<tr class="<?=strtolower($test->getStatus())?>">
-			<td><?=$test->getStatus();?></td>
+			<td>
+				</a><span class="icon-<?=$test->isOk()?'ok':'remove'?>"></span>
+			</td>
+			<td></span><?=$test->getStatus();?></td>
 			<td><?=$test->getName();?></td>
 			<td><?=$test->getNotice();?></td>
 			<td><?=$test->getType();?></td>
-			<td><code><?=json_encode((array)$test->getOptions());?></code></td>
+			<td>
+				<?if($test->hasOptions()){?>
+				<code><?=json_encode((array)$test->getOptions());?></code>
+				<?}?>
+			</td>
 			<td><?=$test->getStatusMessage();?></td>
 		</tr>
+			<?}?>
 		<?}?>
-	<?}?>
 
-	<!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+	</tbody>
 </table>
 
 </body>
-</html><?php }}}namespace envtesting{class
-SuitGroup
-implements\IteratorAggregate{protected$suits=array();protected$name=__CLASS__;function
-__construct($name=__CLASS__){$this->name=$name;}function
-getName(){return$this->name;}function
-shuffle(){shuffle($this->suits);return$this;}function
-addSuit($name,$suit=null){if(array_key_exists($name,$this->suits)){throw
-new\Exception('TestSuit "'.$name.'" already exists');}return$this->suits[$name]=$suit?$suit:TestSuit::instance($name);}function
-getIterator(){return
-new\ArrayIterator($this->suits);}function
-run(){foreach($this->suits
-as$suit){$suit->run();}return$this;}function
-__toString(){return
-str_repeat('#',80).PHP_EOL.str_pad($this->name,80,' ',STR_PAD_BOTH).PHP_EOL.implode($this->suits,PHP_EOL).PHP_EOL.str_repeat('#',80).PHP_EOL;}}class
+<!--
+	Generated at <?=date('j.n.Y H:i:s')?> by Envtesting
+	https://github.com/wikidi/envtesting
+-->
+</html><?php }static
+function
+instance($title='Envtesting'){return
+new
+self($title);}}}namespace envtesting{class
 Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;function
 __construct($name,$callback,$type=null){$this->name=$name;$this->callback=$callback;$this->type=$type;}function
 withOptions(){$this->options=func_get_args();return$this;}function
@@ -147,7 +155,7 @@ isOk(){return!$this->isException();}function
 isException(){return$this->getResult()instanceof\Exception;}function
 getResult(){if($this->result===null)$this->run();return$this->result;}function
 setResult($result){$this->result=$result;return$this;}function
-__toString(){$response=array('status'=>str_pad($this->getStatus(),10,' '),'name'=>str_pad($this->getName(),20,' '),'type'=>str_pad($this->getType(),10,' '),'options'=>json_encode((object)$this->getOptions()),'notice'=>$this->getNotice(),'message'=>$this->getStatusMessage());return
+__toString(){$response=array('status'=>str_pad($this->getStatus(),10,' '),'name'=>str_pad($this->getName(),20,' '),'type'=>str_pad($this->getType(),10,' '),'options'=>$this->hasOptions()?json_encode((object)$this->getOptions()):'','notice'=>$this->getNotice(),'message'=>$this->getStatusMessage());return
 implode($response,' | ');}function
 getCallback(){if(is_callable($this->callback))return$this->callback;if(is_string($this->callback)&&strpos($this->callback,'::')){return$this->callback=explode('::',$this->callback);}throw
 new\Exception('Invalid callback');}function
@@ -156,6 +164,7 @@ getName(){return$this->name;}function
 getType(){return$this->type;}function
 setType($type){$this->type=$type;return$this;}function
 getOptions(){return$this->options;}function
+hasOptions(){return!empty($this->options);}function
 setOptions($options){$this->options=$options;return$this;}function
 getNotice(){return$this->notice;}function
 setNotice($notice){$this->notice=$notice;return$this;}static
@@ -163,29 +172,37 @@ function
 instance($name,$callback,$type=null){return
 new
 self($name,$callback,$type);}}class
-TestSuit
-implements\ArrayAccess,\IteratorAggregate{protected$tests=array();protected$name=__CLASS__;function
+Tests
+implements\ArrayAccess,\IteratorAggregate{protected$tests=array();protected$name=__CLASS__;protected$group=null;function
 __construct($name=__CLASS__){$this->name=$name;}function
-shuffle(){shuffle($this->tests);return$this;}function
+shuffle($deep=false){if(count($this->tests)===1||$deep){array_filter($this->tests,'shuffle');}else{shuffle($this->tests);}return$this;}function
 run(){foreach($this->tests
-as$key=>$test){$test->run();}return$this;}function
+as$tests){foreach($tests
+as$test){$test->run();}}return$this;}function
 __invoke(){return$this->run();}function
 getName(){return$this->name;}function
-addTest($name,$callback,$type=null){return$this->tests[]=Test::instance($name,$callback,$type);}function
-__toString(){return
-str_repeat(':',80).PHP_EOL.str_pad($this->name,80,' ',STR_PAD_BOTH).PHP_EOL.str_repeat(':',80).PHP_EOL.implode(PHP_EOL,$this->tests).PHP_EOL;}function
-fromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
+addTest($name,$callback,$type=null){return$this->tests[$this->getGroup()][]=Test::instance($name,$callback,$type);}function
+__toString(){$results=\envtesting\App::header($this->name);foreach($this->tests
+as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
+addFromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
 as$filePath=>$fileInfo){$this->addTest($fileInfo->getBasename('.php'),Check::file($filePath,''))->setType($type);}return$this;}function
 offsetExists($offset){return
-array_key_exists($offset,$this->tests);}function
-offsetGet($offset){return$this->tests[$offset];}function
+array_key_exists($offset,$this->tests[$this->getGroup()]);}function
+offsetGet($offset){return$this->tests[$this->getGroup()][$offset];}function
 offsetSet($offset,$value){if(!$value
 instanceof
 Test){throw
-new\Exception('Usupported test type');}if($offset===null){$this->tests[]=$value;}else{$this->tests[$offset]=$value;}}function
-offsetUnset($offset){if(isset($this->tests[$offset])){unset($this->tests[$offset]);}}function
+new\Exception('Usupported test type');}if($offset===null){$this->tests[$this->getGroup()][]=$value;}else{$this->tests[$this->getGroup()][$offset]=$value;}}function
+offsetUnset($offset){if(isset($this->tests[$this->getGroup()][$offset])){unset($this->tests[$this->getGroup()][$offset]);}}function
 getIterator(){return
-new\ArrayIterator($this->tests);}static
+new\ArrayIterator($this->tests);}function
+__get($name){return$this->to($name);}function
+to($name){$this->group=$name;return$this;}function
+getGroup(){return$this->group?$this->group:'main';}function
+getGroups($name){return
+array_keys($this->tests);}function
+hasGroups(){return
+count($this->tests)===1;}static
 function
 instance($name){return
 new

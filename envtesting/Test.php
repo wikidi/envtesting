@@ -160,7 +160,7 @@ class Test {
 			'status' => str_pad($this->getStatus(), 10, ' '),
 			'name' => str_pad($this->getName(), 20, ' '),
 			'type' => str_pad($this->getType(), 10, ' '),
-			'options' => json_encode((object)$this->getOptions()),
+			'options' => $this->hasOptions() ? json_encode((object)$this->getOptions()) : '',
 			'notice' => $this->getNotice(),
 			'message' => $this->getStatusMessage(),
 		);
@@ -228,6 +228,13 @@ class Test {
 	 */
 	public function getOptions() {
 		return $this->options;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function hasOptions() {
+		return !empty($this->options);
 	}
 
 	/**
