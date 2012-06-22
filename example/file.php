@@ -8,24 +8,26 @@ use \envtesting\Tests;
  * @author Roman Ozana <roman@wikidi.com>
  */
 
-$suit = new Tests('Using PHP files for test');
+$tests = new Tests('Using PHP files for test');
 
 /* ------------------------------------------------------------------------- *
  * Even simple require_once file test
  * ------------------------------------------------------------------------- */
 
-$suit->addTest('APC', Check::file('tests/library/Apc.php'), 'apc');
-$suit->addTest('APC2', Check::file('tests/library/Apc.php'), 'apc');
-$suit->addTest('bzip2', Check::file('tests/library/Bzip2.php'));
-$suit->addTest('curl', Check::file('tests/library/Curl.php'));
-$suit->addTest('gd', Check::file('tests/library/Gd.php'));
-$suit->addTest('warning', Check::file('tests/library/Warning.php'));
-$suit->addTest('error', Check::file('tests/library/Error.php'));
+$tests->addTest('APC', 'tests/library/Apc.php', 'apc');
+$tests->addTest('APC2', 'tests/library/Apc.php', 'apc');
+$tests->addTest('bzip2', 'tests/library/Bzip2.php');
+$tests->addTest('curl', 'tests/library/Curl.php');
+$tests->addTest('gd', 'tests/library/Gd.php');
+$tests->addTest('warning', 'tests/library/Warning.php');
+$tests->addTest('error', 'tests/library/Error.php');
 
-$suit->shuffle(); // randomize test oreder
+echo $tests->shuffle(); // randomize test oreder
 
-foreach ($suit as $test/** @var \envtesting\Test $test */) {
+die('TODO TODO TODO TODO');
+
+foreach ($tests->get() as $test/** @var \envtesting\Test $test */) {
 	echo ($test->isOk() ? '✓' : '☠') . ' ' . $test->getName() . PHP_EOL; // print resuly yourself
 }
 
-//echo $suit->run(); // or print it in our format
+//echo $tests->run(); // or print it in our format

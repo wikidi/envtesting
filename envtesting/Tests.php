@@ -3,6 +3,7 @@ namespace envtesting;
 
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
+ * @todo ignore tests group
  */
 class Tests implements \ArrayAccess, \IteratorAggregate {
 
@@ -77,11 +78,14 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * Add new callback test to suit
 	 *
 	 * @param string $name
-	 * @param mixed $callback
+	 * @param mixed|filepath $callback
 	 * @param null $type
 	 * @return \envtesting\Test
 	 */
 	public function addTest($name, $callback, $type = null) {
+		if (is_string($callback) && is_file(__DIR__ . $callback) || is_file($callback)) {
+			$callback = Check::file(basename($callback), dirname($callback));
+		}
 		return $this->tests[$this->getGroup()][] = Test::instance($name, $callback, $type);
 	}
 
@@ -187,6 +191,13 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	/**
+	 * @todo return all tests without group
+	 */
+	public function getTests() {
+
+	}
+
+	/**
 	 * Begin new tests group
 	 *
 	 * @param string $name
@@ -199,9 +210,11 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	/**
+	 * @param $name
 	 * @return null|string
+	 * @todo get group by name
 	 */
-	public function getGroup() {
+	public function getGroup($name = null) {
 		return $this->group ? $this->group : 'main';
 	}
 
@@ -211,7 +224,7 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * @param string $name
 	 * @return array
 	 */
-	public function getGroups($name) {
+	public function getGroups() {
 		return array_keys($this->tests);
 	}
 
@@ -221,7 +234,7 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * @return bool
 	 */
 	public function hasGroups() {
-		return count($this->tests) === 1;
+		return count($this->tests) !== 1;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -229,7 +242,6 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	/**
 	 * Return new instance of Tests
 	 *
-	 * @static
 	 * @param string $name
 	 * @return Tests
 	 */
