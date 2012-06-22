@@ -83,7 +83,7 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * @return \envtesting\Test
 	 */
 	public function addTest($name, $callback, $type = null) {
-		if (is_string($callback) && is_file(__DIR__ . $callback) || is_file($callback)) {
+		if (is_string($callback) && (is_file(__DIR__ . $callback) || is_file($callback))) {
 			$callback = Check::file(basename($callback), dirname($callback));
 		}
 		return $this->tests[$this->getGroup()][] = Test::instance($name, $callback, $type);

@@ -181,7 +181,7 @@ as$tests){foreach($tests
 as$test){$test->run();}}return$this;}function
 __invoke(){return$this->run();}function
 getName(){return$this->name;}function
-addTest($name,$callback,$type=null){if(is_string($callback)&&is_file(__DIR__.$callback)||is_file($callback)){$callback=Check::file(basename($callback),dirname($callback));}return$this->tests[$this->getGroup()][]=Test::instance($name,$callback,$type);}function
+addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}return$this->tests[$this->getGroup()][]=Test::instance($name,$callback,$type);}function
 __toString(){$results=\envtesting\App::header($this->name);foreach($this->tests
 as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
 addFromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
