@@ -1,8 +1,12 @@
 <?php
 namespace envtesting{/**
- * Envtesting application
+ * Envtesting is fast simple and easy to use environment testing written in PHP.
+ * Can check library, services and services response.
+ *
+ * Produce console, HTML or CSV output.
  *
  * @author Roman Ozana <ozana@omdesign.cz>
+ * @license MIT
  */
 
 class
@@ -187,11 +191,4 @@ instance($name){return
 new
 self($name);}}class
 Warning
-extends\Exception{}}namespace tests\library{\envtesting\Assert::true(\envtesting\Check::lib('apc','apc_inc'),'APC not found');\envtesting\Assert::true(\envtesting\Check::lib('bz2','bzopen'),'Bzip not found');\envtesting\Assert::true(\envtesting\Check::lib('curl','curl_init'),'Curl not found');throw
-new\envtesting\Error('sandal with socks');\envtesting\Assert::true(\envtesting\Check::cls('fann\clients\ServerProxy'),'Fann class fann\clients\ServerProxy not exists');\envtesting\Assert::true(\envtesting\Check::lib('gd','gd_info'),'GD library not found');\envtesting\Assert::true(\envtesting\Check::lib('gettext','gettext'),'Gettext library not found');\envtesting\Assert::true(\envtesting\Check::lib('intl','intl_error_name'),'intl library not found');\envtesting\Assert::true(\envtesting\Check::lib('memcache'),'memcache library not found');\envtesting\Assert::true(\envtesting\Check::cls('MongoDB'),'MongoDB class not found');\envtesting\Assert::true(\envtesting\Check::lib('mysql','mysql_info'),'mysql library not found');\envtesting\Assert::true(\envtesting\Check::cls('PDO'),'PDO class not found');\envtesting\Assert::true(\envtesting\Check::lib('simplexml'),'Simplexml library not found');\envtesting\Assert::true(\envtesting\Check::cls('SphinxClient'),'SphinxClient class not found');\envtesting\Assert::true(\envtesting\Check::lib('tidy'),'Tidy');throw
-new\envtesting\Warning('leave britney alone');\envtesting\Assert::true(\envtesting\Check::cls('wikidi_webDataSearch_categorizer_wordProb_Client'),'Class "wikidi_webDataSearch_categorizer_wordProb_Client" not found');\envtesting\Assert::true(\envtesting\Check::cls('wikidi_webDataSearch_categorizer_wordProb_ClientFactory'),'Class "wikidi_webDataSearch_categorizer_wordProb_ClientFactory" not found');\envtesting\Assert::true(\envtesting\Check::lib('xsl'),'XLS library not found');\envtesting\Assert::true(\envtesting\Check::lib('zlib','gzopen'),'zlib library not found');}namespace tests\services{class
-MemcacheConnection{private$host='127.0.0.1';private$port=11211;function
-__construct($host,$port){$this->host=$host;$this->port=$port;}function
-__invoke(){try{$memcache=new\Memcache();$memcache->connect($this->host,$this->port,true);if($memcache->getStats()==false){throw
-new\envtesting\Error('Memcached connection faild: '.$this->host.':'.$this->port);}}catch(\Exception$e){throw
-new\envtesting\Error('Memcached connection faild: '.$this->host.':'.$this->port.' with '.$e->getMessage());}}}}
+extends\Exception{}}
