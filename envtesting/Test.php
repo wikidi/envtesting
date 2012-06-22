@@ -1,5 +1,5 @@
 <?php
-namespace src\envtesting;
+namespace envtesting;
 
 /**
  * @author Roman Ozana <ozana@omdesign.cz>

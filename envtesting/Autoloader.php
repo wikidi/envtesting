@@ -1,12 +1,12 @@
 <?php
-namespace src\envtesting;
+namespace envtesting;
 
 /**
  * Class autoloading and app tools
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-final class Autoload {
+final class Autoloader {
 
 	/** @var null|boolean */
 	private static $update = true;
@@ -18,8 +18,8 @@ final class Autoload {
 	/**
 	 * Add path for autoloading
 	 *
-	 * @static
 	 * @param string $path
+	 * @return void
 	 */
 	public static function addPath($path) {
 		self::$paths[] = $path;
@@ -27,7 +27,6 @@ final class Autoload {
 	}
 
 	/**
-	 * @static
 	 * @param string $className
 	 * @return bool
 	 */
@@ -52,8 +51,9 @@ final class Autoload {
 			$fileName = str_replace('\\', DIRECTORY_SEPARATOR, $namespace) . DIRECTORY_SEPARATOR; //namespace replace
 		}
 		$fileName .= str_replace('_', DIRECTORY_SEPARATOR, $className) . '.php'; //pear replace on classname only
+		var_dump($fileName);
 		return (bool)@include_once $fileName;
 	}
 }
 
-spl_autoload_register(array('envtesting\Autoload', 'cls'));
+spl_autoload_register(array('envtesting\Autoloader', 'cls'));

@@ -1,5 +1,5 @@
 <?php
-namespace src\envtesting;
+namespace envtesting;
 
 /**
  * Group of test suits
@@ -43,7 +43,7 @@ class SuitGroup implements \IteratorAggregate {
 	 * @param string $name
 	 * @param TestSuit|null $suit
 	 * @throws \Exception
-	 * @return \src\envtesting\TestSuit
+	 * @return \envtesting\TestSuit
 	 */
 	public function addSuit($name, $suit = null) {
 		if (array_key_exists($name, $this->suits)) {

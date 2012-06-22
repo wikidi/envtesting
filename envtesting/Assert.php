@@ -1,5 +1,5 @@
 <?php
-namespace src\envtesting;
+namespace envtesting;
 
 /**
  * Group of basic asserts

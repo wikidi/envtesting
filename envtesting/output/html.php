@@ -1,5 +1,6 @@
 <?php
-namespace envtesting\outputing;
+namespace envtesting\output;
+
 use envtesting\TestSuit;
 use envtesting\SuitGroup;
 
@@ -33,34 +34,12 @@ class Html {
 	}
 
 	/**
-	 * @return null|string
-	 */
-	public function getLayout() {
-		if ($this->layout === null) $this->layout = __DIR__ . '/layout.phtml';
-		return $this->layout;
-	}
-
-	/**
-	 * @param string $layout
-	 * @return \envtesting\outputing\Html
-	 */
-	public function setLayout($layout) {
-		$this->layout = $layout;
-		return $this;
-	}
-
-	/**
 	 * Render HTML output
 	 *
 	 * @throws \Exception
 	 */
 	public function render() {
-		if (file_exists($layout = $this->getLayout())) {
-			extract((array)$this);
-			require $layout;
-		} else {
-			throw new \Exception('Template "' . $layout . '" not exists');
-		}
-
+		extract((array)$this);
+		require __DIR__ . '/layout.phtml';
 	}
 }

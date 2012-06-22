@@ -1,5 +1,5 @@
 <?php
-namespace src\envtesting;
+namespace envtesting;
 
 /**
  * Basic envtesting check
