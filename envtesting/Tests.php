@@ -24,27 +24,6 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	/**
-	 * Randomize tests order in suit
-	 *
-	 * - when there is only one group of test shuffle inner test
-	 * - on multiple groups shuffle only groups not test inside
-	 *
-	 * @return Tests
-	 */
-	public function shuffle($deep = false) {
-		if (count($this->tests) === 1 || $deep) {
-			//$this->tests =
-			array_filter($this->tests, 'shuffle');
-
-			//shuffle($this->tests);
-		} else {
-			shuffle($this->tests); // shuffle group
-		}
-
-		return $this;
-	}
-
-	/**
 	 * Run all tests in test suit
 	 *
 	 * @return Tests
@@ -58,21 +37,29 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 		return $this;
 	}
 
-	/**
-	 * @return Tests
-	 */
-	public function __invoke() {
-		return $this->run();
-	}
 
 	/**
-	 * Return testSuit name
+	 * Randomize tests order in suit
 	 *
-	 * @return string
+	 * - when there is only one group of test shuffle inner test
+	 * - on multiple groups shuffle only groups not test inside
+	 *
+	 * @param bool $deep
+	 * @return \envtesting\Tests
 	 */
-	public function getName() {
-		return $this->name;
+	public function shuffle($deep = false) {
+		if ($this->hasGroups() === false || $deep) {
+			array_filter($this->tests, 'shuffle');
+		} else {
+			shuffle($this->tests); // shuffle only groups
+		}
+
+		return $this;
 	}
+
+	// -------------------------------------------------------------------------------------------------------------------
+	// Add test or tests
+	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * Add new callback test to suit
@@ -88,21 +75,6 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 		}
 		return $this->tests[$this->getGroup()][] = Test::instance($name, $callback, $type);
 	}
-
-	/**
-	 * @return string
-	 */
-	public function __toString() {
-		$results = \envtesting\App::header($this->name);
-		foreach ($this->tests as $group => $tests) {
-			$results .= implode(PHP_EOL, $tests) . PHP_EOL;
-		}
-		return $results . PHP_EOL;
-	}
-
-	// -------------------------------------------------------------------------------------------------------------------
-	// Autoloading
-	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
 	 * Autoload all PHP tests from directory
@@ -126,60 +98,6 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
-	// Interfaces implementation
-	// -------------------------------------------------------------------------------------------------------------------
-
-	/**
-	 * @param mixed $offset
-	 * @return bool
-	 */
-	public function offsetExists($offset) {
-		return array_key_exists($offset, $this->tests[$this->getGroup()]);
-	}
-
-	/**
-	 * @param mixed $offset
-	 * @return Test
-	 */
-	public function offsetGet($offset) {
-		return $this->tests[$this->getGroup()][$offset];
-	}
-
-
-	/**
-	 * @param mixed $offset
-	 * @param mixed $value
-	 * @throws \Exception
-	 */
-	public function offsetSet($offset, $value) {
-		if (!$value instanceof Test) {
-			throw new \Exception('Usupported test type');
-		}
-
-		if ($offset === null) {
-			$this->tests[$this->getGroup()][] = $value;
-		} else {
-			$this->tests[$this->getGroup()][$offset] = $value;
-		}
-	}
-
-	/**
-	 * @param mixed $offset
-	 * @return void
-	 */
-	public function offsetUnset($offset) {
-		if (isset($this->tests[$this->getGroup()][$offset])) {
-			unset($this->tests[$this->getGroup()][$offset]);
-		}
-	}
-
-	/**
-	 * @return \ArrayIterator|\Traversable
-	 */
-	public function getIterator() {
-		return new \ArrayIterator($this->tests);
-	}
-
 
 	/**
 	 * @param string $name
@@ -187,14 +105,6 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 */
 	public function __get($name) {
 		return $this->to($name);
-
-	}
-
-	/**
-	 * @todo return all tests without group
-	 */
-	public function getTests() {
-
 	}
 
 	/**
@@ -207,6 +117,15 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	public function to($name) {
 		$this->group = $name;
 		return $this;
+	}
+
+	/**
+	 * Return testSuit name
+	 *
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
 	}
 
 	/**
@@ -248,4 +167,75 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	public static function instance($name) {
 		return new self($name);
 	}
+
+	// -------------------------------------------------------------------------------------------------------------------
+	// Interfaces implementation
+	// -------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * @param mixed $offset
+	 * @return bool
+	 */
+	public function offsetExists($offset) {
+		return array_key_exists($offset, $this->tests[$this->getGroup()]);
+	}
+
+	/**
+	 * @param mixed $offset
+	 * @return Test
+	 */
+	public function offsetGet($offset) {
+		return $this->tests[$this->getGroup()][$offset];
+	}
+
+	/**
+	 * @param mixed $offset
+	 * @param mixed $value
+	 * @throws \Exception
+	 */
+	public function offsetSet($offset, $value) {
+		if (!$value instanceof Test) {
+			throw new \Exception('Usupported test type');
+		}
+
+		if ($offset === null) {
+			$this->tests[$this->getGroup()][] = $value;
+		} else {
+			$this->tests[$this->getGroup()][$offset] = $value;
+		}
+	}
+
+	/**
+	 * @param mixed $offset
+	 * @return void
+	 */
+	public function offsetUnset($offset) {
+		if (isset($this->tests[$this->getGroup()][$offset])) {
+			unset($this->tests[$this->getGroup()][$offset]);
+		}
+	}
+
+	/**
+	 * @return \ArrayIterator|\Traversable
+	 */
+	public function getIterator() {
+		return new \ArrayIterator($this->tests);
+	}
+
+	// -------------------------------------------------------------------------------------------------------------------
+	// outputing
+	// -------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * @return string
+	 */
+	public function __toString() {
+		$results = \envtesting\App::header($this->name);
+		foreach ($this->tests as $group => $tests) {
+			$results .= implode(PHP_EOL, $tests) . PHP_EOL;
+		}
+		return $results . PHP_EOL;
+	}
+
 }
+

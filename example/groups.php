@@ -4,23 +4,17 @@
  */
 require_once __DIR__ . '/../Envtesting.php';
 
-use \envtesting\Check;
-use \envtesting\SuitGroup;
-use \envtesting\Tests;
+$tests = new \envtesting\Tests('Super group test');
 
-$group = new SuitGroup();
+// group 1
+$tests->group1->addTest('APC', 'tests/library/Apc.php')->setType('library')->setNotice('1 : 1');
+$tests->group1->addTest('GD', 'tests/library/Gd.php')->setType('library')->setNotice('1 : 2');
+$tests->group1->addTest('Gettext', 'tests/library/Gettext.php')->setType('library')->setNotice('1 : 3');
 
-// add APC library test
-$suit = $group->addSuit('APC');
-$suit->addTest('APC', Check::file('tests/library/Apc.php'))->setType('library');
+// group 2
+$tests->group2->addTest('PDO', 'tests/library/Pdo.php')->setType('library')->setNotice('2 : 1');
+$tests->group2->addTest('Mongo', 'tests/library/Mongo.php')->setType('library')->setNotice('2 : 2');
 
-$suit = $group->addSuit('GD and Gettext');
-$suit->addTest('GD', Check::file('tests/library/Gd.php'))->setType('library');
-$suit->addTest('Gettext', Check::file('tests/library/Gettext.php'))->setType('library');
+echo $tests->shuffle()->run(); // group mix
 
-$suit = $group->addSuit('Mongo and PDO');
-$suit->addTest('Mongo', Check::file('tests/library/Mongo.php'))->setType('library');
-$suit->addTest('Pdo', Check::file('tests/library/Pdo.php'))->setType('library');
-
-// shuffle group and return response as string
-echo $group->shuffle()->run();
+echo $tests->shuffle(true)->run(); // deep mix
