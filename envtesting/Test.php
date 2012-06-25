@@ -2,6 +2,8 @@
 namespace envtesting;
 
 /**
+ * Test is object cover for callback that perform test
+ *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 class Test {
@@ -241,7 +243,7 @@ class Test {
 	 * @param array $options
 	 * @return Test
 	 */
-	public function setOptions($options) {
+	public function setOptions(array $options) {
 		$this->options = $options;
 		return $this;
 	}
@@ -265,7 +267,12 @@ class Test {
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * @static
+	 * Return instance of test
+	 *
+	 * <code>
+	 * Test::instance('something', function(){ return true; }, 'dummy');
+	 * </code>
+	 *
 	 * @param string $name
 	 * @param mixed $callback
 	 * @param string|null $type
