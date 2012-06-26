@@ -11,6 +11,7 @@ namespace envtesting;
  * @license MIT
  */
 class App {
+
 	/** @var string */
 	public static $root = __DIR__;
 

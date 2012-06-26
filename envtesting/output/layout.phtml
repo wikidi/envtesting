@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+<?php
+/** @var \envtesting\Suit $suit */
+/** @var \envtesting\Filter $filter */
+?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
@@ -10,6 +13,10 @@
 	<style type="text/css">
 		tr.warning {
 			background: #F89406;
+		}
+
+		tr.disabled {
+			text-decoration: line-through;
 		}
 
 		tr.error, tr.exception {
@@ -43,25 +50,27 @@
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<? if (isset($_GET['test']) || isset($_GET['group']) || isset($_GET['type'])) { ?>
-			<div class="alert alert-info">
-				<a href="?" class="close">&times;</a>
-				<h4 class="alert-heading">Results are filtered!</h4>
-				Show
-				<?= isset($_GET['test']) ? 'test <span class="label label-inverse">' . htmlspecialchars($_GET['test']) . '</span>' : ''?>
-				<?= isset($_GET['group']) ? 'group <span class="label label-inverse">' . htmlspecialchars($_GET['group']) . '</span>' : ''?>
-				<?= isset($_GET['type']) ? 'tests type <span class="label label-inverse">' . htmlspecialchars($_GET['type']) . '</span>' : ''?>
+			<? if ($filter->isActive()) { ?>
+			<div class="alert">
+				<a href="?" class="close">&times;</a>Results are filtered!
 			</div>
 			<? } ?>
+
 
 			<table class="table table-condensed">
 				<thead>
 				<tr>
 					<th></th>
-					<th>Result</th>
-					<th title="Unique test name">Test</th>
-					<th title="Test group">Group</th>
-					<th title="Test type">Type</th>
+					<th title="Warning | Error | Ok or disabled">Result</th>
+					<th title="Unique test name">
+						Name<?= $filter->name ? ' = <span class="label label-inverse">' . $filter->name . '</span>' : ''?>
+					</th>
+					<th title="Test group">
+						Group<?= $filter->group ? ' = <span class="label label-inverse">' . $filter->group . '</span>' : ''?>
+					</th>
+					<th title="Test type">
+						Type<?= $filter->type ? ' = <span class="label label-inverse">' . $filter->type . '</span>' : ''?>
+					</th>
 					<th title="Notice eg. stable server">Notice</th>
 					<th title="Test parameters">Options</th>
 					<th title="Response message">Message</th>
@@ -71,14 +80,14 @@
 				<tbody>
 
 				<? foreach ($suit as $group => $tests) { ?>
-					<? foreach ($tests as $order => $test/** @var \envtesting\Test $test */) {
-						$total++; ?>
+					<? foreach ($tests as $order => $test/** @var \envtesting\Test $test */) { ?>
+						<? $total++; ?>
 					<tr class="<?= strtolower($test->getStatus())?>">
 						<td>
-							</a><span class="icon-<?= $test->isOk() ? 'ok' : 'remove' ?>"></span>
+							<i class="icon-<?= $test->isOk() ? 'ok' : 'remove' ?>"></i>
 						</td>
-						<td></span><?= $test->getStatus(); ?></td>
-						<td><a href="?test=<?= $test->getName(); ?>"><?= $test->getName(); ?></a></td>
+						<td><?= $test->getStatus(); ?></td>
+						<td><a href="?name=<?= $test->getName(); ?>"><?= $test->getName(); ?></a></td>
 						<td><a href="?group=<?= $group ?>"><?= $group ?></a></td>
 						<td>
 							<a href="?type=<?= $test->getType(); ?>"><?= $test->getType(); ?></a>
@@ -91,7 +100,8 @@
 						</td>
 						<td><?= $test->getStatusMessage(); ?></td>
 					</tr>
-						<? if ($test->isOk()) $ok++; ?>
+						<? if ($test->isOk() && $test->isEnabled()) $ok++; ?>
+						<? if (!$test->isEnabled()) $disabled++; ?>
 						<? if ($test->isError()) $error++; ?>
 						<? if ($test->isWarning()) $warning++; ?>
 						<? } ?>
@@ -100,10 +110,15 @@
 				</tbody>
 			</table>
 
+			<? if ($filter->isActive()) { ?>
+			<p><a href="?" class="btn btn-primary">Cancel filter</a></p>
+			<? } ?>
+
 			<hr>
 			<p>
-				<span class="badge badge-important"><?= $error ?> Errors</span>
-				<span class="badge badge-warning"><?= $warning ?> Warnings</span>
+				<? if ($disabled > 0) { ?><span class="badge badge-info"><?= $disabled ?> Disabled</span> <? } ?>
+				<? if ($error > 0) { ?><span class="badge badge-important"><?= $error ?> Errors</span><? } ?>
+				<? if ($warning > 0) { ?><span class="badge badge-warning"><?= $warning ?> Warnings</span><? } ?>
 				<span class="badge badge-success"><?= $ok ?> OK</span>
 				<span class="badge badge-inverse"><?= $total ?> total</span>
 				<a data-toggle="modal" href="#about" class="icon-info-sign"></a>
@@ -140,7 +155,7 @@
 
 				<h4>Copyright & License</h4>
 
-				<pre><? include __DIR__ . ' /../../LICENSE . TXT'?></pre>
+				<pre><? include __DIR__ . "/../../LICENSE.TXT"?></pre>
 
 			</div>
 
@@ -162,7 +177,7 @@
 
 </body>
 <!--
-	Generated at <?= date('j . n . Y H:i:s') ?> by Envtesting
+	Generated at <?= date('j.n.Y H:i:s') ?> by Envtesting
 	https://github.com/wikidi/envtesting
 -->
 </html>

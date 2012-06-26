@@ -19,16 +19,19 @@ class Test {
 	protected $notice = '';
 	/** @var null|\Exception */
 	protected $result = null;
+	/** @var bool */
+	protected $enabled = true;
 
 	/**
 	 * @param string $name
 	 * @param mixed $callback
 	 * @param null|string $type
 	 */
-	public function __construct($name, $callback, $type = null) {
+	public function __construct($name, $callback, $type = null, $enabled = true) {
 		$this->name = $name;
 		$this->callback = $callback;
 		$this->type = $type;
+		$this->enabled = $enabled;
 	}
 
 	/**
@@ -70,12 +73,15 @@ class Test {
 	/**
 	 * Return test status string
 	 *
+	 * DISABLED | WARNING | ERROR | EXCEPTION
+	 *
 	 * @throws \Exception
 	 * @return string|null
 	 */
 	public function getStatus() {
 		if (is_scalar($this->getResult())) return (string)$this->getResult();
 
+		if (!$this->enabled) return 'DISABLED';
 		if ($this->isError()) return 'ERROR';
 		if ($this->isWarning()) return 'WARNING';
 		if ($this->isException()) return 'EXCEPTION';
@@ -137,7 +143,7 @@ class Test {
 	 * @return bool|\Exception|null
 	 */
 	public function getResult() {
-		if ($this->result === null) $this->run();
+		if ($this->result === null && $this->enabled) $this->run();
 		return $this->result;
 	}
 
@@ -197,7 +203,7 @@ class Test {
 	 * @param string $name
 	 * @return Test
 	 */
-	public function setName($name) {
+	public function setName($name = '') {
 		$this->name = $name;
 		return $this;
 	}
@@ -243,7 +249,7 @@ class Test {
 	 * @param array $options
 	 * @return Test
 	 */
-	public function setOptions(array $options) {
+	public function setOptions(array $options = array()) {
 		$this->options = $options;
 		return $this;
 	}
@@ -259,9 +265,32 @@ class Test {
 	 * @param string $notice
 	 * @return Test
 	 */
-	public function setNotice($notice) {
+	public function setNotice($notice = '') {
 		$this->notice = $notice;
 		return $this;
+	}
+
+	/**
+	 * @param bool $enabled
+	 * @return Test
+	 */
+	public function enable($enabled = true) {
+		$this->enabled = $enabled;
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isEnabled() {
+		return $this->enabled;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isDisabled() {
+		return !$this->isEnabled();
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -276,9 +305,10 @@ class Test {
 	 * @param string $name
 	 * @param mixed $callback
 	 * @param string|null $type
+	 * @param bool $enabled
 	 * @return Test
 	 */
-	public static function instance($name, $callback, $type = null) {
-		return new self($name, $callback, $type);
+	public static function instance($name, $callback, $type = null, $enabled = true) {
+		return new self($name, $callback, $type, $enabled);
 	}
 }

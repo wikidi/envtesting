@@ -54,12 +54,20 @@ function
 file($file,$dir=__DIR__){return
 function()use($file,$dir){ include $dir . DIRECTORY_SEPARATOR . $file;};}}class
 Error
-extends\Exception{}}namespace envtesting\output{use
+extends\Exception{}class
+Filter{public$type=null;public$group=null;public$name=null;function
+__construct($name=null,$type=null,$group=null){$this->name=$name;$this->group=$group;$this->type=$type;}function
+isActive(){return$this->type!==null||$this->name!==null||$this->group!==null;}function
+isValid(Test$test,Suit$suit){return$this->isActive()?($this->name&&$test->getName()===$this->name)||($this->type&&$test->getType()===$this->type)||($this->group&&$suit->getCurrentGroupName()===$this->group):true;}static
+function
+instanceFromArray(array$array){return
+new
+self(isset($array['name'])?(string)$array['name']:null,isset($array['type'])?(string)$array['type']:null,isset($array['group'])?(string)$array['group']:null);}}}namespace envtesting\output{use
 envtesting\Suit;final
 class
 Html{static
 function
-render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=0;?><!DOCTYPE html>
+render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$suit->getFilter();}namespace {?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
@@ -71,6 +79,10 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=0;?><!DOCTYPE 
 	<style type="text/css">
 		tr.warning {
 			background: #F89406;
+		}
+
+		tr.disabled {
+			text-decoration: line-through;
 		}
 
 		tr.error, tr.exception {
@@ -104,25 +116,27 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=0;?><!DOCTYPE 
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<?if(isset($_GET['test'])||isset($_GET['group'])||isset($_GET['type'])){?>
-			<div class="alert alert-info">
-				<a href="?" class="close">&times;</a>
-				<h4 class="alert-heading">Results are filtered!</h4>
-				Show
-				<?=isset($_GET['test'])?'test <span class="label label-inverse">'.htmlspecialchars($_GET['test']).'</span>':''?>
-				<?=isset($_GET['group'])?'group <span class="label label-inverse">'.htmlspecialchars($_GET['group']).'</span>':''?>
-				<?=isset($_GET['type'])?'tests type <span class="label label-inverse">'.htmlspecialchars($_GET['type']).'</span>':''?>
+			<?if($filter->isActive()){?>
+			<div class="alert">
+				<a href="?" class="close">&times;</a>Results are filtered!
 			</div>
 			<?}?>
+
 
 			<table class="table table-condensed">
 				<thead>
 				<tr>
 					<th></th>
-					<th>Result</th>
-					<th title="Unique test name">Test</th>
-					<th title="Test group">Group</th>
-					<th title="Test type">Type</th>
+					<th title="Warning | Error | Ok or disabled">Result</th>
+					<th title="Unique test name">
+						Name<?=$filter->name?' = <span class="label label-inverse">'.$filter->name.'</span>':''?>
+					</th>
+					<th title="Test group">
+						Group<?=$filter->group?' = <span class="label label-inverse">'.$filter->group.'</span>':''?>
+					</th>
+					<th title="Test type">
+						Type<?=$filter->type?' = <span class="label label-inverse">'.$filter->type.'</span>':''?>
+					</th>
 					<th title="Notice eg. stable server">Notice</th>
 					<th title="Test parameters">Options</th>
 					<th title="Response message">Message</th>
@@ -134,13 +148,14 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=0;?><!DOCTYPE 
 				<?foreach($suit
 as$group=>$tests){?>
 					<?foreach($tests
-as$order=>$test){$total++;?>
+as$order=>$test){?>
+						<?$total++;?>
 					<tr class="<?=strtolower($test->getStatus())?>">
 						<td>
-							</a><span class="icon-<?=$test->isOk()?'ok':'remove'?>"></span>
+							<i class="icon-<?=$test->isOk()?'ok':'remove'?>"></i>
 						</td>
-						<td></span><?=$test->getStatus();?></td>
-						<td><a href="?test=<?=$test->getName();?>"><?=$test->getName();?></a></td>
+						<td><?=$test->getStatus();?></td>
+						<td><a href="?name=<?=$test->getName();?>"><?=$test->getName();?></a></td>
 						<td><a href="?group=<?=$group?>"><?=$group?></a></td>
 						<td>
 							<a href="?type=<?=$test->getType();?>"><?=$test->getType();?></a>
@@ -153,7 +168,8 @@ as$order=>$test){$total++;?>
 						</td>
 						<td><?=$test->getStatusMessage();?></td>
 					</tr>
-						<?if($test->isOk())$ok++;?>
+						<?if($test->isOk()&&$test->isEnabled())$ok++;?>
+						<?if(!$test->isEnabled())$disabled++;?>
 						<?if($test->isError())$error++;?>
 						<?if($test->isWarning())$warning++;?>
 						<?}?>
@@ -162,10 +178,15 @@ as$order=>$test){$total++;?>
 				</tbody>
 			</table>
 
+			<?if($filter->isActive()){?>
+			<p><a href="?" class="btn btn-primary">Cancel filter</a></p>
+			<?}?>
+
 			<hr>
 			<p>
-				<span class="badge badge-important"><?=$error?> Errors</span>
-				<span class="badge badge-warning"><?=$warning?> Warnings</span>
+				<?if($disabled>0){?><span class="badge badge-info"><?=$disabled?> Disabled</span> <?}?>
+				<?if($error>0){?><span class="badge badge-important"><?=$error?> Errors</span><?}?>
+				<?if($warning>0){?><span class="badge badge-warning"><?=$warning?> Warnings</span><?}?>
 				<span class="badge badge-success"><?=$ok?> OK</span>
 				<span class="badge badge-inverse"><?=$total?> total</span>
 				<a data-toggle="modal" href="#about" class="icon-info-sign"></a>
@@ -202,7 +223,17 @@ as$order=>$test){$total++;?>
 
 				<h4>Copyright & License</h4>
 
-				<pre><? include __DIR__ . ' /../../LICENSE . TXT';</pre>
+				<pre><??>Copyright (c) 2012, Envtesting (Roman Ozana <ozana@omdesign.cz>) All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+    * Neither the name of the Morphine nor the names of its contributors may be used to endorse or promote products derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+</pre>
 
 			</div>
 
@@ -224,37 +255,40 @@ as$order=>$test){$total++;?>
 
 </body>
 <!--
-	Generated at <?=date('j . n . Y H:i:s')?> by Envtesting
+	Generated at <?=date('j.n.Y H:i:s')?> by Envtesting
 	https://github.com/wikidi/envtesting
 -->
-</html><?php }}}namespace envtesting{class
+</html><?php }namespace envtesting\output{}}}namespace envtesting{class
 Suit
-implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=__CLASS__;protected$currentGroup=null;protected$failGroupOnFirstError=false;function
-__construct($name=__CLASS__){$this->name=$name;}function
+implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=__CLASS__;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
+__construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:new
+Filter();}function
 run(){foreach($this->groups
 as$tests){$isError=false;foreach($tests
 as$test){$test->run();$isError=$test->isError()&&$this->failGroupOnFirstError;}}return$this;}function
-shuffle($deep=false){if($this->hasGroups()===false||$deep){array_filter($this->groups,'shuffle');}else{shuffle($this->groups);}return$this;}function
-addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}return$this->groups[$this->getCurrentGroupName()][]=Test::instance($name,$callback,$type);}function
+shuffle($deep=false){if($deep||$this->hasGroups()===false)array_filter($this->groups,'shuffle');if($this->hasGroups()){$keys=array_keys($this->groups);shuffle($keys);$this->groups=array_merge(array_flip($keys),$this->groups);}return$this;}function
+addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}$test=Test::instance($name,$callback,$type);$test->enable($this->filter->isValid($test,$this));return$this->groups[$this->getCurrentGroupName()][]=$test;}function
 addFromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
-as$filePath=>$fileInfo){$this->addTest($fileInfo->getBasename('.php'),$filePath)->setType($type);}return$this;}function
+as$filePath=>$fileInfo){$this->addTest($fileInfo->getBasename('.php'),$filePath,$type);}return$this;}function
 __get($name){return$this->to($name);}function
-to($name){$this->currentGroup=$name;return$this;}function
+to($name){$this->currentGroup=$name;if(!array_key_exists($name,$this->groups))$this->groups[$name]=array();return$this;}function
 getName(){return$this->name;}function
 setName($name){$this->name=$name;return$this;}function
 getCurrentGroupName(){return$this->currentGroup?$this->currentGroup:'main';}function
 getGroupsNames(){return
 array_keys($this->groups);}function
 hasGroups(){return
-count($this->groups)!==1;}function
+count($this->groups)>1;}function
+setFilter(Filter$filter){$this->filter=$filter;return$this;}function
+getFilter(){return$this->filter;}function
 failGroupOnFirstError($fail=true){$this->failGroupOnFirstError=$fail;return$this;}static
 function
-instance($name){return
+instance($name,Filter$filter=null){return
 new
-self($name);}function
+self($name,$filter);}function
 offsetExists($offset){return
 array_key_exists($offset,$this->groups[$this->getCurrentGroupName()]);}function
-offsetGet($offset){return$this->groups[$this->getCurrentGroupName()][$offset];}function
+offsetGet($offset){return$this->offsetExists($offset)?$this->groups[$this->getCurrentGroupName()][$offset]:null;}function
 offsetSet($offset,$value){if(!$value
 instanceof
 Test){throw
@@ -264,12 +298,12 @@ getIterator(){return
 new\ArrayIterator($this->groups);}function
 __toString(){$results=\envtesting\App::header($this->name);foreach($this->groups
 as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}}class
-Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;function
-__construct($name,$callback,$type=null){$this->name=$name;$this->callback=$callback;$this->type=$type;}function
+Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
+__construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function
 run(){try{$this->result='OK';call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
 __invoke(){return$this->run();}function
-getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if($this->isError())return'ERROR';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
+getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if(!$this->enabled)return'DISABLED';if($this->isError())return'ERROR';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
 new\Exception('Invalid result type: '.gettype($this->result));}function
 getStatusMessage(){return($this->result
 instanceof\Exception)?$this->result->getMessage():'';}function
@@ -279,24 +313,27 @@ isError(){return$this->getResult()instanceof
 Error;}function
 isOk(){return!$this->isException();}function
 isException(){return$this->getResult()instanceof\Exception;}function
-getResult(){if($this->result===null)$this->run();return$this->result;}function
+getResult(){if($this->result===null&&$this->enabled)$this->run();return$this->result;}function
 setResult($result){$this->result=$result;return$this;}function
 __toString(){$response=array('status'=>str_pad($this->getStatus(),10,' '),'name'=>str_pad($this->getName(),20,' '),'type'=>str_pad($this->getType(),10,' '),'options'=>$this->hasOptions()?json_encode((object)$this->getOptions()):'','notice'=>$this->getNotice(),'message'=>$this->getStatusMessage());return
 implode($response,' | ');}function
 getCallback(){if(is_callable($this->callback))return$this->callback;if(is_string($this->callback)&&strpos($this->callback,'::')){return$this->callback=explode('::',$this->callback);}throw
 new\Exception('Invalid callback');}function
-setName($name){$this->name=$name;return$this;}function
+setName($name=''){$this->name=$name;return$this;}function
 getName(){return$this->name;}function
 getType(){return$this->type;}function
 setType($type){$this->type=$type;return$this;}function
 getOptions(){return$this->options;}function
 hasOptions(){return!empty($this->options);}function
-setOptions(array$options){$this->options=$options;return$this;}function
+setOptions(array$options=array()){$this->options=$options;return$this;}function
 getNotice(){return$this->notice;}function
-setNotice($notice){$this->notice=$notice;return$this;}static
+setNotice($notice=''){$this->notice=$notice;return$this;}function
+enable($enabled=true){$this->enabled=$enabled;return$this;}function
+isEnabled(){return$this->enabled;}function
+isDisabled(){return!$this->isEnabled();}static
 function
-instance($name,$callback,$type=null){return
+instance($name,$callback,$type=null,$enabled=true){return
 new
-self($name,$callback,$type);}}class
+self($name,$callback,$type,$enabled);}}class
 Warning
 extends\Exception{}}

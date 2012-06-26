@@ -6,6 +6,5 @@ namespace envtesting;
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Error extends \Exception {
-}
+class Error extends \Exception { }
 

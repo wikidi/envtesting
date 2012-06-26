@@ -25,11 +25,16 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	/** @var bool */
 	protected $failGroupOnFirstError = false;
 
+	/** @var Filter */
+	protected $filter = null;
+
 	/**
 	 * @param string $name
+	 * @param Filter|null $filter
 	 */
-	public function __construct($name = __CLASS__) {
+	public function __construct($name = __CLASS__, Filter $filter = null) {
 		$this->name = $name;
+		$this->filter = ($filter) ? $filter : new Filter();
 	}
 
 	/**
@@ -41,7 +46,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 		foreach ($this->groups as $tests) {
 			$isError = false;
 			foreach ($tests as $test/** @var Test $test */) {
-				$test->run();
+				$test->run(); // execute test
 				$isError = $test->isError() && $this->failGroupOnFirstError;
 			}
 		}
@@ -59,10 +64,13 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 * @return \envtesting\Suit
 	 */
 	public function shuffle($deep = false) {
-		if ($this->hasGroups() === false || $deep) {
-			array_filter($this->groups, 'shuffle');
-		} else {
-			shuffle($this->groups); // shuffle only groups
+		if ($deep || $this->hasGroups() === false) array_filter($this->groups, 'shuffle');
+
+		if ($this->hasGroups()) {
+			// @see http://php.net/manual/en/function.shuffle.php
+			$keys = array_keys($this->groups);
+			shuffle($keys);
+			$this->groups = array_merge(array_flip($keys), $this->groups);
 		}
 
 		return $this;
@@ -84,7 +92,12 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 		if (is_string($callback) && (is_file(__DIR__ . $callback) || is_file($callback))) {
 			$callback = Check::file(basename($callback), dirname($callback));
 		}
-		return $this->groups[$this->getCurrentGroupName()][] = Test::instance($name, $callback, $type);
+
+		// create new Test instance
+		$test = Test::instance($name, $callback, $type);
+		$test->enable($this->filter->isValid($test, $this));
+
+		return $this->groups[$this->getCurrentGroupName()][] = $test;
 	}
 
 	/**
@@ -98,7 +111,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 		$iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)), '/\.php$/i');
 
 		foreach ($iterator as $filePath => $fileInfo/** @var SplFileInfo $fileInfo */) {
-			$this->addTest($fileInfo->getBasename('.php'), $filePath)->setType($type); // add tests to test suit
+			$this->addTest($fileInfo->getBasename('.php'), $filePath, $type); // add tests to test suit
 		}
 
 		return $this;
@@ -122,6 +135,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 */
 	public function to($name) {
 		$this->currentGroup = $name;
+		if (!array_key_exists($name, $this->groups)) $this->groups[$name] = array();
 		return $this;
 	}
 
@@ -168,11 +182,28 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 * @return bool
 	 */
 	public function hasGroups() {
-		return count($this->groups) !== 1;
+		return count($this->groups) > 1;
+	}
+
+	/**
+	 * @param Filter $filter
+	 * @return Suit
+	 */
+	public function setFilter(Filter $filter) {
+		$this->filter = $filter;
+		return $this;
+	}
+
+	/**
+	 * @return Filter|null
+	 */
+	public function getFilter() {
+		return $this->filter;
 	}
 
 	/**
 	 * @param bool $group
+	 * @return Suit
 	 */
 	public function failGroupOnFirstError($fail = true) {
 		$this->failGroupOnFirstError = $fail;
@@ -185,10 +216,11 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 * Return new instance of Suit
 	 *
 	 * @param string $name
+	 * @param Filter|null $filter
 	 * @return Suit
 	 */
-	public static function instance($name) {
-		return new self($name);
+	public static function instance($name, Filter $filter = null) {
+		return new self($name, $filter);
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -205,10 +237,10 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 
 	/**
 	 * @param mixed $offset
-	 * @return Test
+	 * @return Test|mixed
 	 */
 	public function offsetGet($offset) {
-		return $this->groups[$this->getCurrentGroupName()][$offset];
+		return $this->offsetExists($offset) ? $this->groups[$this->getCurrentGroupName()][$offset] : null;
 	}
 
 	/**
