@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../Envtesting.php';
 
-use envtesting\Tests;
+use envtesting\Suit;
 use envtesting\Check;
 
 /**
@@ -11,10 +11,10 @@ use envtesting\Check;
  */
 
 // run tests and show result
-echo $tests = Tests::instance('All libs autoloaded')->addFromDir(__DIR__ . '/../tests/library', 'library')->run();
+echo $suit = Suit::instance('All libs autoloaded')->addFromDir(__DIR__ . '/../tests/library', 'library')->run();
 
 // change fitst test
-$tests[0] = new \envtesting\Test('NEW TEST', function() {
+$suit[0] = new \envtesting\Test('NEW TEST', function() {
 	throw new \envtesting\Error('Black Hawk Down');
 });
 
@@ -23,22 +23,22 @@ $tests[0] = new \envtesting\Test('NEW TEST', function() {
 // ---------------------------------------------------------------------------------------------------------------------
 
 // unset something
-unset($tests[1]);
-unset($tests[2]);
-unset($tests[3]);
+unset($suit[1]);
+unset($suit[2]);
+unset($suit[3]);
 
 // ---------------------------------------------------------------------------------------------------------------------
 // repeat test execution
 // ---------------------------------------------------------------------------------------------------------------------
 
 // shuffle and run all tests again
-echo $tests->shuffle()->run();
+echo $suit->shuffle()->run();
 
 // ---------------------------------------------------------------------------------------------------------------------
 // group example
 // ---------------------------------------------------------------------------------------------------------------------
 
-$group = Tests::instance('Groups');
+$group = Suit::instance('Groups');
 
 // autoload tests to group
 $group->to('Autoloaded dir')->addFromDir(__DIR__ . '/../tests/library', 'something');

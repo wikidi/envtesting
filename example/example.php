@@ -2,14 +2,14 @@
 require_once __DIR__ . '/../Envtesting.php';
 
 use \envtesting\Check;
-use \envtesting\Tests;
+use \envtesting\Suit;
 
 
 /* ------------------------------------------------------------------------- *
  * Create new test suit
  * ------------------------------------------------------------------------- */
 
-$suit = new Tests('Example test suit');
+$suit = new Suit('Example test suit');
 function apcRequireTest() { require_once 'tests/library/Apc.php'; }
 $suit->addTest('APC', 'apcRequireTest', 'library');
 

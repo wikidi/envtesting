@@ -55,13 +55,11 @@ file($file,$dir=__DIR__){return
 function()use($file,$dir){ include $dir . DIRECTORY_SEPARATOR . $file;};}}class
 Error
 extends\Exception{}}namespace envtesting\output{use
-envtesting\Tests;use
-envtesting\SuitGroup;final
+envtesting\Suit;final
 class
-Html{public$elements=array();public$title='Envtesting';function
-__construct($title='Envtesting'){$this->title=$title;}function
-add($element){$this->elements[]=$element;return$this;}function
-render(){extract((array)$this);?><!DOCTYPE html>
+Html{static
+function
+render(Suit$suit,$title=''){?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
@@ -102,9 +100,9 @@ render(){extract((array)$this);?><!DOCTYPE html>
 
 	<tbody>
 
-	<?foreach($elements
-as$element){?>
-		<?foreach($element
+	<?foreach($suit
+as$group){?>
+		<?foreach($group
 as$order=>$test){?>
 		<tr class="<?=strtolower($test->getStatus())?>">
 			<td>
@@ -133,11 +131,43 @@ as$order=>$test){?>
 	Generated at <?=date('j.n.Y H:i:s')?> by Envtesting
 	https://github.com/wikidi/envtesting
 -->
-</html><?php }static
+</html><?php }}}namespace envtesting{class
+Suit
+implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=__CLASS__;protected$currentGroup=null;protected$failGroupOnFirstError=false;function
+__construct($name=__CLASS__){$this->name=$name;}function
+run(){foreach($this->groups
+as$tests){$isError=false;foreach($tests
+as$test){$test->run();$isError=$test->isError()&&$this->failGroupOnFirstError;}}return$this;}function
+shuffle($deep=false){if($this->hasGroups()===false||$deep){array_filter($this->groups,'shuffle');}else{shuffle($this->groups);}return$this;}function
+addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}return$this->groups[$this->getCurrentGroupName()][]=Test::instance($name,$callback,$type);}function
+addFromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
+as$filePath=>$fileInfo){$this->addTest($fileInfo->getBasename('.php'),$filePath)->setType($type);}return$this;}function
+__get($name){return$this->to($name);}function
+to($name){$this->currentGroup=$name;return$this;}function
+getName(){return$this->name;}function
+setName($name){$this->name=$name;return$this;}function
+getCurrentGroupName(){return$this->currentGroup?$this->currentGroup:'main';}function
+getGroupsNames(){return
+array_keys($this->groups);}function
+hasGroups(){return
+count($this->groups)!==1;}function
+failGroupOnFirstError($fail=true){$this->failGroupOnFirstError=$fail;return$this;}static
 function
-instance($title='Envtesting'){return
+instance($name){return
 new
-self($title);}}}namespace envtesting{class
+self($name);}function
+offsetExists($offset){return
+array_key_exists($offset,$this->groups[$this->getCurrentGroupName()]);}function
+offsetGet($offset){return$this->groups[$this->getCurrentGroupName()][$offset];}function
+offsetSet($offset,$value){if(!$value
+instanceof
+Test){throw
+new\Exception('Usupported test type');}if($offset===null){$this->groups[$this->getCurrentGroupName()][]=$value;}else{$this->groups[$this->getCurrentGroupName()][$offset]=$value;}}function
+offsetUnset($offset){if(isset($this->groups[$this->getCurrentGroupName()][$offset])){unset($this->groups[$this->getCurrentGroupName()][$offset]);}}function
+getIterator(){return
+new\ArrayIterator($this->groups);}function
+__toString(){$results=\envtesting\App::header($this->name);foreach($this->groups
+as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}}class
 Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;function
 __construct($name,$callback,$type=null){$this->name=$name;$this->callback=$callback;$this->type=$type;}function
 withOptions(){$this->options=func_get_args();return$this;}function
@@ -165,48 +195,12 @@ getType(){return$this->type;}function
 setType($type){$this->type=$type;return$this;}function
 getOptions(){return$this->options;}function
 hasOptions(){return!empty($this->options);}function
-setOptions($options){$this->options=$options;return$this;}function
+setOptions(array$options){$this->options=$options;return$this;}function
 getNotice(){return$this->notice;}function
 setNotice($notice){$this->notice=$notice;return$this;}static
 function
 instance($name,$callback,$type=null){return
 new
 self($name,$callback,$type);}}class
-Tests
-implements\ArrayAccess,\IteratorAggregate{protected$tests=array();protected$name=__CLASS__;protected$group=null;function
-__construct($name=__CLASS__){$this->name=$name;}function
-shuffle($deep=false){if(count($this->tests)===1||$deep){array_filter($this->tests,'shuffle');}else{shuffle($this->tests);}return$this;}function
-run(){foreach($this->tests
-as$tests){foreach($tests
-as$test){$test->run();}}return$this;}function
-__invoke(){return$this->run();}function
-getName(){return$this->name;}function
-addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}return$this->tests[$this->getGroup()][]=Test::instance($name,$callback,$type);}function
-__toString(){$results=\envtesting\App::header($this->name);foreach($this->tests
-as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
-addFromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
-as$filePath=>$fileInfo){$this->addTest($fileInfo->getBasename('.php'),Check::file($filePath,''))->setType($type);}return$this;}function
-offsetExists($offset){return
-array_key_exists($offset,$this->tests[$this->getGroup()]);}function
-offsetGet($offset){return$this->tests[$this->getGroup()][$offset];}function
-offsetSet($offset,$value){if(!$value
-instanceof
-Test){throw
-new\Exception('Usupported test type');}if($offset===null){$this->tests[$this->getGroup()][]=$value;}else{$this->tests[$this->getGroup()][$offset]=$value;}}function
-offsetUnset($offset){if(isset($this->tests[$this->getGroup()][$offset])){unset($this->tests[$this->getGroup()][$offset]);}}function
-getIterator(){return
-new\ArrayIterator($this->tests);}function
-__get($name){return$this->to($name);}function
-getTests(){}function
-to($name){$this->group=$name;return$this;}function
-getGroup($name=null){return$this->group?$this->group:'main';}function
-getGroups(){return
-array_keys($this->tests);}function
-hasGroups(){return
-count($this->tests)!==1;}static
-function
-instance($name){return
-new
-self($name);}}class
 Warning
 extends\Exception{}}

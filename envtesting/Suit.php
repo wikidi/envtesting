@@ -2,19 +2,28 @@
 namespace envtesting;
 
 /**
+ * Suit for group of Suit
+ *
+ * <code>
+ * $Suit = new Suit();
+ * $tests->addTest('something', function () { throw new Error('wrong');}, 'lib')
+ * </code>
+ *
  * @author Roman Ozana <ozana@omdesign.cz>
- * @todo ignore tests group
  */
-class Tests implements \ArrayAccess, \IteratorAggregate {
+class Suit implements \ArrayAccess, \IteratorAggregate {
 
 	/** @var array */
-	protected $tests = array();
+	protected $groups = array();
 
 	/** @var string */
 	protected $name = __CLASS__;
 
 	/** @var null|string */
-	protected $group = null;
+	protected $currentGroup = null;
+
+	/** @var bool */
+	protected $failGroupOnFirstError = false;
 
 	/**
 	 * @param string $name
@@ -26,12 +35,14 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	/**
 	 * Run all tests in test suit
 	 *
-	 * @return Tests
+	 * @return Suit
 	 */
 	public function run() {
-		foreach ($this->tests as $tests) {
+		foreach ($this->groups as $tests) {
+			$isError = false;
 			foreach ($tests as $test/** @var Test $test */) {
-				$test->run(); // TODO break group cycle after firs error / warning / exception
+				$test->run();
+				$isError = $test->isError() && $this->failGroupOnFirstError;
 			}
 		}
 		return $this;
@@ -45,13 +56,13 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * - on multiple groups shuffle only groups not test inside
 	 *
 	 * @param bool $deep
-	 * @return \envtesting\Tests
+	 * @return \envtesting\Suit
 	 */
 	public function shuffle($deep = false) {
 		if ($this->hasGroups() === false || $deep) {
-			array_filter($this->tests, 'shuffle');
+			array_filter($this->groups, 'shuffle');
 		} else {
-			shuffle($this->tests); // shuffle only groups
+			shuffle($this->groups); // shuffle only groups
 		}
 
 		return $this;
@@ -65,33 +76,29 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * Add new callback test to suit
 	 *
 	 * @param string $name
-	 * @param mixed|filepath $callback
+	 * @param mixed|callable|filepath $callback
 	 * @param null $type
-	 * @return \envtesting\Test
+	 * @return Test
 	 */
 	public function addTest($name, $callback, $type = null) {
 		if (is_string($callback) && (is_file(__DIR__ . $callback) || is_file($callback))) {
 			$callback = Check::file(basename($callback), dirname($callback));
 		}
-		return $this->tests[$this->getGroup()][] = Test::instance($name, $callback, $type);
+		return $this->groups[$this->getCurrentGroupName()][] = Test::instance($name, $callback, $type);
 	}
 
 	/**
-	 * Autoload all PHP tests from directory
+	 * Autoload all PHP files from directory
 	 *
 	 * @param string $dir
 	 * @param string $type
-	 * @return Tests
+	 * @return Suit
 	 */
 	public function addFromDir($dir, $type = '') {
 		$iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)), '/\.php$/i');
 
 		foreach ($iterator as $filePath => $fileInfo/** @var SplFileInfo $fileInfo */) {
-			// add tests to test suit
-			$this->addTest(
-				$fileInfo->getBasename('.php'),
-				Check::file($filePath, '')
-			)->setType($type);
+			$this->addTest($fileInfo->getBasename('.php'), $filePath)->setType($type); // add tests to test suit
 		}
 
 		return $this;
@@ -101,21 +108,20 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 
 	/**
 	 * @param string $name
-	 * @return Tests
+	 * @return Suit
 	 */
 	public function __get($name) {
 		return $this->to($name);
 	}
 
 	/**
-	 * Begin new tests group
+	 * Begin new Suit group
 	 *
 	 * @param string $name
-	 * @param string $title
-	 * @return Tests
+	 * @return Suit
 	 */
 	public function to($name) {
-		$this->group = $name;
+		$this->currentGroup = $name;
 		return $this;
 	}
 
@@ -129,40 +135,57 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	/**
-	 * @param $name
-	 * @return null|string
-	 * @todo get group by name
+	 * @param string $name
+	 * @return Suit
 	 */
-	public function getGroup($name = null) {
-		return $this->group ? $this->group : 'main';
+	public function setName($name) {
+		$this->name = $name;
+		return $this;
+	}
+
+	/**
+	 * Return current group name
+	 * - default group name is "main"
+	 *
+	 * @return null|string
+	 */
+	public function getCurrentGroupName() {
+		return $this->currentGroup ? $this->currentGroup : 'main';
 	}
 
 	/**
 	 * Return groups names
 	 *
-	 * @param string $name
 	 * @return array
 	 */
-	public function getGroups() {
-		return array_keys($this->tests);
+	public function getGroupsNames() {
+		return array_keys($this->groups);
 	}
 
 	/**
-	 * Has tests groups
+	 * Is there more then one group?
 	 *
 	 * @return bool
 	 */
 	public function hasGroups() {
-		return count($this->tests) !== 1;
+		return count($this->groups) !== 1;
+	}
+
+	/**
+	 * @param bool $group
+	 */
+	public function failGroupOnFirstError($fail = true) {
+		$this->failGroupOnFirstError = $fail;
+		return $this;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Return new instance of Tests
+	 * Return new instance of Suit
 	 *
 	 * @param string $name
-	 * @return Tests
+	 * @return Suit
 	 */
 	public static function instance($name) {
 		return new self($name);
@@ -177,7 +200,7 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * @return bool
 	 */
 	public function offsetExists($offset) {
-		return array_key_exists($offset, $this->tests[$this->getGroup()]);
+		return array_key_exists($offset, $this->groups[$this->getCurrentGroupName()]);
 	}
 
 	/**
@@ -185,7 +208,7 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * @return Test
 	 */
 	public function offsetGet($offset) {
-		return $this->tests[$this->getGroup()][$offset];
+		return $this->groups[$this->getCurrentGroupName()][$offset];
 	}
 
 	/**
@@ -199,9 +222,9 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 		}
 
 		if ($offset === null) {
-			$this->tests[$this->getGroup()][] = $value;
+			$this->groups[$this->getCurrentGroupName()][] = $value;
 		} else {
-			$this->tests[$this->getGroup()][$offset] = $value;
+			$this->groups[$this->getCurrentGroupName()][$offset] = $value;
 		}
 	}
 
@@ -210,8 +233,8 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * @return void
 	 */
 	public function offsetUnset($offset) {
-		if (isset($this->tests[$this->getGroup()][$offset])) {
-			unset($this->tests[$this->getGroup()][$offset]);
+		if (isset($this->groups[$this->getCurrentGroupName()][$offset])) {
+			unset($this->groups[$this->getCurrentGroupName()][$offset]);
 		}
 	}
 
@@ -219,7 +242,7 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 * @return \ArrayIterator|\Traversable
 	 */
 	public function getIterator() {
-		return new \ArrayIterator($this->tests);
+		return new \ArrayIterator($this->groups);
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -231,7 +254,7 @@ class Tests implements \ArrayAccess, \IteratorAggregate {
 	 */
 	public function __toString() {
 		$results = \envtesting\App::header($this->name);
-		foreach ($this->tests as $group => $tests) {
+		foreach ($this->groups as $group => $tests) {
 			$results .= implode(PHP_EOL, $tests) . PHP_EOL;
 		}
 		return $results . PHP_EOL;

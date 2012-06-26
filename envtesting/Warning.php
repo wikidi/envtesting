@@ -5,5 +5,4 @@ namespace envtesting;
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Warning extends \Exception {
-}
+class Warning extends \Exception { }

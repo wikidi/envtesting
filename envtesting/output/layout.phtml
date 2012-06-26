@@ -39,8 +39,8 @@
 
 	<tbody>
 
-	<? foreach ($elements as $element) { ?>
-		<? foreach ($element as $order => $test/** @var \envtesting\Test $test */) { ?>
+	<? foreach ($suit as $group) { ?>
+		<? foreach ($group as $order => $test/** @var \envtesting\Test $test */) { ?>
 		<tr class="<?= strtolower($test->getStatus())?>">
 			<td>
 				</a><span class="icon-<?= $test->isOk() ? 'ok' : 'remove' ?>"></span>

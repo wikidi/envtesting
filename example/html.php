@@ -6,7 +6,10 @@
  */
 require_once __DIR__ . '/../Envtesting.php';
 
-$suit = new \envtesting\Tests('memcached');
+use envtesting\output\Html;
+use envtesting\Suit;
+
+$suit = new Suit('memcached');
 $suit->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service'); // KISS
 
-\envtesting\output\Html::instance('Envtesting output as HTML')->add($suit)->render();
+Html::render($suit, 'Envtesting output as HTML'); // KISS
