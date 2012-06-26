@@ -18,6 +18,7 @@ final class Html {
 	 * @return void
 	 */
 	public static function render(Suit $suit, $title = '') {
+		$total = $error = $warning = $exception = $ok = 0;
 		require __DIR__ . '/layout.phtml';
 	}
 

@@ -4,16 +4,15 @@
 	<meta charset="UTF-8">
 	<title><?= $title ?></title>
 	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
+
 	<link rel="stylesheet" type="text/css" media="all"
 	      href="//current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"/>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<script src="//current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"></script>
 	<style type="text/css">
 		tr.warning {
 			background: #F89406;
 		}
 
-		tr.error, tr.eception {
+		tr.error, tr.exception {
 			background: #BD362F;
 		}
 
@@ -21,51 +20,149 @@
 			background: #5BB75B;
 		}
 
+		.modal pre {
+			overflow: auto;
+			height: 150px;
+		}
+
+		body {
+			padding-top: 20px;
+		}
+
+		.icon-info-sign {
+			float: right;
+		}
+
+		table a {
+			color: #333;
+		}
+
 	</style>
 </head>
-<body data-spy="scroll">
-
-<table class="table table-condensed">
-	<thead>
-	<tr>
-		<th colspan="2">Status</th>
-		<th title="Unique test name">Name</th>
-		<th title="Notice eg. stable server">Notice</th>
-		<th title="Test type">Type</th>
-		<th title="Test parameters">Options</th>
-		<th title="Response message">Message</th>
-	</tr>
-	</thead>
-
-	<tbody>
-
-	<? foreach ($suit as $group) { ?>
-		<? foreach ($group as $order => $test/** @var \envtesting\Test $test */) { ?>
-		<tr class="<?= strtolower($test->getStatus())?>">
-			<td>
-				</a><span class="icon-<?= $test->isOk() ? 'ok' : 'remove' ?>"></span>
-			</td>
-			<td></span><?= $test->getStatus(); ?></td>
-			<td><?= $test->getName(); ?></td>
-			<td><?= $test->getNotice(); ?></td>
-			<td><?= $test->getType(); ?></td>
-			<td>
-				<? if ($test->hasOptions()) { ?>
-				<code><?= json_encode((array)$test->getOptions()); ?></code>
-				<? } ?>
-			</td>
-			<td><?= $test->getStatusMessage(); ?></td>
-		</tr>
+<body>
+<div class="container">
+	<div class="row">
+		<div class="span12">
+			<? if (isset($_GET['test']) || isset($_GET['group']) || isset($_GET['type'])) { ?>
+			<div class="alert alert-info">
+				<a href="?" class="close">&times;</a>
+				<h4 class="alert-heading">Results are filtered!</h4>
+				Show
+				<?= isset($_GET['test']) ? 'test <span class="label label-inverse">' . htmlspecialchars($_GET['test']) . '</span>' : ''?>
+				<?= isset($_GET['group']) ? 'group <span class="label label-inverse">' . htmlspecialchars($_GET['group']) . '</span>' : ''?>
+				<?= isset($_GET['type']) ? 'tests type <span class="label label-inverse">' . htmlspecialchars($_GET['type']) . '</span>' : ''?>
+			</div>
 			<? } ?>
-		<? } ?>
+
+			<table class="table table-condensed">
+				<thead>
+				<tr>
+					<th></th>
+					<th>Result</th>
+					<th title="Unique test name">Test</th>
+					<th title="Test group">Group</th>
+					<th title="Test type">Type</th>
+					<th title="Notice eg. stable server">Notice</th>
+					<th title="Test parameters">Options</th>
+					<th title="Response message">Message</th>
+				</tr>
+				</thead>
+
+				<tbody>
+
+				<? foreach ($suit as $group => $tests) { ?>
+					<? foreach ($tests as $order => $test/** @var \envtesting\Test $test */) {
+						$total++; ?>
+					<tr class="<?= strtolower($test->getStatus())?>">
+						<td>
+							</a><span class="icon-<?= $test->isOk() ? 'ok' : 'remove' ?>"></span>
+						</td>
+						<td></span><?= $test->getStatus(); ?></td>
+						<td><a href="?test=<?= $test->getName(); ?>"><?= $test->getName(); ?></a></td>
+						<td><a href="?group=<?= $group ?>"><?= $group ?></a></td>
+						<td>
+							<a href="?type=<?= $test->getType(); ?>"><?= $test->getType(); ?></a>
+						</td>
+						<td><?= $test->getNotice(); ?></td>
+						<td>
+							<? if ($test->hasOptions()) { ?>
+							<code><?= json_encode((array)$test->getOptions()); ?></code>
+							<? } ?>
+						</td>
+						<td><?= $test->getStatusMessage(); ?></td>
+					</tr>
+						<? if ($test->isOk()) $ok++; ?>
+						<? if ($test->isError()) $error++; ?>
+						<? if ($test->isWarning()) $warning++; ?>
+						<? } ?>
+
+					<? } ?>
+				</tbody>
+			</table>
+
+			<hr>
+			<p>
+				<span class="badge badge-important"><?= $error ?> Errors</span>
+				<span class="badge badge-warning"><?= $warning ?> Warnings</span>
+				<span class="badge badge-success"><?= $ok ?> OK</span>
+				<span class="badge badge-inverse"><?= $total ?> total</span>
+				<a data-toggle="modal" href="#about" class="icon-info-sign"></a>
+			</p>
+		</div>
+	</div>
 
 
-	</tbody>
-</table>
+	<div class="row">
+
+		<div class="span12">
+			<div class="footer">
+
+			</div>
+		</div>
+
+		<div class="modal hide" id="about">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">×</button>
+				<h3>Envtesting</h3>
+			</div>
+			<div class="modal-body">
+				<p>Envtesting is fast simple and <strong>easy to use</strong> environment testing written in PHP.
+					Can check library, services and services response. Produce console, HTML or CSV output.
+				</p>
+
+				<h4>Authors</h4>
+
+				<p>
+					<a href="http://www.wikidi.com">wikidi.com</a> and
+					<a href="https://twitter.com/#!/OzzyCzech" title="Roman Ožana" target="_blank">@OzzyCzech</a>
+				</p>
+
+
+				<h4>Copyright & License</h4>
+
+				<pre><? include __DIR__ . ' /../../LICENSE . TXT'?></pre>
+
+			</div>
+
+			<div class="modal-footer">
+				<a href="https://github.com/wikidi/envtesting" class="btn btn-primary" target="blank">Fork me on GitHub</a>
+				<a href="#" class="btn btn-success" data-dismiss="modal">Thanks!</a>
+			</div>
+
+
+		</div>
+
+	</div>
+</div>
+
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<script src="//current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"></script>
+
 
 </body>
 <!--
-	Generated at <?= date('j.n.Y H:i:s')?> by Envtesting
+	Generated at <?= date('j . n . Y H:i:s') ?> by Envtesting
 	https://github.com/wikidi/envtesting
 -->
 </html>

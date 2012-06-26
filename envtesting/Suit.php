@@ -2,11 +2,11 @@
 namespace envtesting;
 
 /**
- * Suit for group of Suit
- *
  * <code>
- * $Suit = new Suit();
- * $tests->addTest('something', function () { throw new Error('wrong');}, 'lib')
+ * $suit = new Suit();
+ * $tests->addTest('something', function () { throw new Error('wrong');}, 'lib');
+ * $tests->addTest('something2', function () { throw new Error('wrong');}, 'lib');
+ * $tests->group->addTest('something2', function () { throw new Warning('wrong');}, 'lib');
  * </code>
  *
  * @author Roman Ozana <ozana@omdesign.cz>
