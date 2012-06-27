@@ -81,8 +81,8 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$f
 			background: #F89406;
 		}
 
-		tr.disabled {
-			text-decoration: line-through;
+		tr.disabled, tr.disabled a {
+			color: #a0a0a0;
 		}
 
 		tr.error, tr.exception {
@@ -110,20 +110,45 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$f
 			color: #333;
 		}
 
+		h5 {
+			text-align: center;
+			padding-bottom: 1em;
+		}
+
+		thead {
+			border-top: 1px solid #ddd;
+		}
+
+		.btn-group {
+			padding-bottom: 1em;
+		}
+
+		.footer {
+			border-top: 1px solid #ddd;
+			padding-top: 1em;
+		}
+
 	</style>
 </head>
 <body>
 <div class="container">
 	<div class="row">
 		<div class="span12">
+			<h5><?=$title?></h5>
+
 			<?if($filter->isActive()){?>
 			<div class="alert">
-				<a href="?" class="close">&times;</a>Results are filtered!
+				<a href="?" class="close">&times;</a>Test results are filtered!
 			</div>
 			<?}?>
 
-
 			<table class="table table-condensed">
+				<colgroup style="width:25px;"/>
+				<colgroup style="width:80px;"/>
+				<colgroup style="width:150px;"/>
+				<colgroup style="width:150px;"/>
+				<colgroup style="width:120px;"/>
+				<colgroup style="width:100px;"/>
 				<thead>
 				<tr>
 					<th></th>
@@ -138,7 +163,6 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$f
 						Type<?=$filter->type?' = <span class="label label-inverse">'.$filter->type.'</span>':''?>
 					</th>
 					<th title="Notice eg. stable server">Notice</th>
-					<th title="Test parameters">Options</th>
 					<th title="Response message">Message</th>
 				</tr>
 				</thead>
@@ -162,11 +186,12 @@ as$order=>$test){?>
 						</td>
 						<td><?=$test->getNotice();?></td>
 						<td>
+							<?=$test->getStatusMessage();?>
 							<?if($test->hasOptions()){?>
-							<code><?=json_encode((array)$test->getOptions());?></code>
+							<code>Options: <?=json_encode((array)$test->getOptions());?></code>
 							<?}?>
 						</td>
-						<td><?=$test->getStatusMessage();?></td>
+
 					</tr>
 						<?if($test->isOk()&&$test->isEnabled())$ok++;?>
 						<?if(!$test->isEnabled())$disabled++;?>
@@ -174,34 +199,35 @@ as$order=>$test){?>
 						<?if($test->isWarning())$warning++;?>
 						<?}?>
 
-					<?}?>
+					<?}$enabled=$total-$disabled;?>
 				</tbody>
 			</table>
 
-			<?if($filter->isActive()){?>
-			<p><a href="?" class="btn btn-primary">Cancel filter</a></p>
-			<?}?>
+			<div class="btn-group">
+				<a href="" class="btn btn-primary">Refresh</a><?if($filter->isActive()){?>
+				<a href="?" class="btn btn-danger">Cancel filter</a><?}?>
+			</div>
 
-			<hr>
-			<p>
-				<?if($disabled>0){?><span class="badge badge-info"><?=$disabled?> Disabled</span> <?}?>
-				<?if($error>0){?><span class="badge badge-important"><?=$error?> Errors</span><?}?>
-				<?if($warning>0){?><span class="badge badge-warning"><?=$warning?> Warnings</span><?}?>
-				<span class="badge badge-success"><?=$ok?> OK</span>
-				<span class="badge badge-inverse"><?=$total?> total</span>
+			<div class="footer">
+				<?if($disabled>0){?>
+				<span class="badge badge-info"><?=$disabled?> DISABLED <?=round(100*$disabled/$total)?>%</span>
+				<?}?>
+				<?if($error>0){?>
+				<span class="badge badge-important"><?=$error?> ERROR <?=round(100*$error/$enabled)?>%</span>
+				<?}?>
+				<?if($warning>0){?>
+				<span class="badge badge-warning"><?=$warning?> WARNING <?=round(100*$warning/$enabled)?>%</span>
+				<?}?>
+				<span class="badge badge-success"><?=$ok?> OK <?=round(100*$ok/($total-$disabled))?>%</span>
+				<span class="badge badge-inverse"><?=$total?> TESTS</span>
 				<a data-toggle="modal" href="#about" class="icon-info-sign"></a>
-			</p>
+			</div>
+
 		</div>
 	</div>
 
 
 	<div class="row">
-
-		<div class="span12">
-			<div class="footer">
-
-			</div>
-		</div>
 
 		<div class="modal hide" id="about">
 			<div class="modal-header">
@@ -216,10 +242,9 @@ as$order=>$test){?>
 				<h4>Authors</h4>
 
 				<p>
-					<a href="http://www.wikidi.com">wikidi.com</a> and
+					<a href="http://www.wikidi.com">wikidi.com</a> +
 					<a href="https://twitter.com/#!/OzzyCzech" title="Roman Ožana" target="_blank">@OzzyCzech</a>
 				</p>
-
 
 				<h4>Copyright & License</h4>
 
@@ -241,18 +266,12 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 				<a href="https://github.com/wikidi/envtesting" class="btn btn-primary" target="blank">Fork me on GitHub</a>
 				<a href="#" class="btn btn-success" data-dismiss="modal">Thanks!</a>
 			</div>
-
-
 		</div>
 
 	</div>
 </div>
-
-
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
 <script src="//current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"></script>
-
-
 </body>
 <!--
 	Generated at <?=date('j.n.Y H:i:s')?> by Envtesting
