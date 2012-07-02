@@ -65,6 +65,13 @@ new
 self(isset($array['name'])?(string)$array['name']:null,isset($array['type'])?(string)$array['type']:null,isset($array['group'])?(string)$array['group']:null);}}}namespace envtesting\output{use
 envtesting\Suit;final
 class
+Csv{static
+function
+render(Suit$suit,$title=''){echo'<pre>';foreach($suit
+as$group=>$tests){foreach($tests
+as$order=>$test){$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':$test->getStatusMessage().$options,$order);echo
+implode(', ',$data).PHP_EOL;}}}}}final
+class
 Html{static
 function
 render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$suit->getFilter();}namespace {?><!DOCTYPE html>
@@ -110,8 +117,9 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$f
 			color: #333;
 		}
 
-		h5 {
+		h3 {
 			text-align: center;
+			color: #05C;
 			padding-bottom: 1em;
 		}
 
@@ -134,7 +142,7 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$f
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h5><?=$title?></h5>
+			<h3><?=$title?></h3>
 
 			<?if($filter->isActive()){?>
 			<div class="alert">

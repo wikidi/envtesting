@@ -1,0 +1,68 @@
+#!/bin/bash
+
+# Bah command line tools for checking CSV formated output of envtesting
+# @author Ondrej Procházka, Dušan Hokův, Roman Ožana
+
+printf "\033c"
+command -v=wget > /dev/null 2>&1 || { echo -e >&2 "[ERROR] wget command not found\n\n# install on Mac OS\nsudo port seflupdate\nsudo port install wget\n"; exit 1; }
+echo $@ > /tmp/arg
+
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+if ! ( [[ "$4" =~ ^[0-9]{1,4}:[0-9]{1,4}$ ]] && [[ "$5" =~ ^[0-9]{1,4}:[0-9]{1,4}$ ]]) ; then
+	echo "Usage: check_wikidi_apptest <ip/domain> <http HOST> <url_to_test> MINOK_WARN:MAXFAIL_WARN MINOK_CRIT:MAXFAIL_CRIT"
+	echo "${1} ${2} ${3} ${4} ${5}"
+	exit 3
+fi
+
+##################################################################################################################
+# prepare input variables
+##################################################################################################################
+
+URL="http://${1}${3}"               # concat url request
+HOSTHEAD="--header=\"Host: ${2}\""  # host for WGET
+
+# Mac don't know tempfile
+if command -v tempfile > /dev/null; then
+	TMPFILE=$(tempfile)
+else
+	TMPFILE=$(mktemp -t="envtesting")	
+fi
+
+MINOK_WARN=$(echo $4 | cut -d: -f1)
+MAXFAIL_WARN=$(echo $4 | cut -d: -f2)
+
+MINOK_CRIT=$(echo $5 | cut -d: -f1)
+MAXFAIL_CRIT=$(echo $5 | cut -d: -f2)
+
+##################################################################################################################
+# echo wget --header=\"Host: ${2}\" \"$URL\" -O\"$TMPFILE\"
+##################################################################################################################
+echo $(which wget)
+echo $(command -v=wget)
+
+wget --header="Host: ${2}" "$URL" -O"$TMPFILE"
+if wget --header="Host: ${2}" "$URL" -O"$TMPFILE" 2> /dev/null ; then
+	OKCNT=$(cat $TMPFILE | grep "^OK" | wc -l)
+	FAILCNT=$(cat $TMPFILE | grep "^CRIT" | wc -l)
+	FAILMSGS=$(cat $TMPFILE | grep "^CRIT")
+	rm $TMPFILE
+	
+	if [ "$OKCNT" -lt "$MINOK_CRIT" ] || [ "$FAILCNT" -ge "$MAXFAIL_CRIT" ] ; then
+		echo -e "APPTEST CRITICAL - $OKCNT tests passed, $FAILCNT tests failed: \n$FAILMSGS"
+		exit 2
+	fi
+	if [ "$OKCNT" -lt "$MINOK_WARN" ] || [ "$FAILCNT" -ge "$MAXFAIL_WARN" ] ; then
+		echo -e "APPTEST WARNING - $OKCNT tests passed, $FAILCNT tests failed: \n$FAILMSGS"
+		exit 1
+	fi
+
+	echo "APPTEST OK - $OKCNT tests passed, $FAILCNT tests failed."
+	exit 0
+	
+else
+	echo "APPTEST CRITICAL - couldn't get requested URL $URL"
+	exit 2
+fi
+
+

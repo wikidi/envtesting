@@ -18,8 +18,8 @@ class MemcacheConnection {
 	 * @param string $port
 	 */
 	public function __construct($host, $port) {
-		$this->host = $host;
-		$this->port = $port;
+			$this->host = $host;
+			$this->port = $port;
 	}
 
 	/**
