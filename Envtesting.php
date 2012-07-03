@@ -67,18 +67,18 @@ envtesting\Suit;final
 class
 Csv{static
 function
-render(Suit$suit,$title=''){echo'<pre>';foreach($suit
+render(Suit$suit){header('Content-type: text/csv');header('Content-Disposition: attachment; filename=file.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suit
 as$group=>$tests){foreach($tests
 as$order=>$test){$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':$test->getStatusMessage().$options,$order);echo
-implode(', ',$data).PHP_EOL;}}}}}final
+addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
 class
 Html{static
 function
-render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$suit->getFilter();}namespace {?><!DOCTYPE html>
+render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$suit->getFilter();}namespace {?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
-	<title><?=$title?></title>
+	<title><?=$suit->getName()?></title>
 	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
 
 	<link rel="stylesheet" type="text/css" media="all"
@@ -136,13 +136,16 @@ render(Suit$suit,$title=''){$total=$error=$warning=$exception=$ok=$disabled=0;$f
 			padding-top: 1em;
 		}
 
+		.footer .badge {
+			margin: 0 2px;
+		}
 	</style>
 </head>
 <body>
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3><?=$title?></h3>
+			<h3><?=$suit->getName()?></h3>
 
 			<?if($filter->isActive()){?>
 			<div class="alert">
@@ -218,15 +221,23 @@ as$order=>$test){?>
 
 			<div class="footer">
 				<?if($disabled>0){?>
-				<span class="badge badge-info"><?=$disabled?> DISABLED <?=round(100*$disabled/$total)?>%</span>
+				<span class="badge badge-info">
+					<?=$disabled?> DISABLED <?=$total?round(100*$disabled/$total):0?>%
+				</span>
 				<?}?>
 				<?if($error>0){?>
-				<span class="badge badge-important"><?=$error?> ERROR <?=round(100*$error/$enabled)?>%</span>
+				<span class="badge badge-important">
+					<?=$error?> ERROR <?=$enabled?round(100*$error/$enabled):0?>%
+				</span>
 				<?}?>
 				<?if($warning>0){?>
-				<span class="badge badge-warning"><?=$warning?> WARNING <?=round(100*$warning/$enabled)?>%</span>
+				<span class="badge badge-warning">
+					<?=$warning?> WARNING <?=$enabled?round(100*$warning/$enabled):0?>%
+				</span>
 				<?}?>
-				<span class="badge badge-success"><?=$ok?> OK <?=round(100*$ok/($total-$disabled))?>%</span>
+				<span class="badge badge-success">
+					<?=$ok?> OK <?=($total-$disabled)?round(100*$ok/($total-$disabled)):0?>%
+				</span>
 				<span class="badge badge-inverse"><?=$total?> TESTS</span>
 				<a data-toggle="modal" href="#about" class="icon-info-sign"></a>
 			</div>
@@ -324,7 +335,8 @@ offsetUnset($offset){if(isset($this->groups[$this->getCurrentGroupName()][$offse
 getIterator(){return
 new\ArrayIterator($this->groups);}function
 __toString(){$results=\envtesting\App::header($this->name);foreach($this->groups
-as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}}class
+as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
+render($to=null){if($to===null)$to=isset($_GET['csv'])?'csv':'html';if(PHP_SAPI==='cli'){echo$this;}elseif($to==='csv'){\envtesting\output\Csv::render($this);}else{\envtesting\output\Html::render($this);}}}class
 Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
 __construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function
