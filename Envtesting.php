@@ -67,7 +67,7 @@ envtesting\Suit;final
 class
 Csv{static
 function
-render(Suit$suit){header('Content-type: text/csv');header('Content-Disposition: attachment; filename=file.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suit
+render(Suit$suit){$name=preg_replace('#[^a-z0-9]+#i','-',strtolower($suit->getName()));header('Content-type: text/csv');header('Content-Disposition: attachment; filename='.trim($name,'-').'.env.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suit
 as$group=>$tests){foreach($tests
 as$order=>$test){$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':$test->getStatusMessage().$options,$order);echo
 addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
@@ -336,7 +336,7 @@ getIterator(){return
 new\ArrayIterator($this->groups);}function
 __toString(){$results=\envtesting\App::header($this->name);foreach($this->groups
 as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
-render($to=null){if($to===null)$to=isset($_GET['csv'])?'csv':'html';if(PHP_SAPI==='cli'){echo$this;}elseif($to==='csv'){\envtesting\output\Csv::render($this);}else{\envtesting\output\Html::render($this);}}}class
+render($to=null){if($to===null&&isset($_SERVER['REQUEST_URI'])){$to=basename(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH))==='csv'?'csv':'html';}if(PHP_SAPI==='cli'){echo$this;}elseif($to==='csv'){echo\envtesting\output\Csv::render($this);}else{\envtesting\output\Html::render($this);}}}class
 Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
 __construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function

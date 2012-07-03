@@ -297,12 +297,14 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 * @return mixed
 	 */
 	public function render($to = null) {
-		if ($to === null) $to = isset($_GET['csv']) ? 'csv' : 'html'; // output
+		if ($to === null && isset($_SERVER['REQUEST_URI'])) {
+			$to = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) === 'csv' ? 'csv' : 'html';
+		}
 
 		if (PHP_SAPI === 'cli') {
 			echo $this;
 		} elseif ($to === 'csv') {
-			\envtesting\output\Csv::render($this);
+			echo \envtesting\output\Csv::render($this);
 		} else {
 			\envtesting\output\Html::render($this);
 		}

@@ -16,8 +16,9 @@ final class Csv {
 	 * @return void
 	 */
 	public static function render(Suit $suit) {
+		$name = preg_replace('#[^a-z0-9]+#i', '-', strtolower($suit->getName())); // sanitize filename
 		header('Content-type: text/csv');
-		header('Content-Disposition: attachment; filename=file.csv');
+		header('Content-Disposition: attachment; filename=' . trim($name, '-') . '.env.csv');
 		header('Pragma: no-cache');
 		header('Expires: 0');
 

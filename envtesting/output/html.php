@@ -20,7 +20,6 @@ final class Html {
 	public static function render(Suit $suit) {
 		$total = $error = $warning = $exception = $ok = $disabled = 0;
 		$filter = $suit->getFilter();
-
 		require __DIR__ . '/layout.phtml';
 	}
 
