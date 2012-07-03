@@ -89,6 +89,8 @@ $suit->render('csv');  // render CSV output
 $suit->render('html'); // render HTML output
 ```
 
+![HTML output example](/doc/images/html-output-example.png "HTML output")
+
 
 Visit more examples in: https://github.com/wikidi/envtesting/tree/master/example
 
