@@ -75,9 +75,20 @@ $suit = new \envtesting\Suit('my great envtest');
 $suit->group->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
 $suit->group->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
 $suit->group2->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
-$suit->shuffle();
-$suit->shuffle(); // deep shuffle mix groups and tests inside group
+$suit->shuffle(); // mixe only groups
+$suit->shuffle(true); // deep shuffle mix groups and tests inside group
 ```
+Envtesting can render CSV, HTML or text output:
+
+```php
+<?php
+require_once __DIR__ . '/Envtesting.php';
+$suit = new \envtesting\Suit('my great envtest');
+echo $suit; // produce TXT output
+$suit->render('csv'); // render CSV output
+$suit->render('html'); // render HTML output
+```
+
 
 Visit more examples in: https://github.com/wikidi/envtesting/tree/master/example
 
