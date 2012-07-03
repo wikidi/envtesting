@@ -10,19 +10,17 @@ use envtesting\Suit;
 final class Csv {
 
 	/**
-	 * Render HTML output
+	 * Render CSV output
 	 *
 	 * @param Suit $suit
-	 * @param string $title
 	 * @return void
 	 */
-	public static function render(Suit $suit, $title = '') {
-		//header("Content-type: text/csv");
-		//header("Content-Disposition: attachment; filename=file.csv");
-		//header("Pragma: no-cache");
-		//header("Expires: 0");
+	public static function render(Suit $suit) {
+		header('Content-type: text/csv');
+		header('Content-Disposition: attachment; filename=file.csv');
+		header('Pragma: no-cache');
+		header('Expires: 0');
 
-		echo '<pre>';
 		foreach ($suit as $group => $tests) {
 			foreach ($tests as $order => $test/** @var \envtesting\Test $test */) {
 				$options = ($test->getOptions() ? '<br/>' . json_encode($test->getOptions()) : '');
@@ -35,7 +33,7 @@ final class Csv {
 						$test->isOk() ? 'OK' : $test->getStatusMessage() . $options,
 						$order,
 					);
-					echo implode(', ', $data) . PHP_EOL;
+					echo addslashes(implode(', ', $data)) . PHP_EOL;
 				}
 			}
 		}

@@ -292,5 +292,21 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 		return $results . PHP_EOL;
 	}
 
+
+	/**
+	 * @return mixed
+	 */
+	public function render($to = null) {
+		if ($to === null) $to = isset($_GET['csv']) ? 'csv' : 'html'; // output
+
+		if (PHP_SAPI === 'cli') {
+			echo $this;
+		} elseif ($to === 'csv') {
+			\envtesting\output\Csv::render($this);
+		} else {
+			\envtesting\output\Html::render($this);
+		}
+	}
+
 }
 

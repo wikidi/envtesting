@@ -5,7 +5,7 @@
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
-	<title><?= $title ?></title>
+	<title><?= $suit->getName() ?></title>
 	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
 
 	<link rel="stylesheet" type="text/css" media="all"
@@ -63,13 +63,16 @@
 			padding-top: 1em;
 		}
 
+		.footer .badge {
+			margin: 0 2px;
+		}
 	</style>
 </head>
 <body>
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3><?= $title ?></h3>
+			<h3><?= $suit->getName() ?></h3>
 
 			<? if ($filter->isActive()) { ?>
 			<div class="alert">
@@ -143,15 +146,23 @@
 
 			<div class="footer">
 				<? if ($disabled > 0) { ?>
-				<span class="badge badge-info"><?= $disabled ?> DISABLED <?= round(100 * $disabled / $total)?>%</span>
+				<span class="badge badge-info">
+					<?= $disabled ?> DISABLED <?= $total ? round(100 * $disabled / $total) : 0 ?>%
+				</span>
 				<? } ?>
 				<? if ($error > 0) { ?>
-				<span class="badge badge-important"><?= $error ?> ERROR <?= round(100 * $error / $enabled)?>%</span>
+				<span class="badge badge-important">
+					<?= $error ?> ERROR <?= $enabled ? round(100 * $error / $enabled) : 0 ?>%
+				</span>
 				<? } ?>
 				<? if ($warning > 0) { ?>
-				<span class="badge badge-warning"><?= $warning ?> WARNING <?= round(100 * $warning / $enabled)?>%</span>
+				<span class="badge badge-warning">
+					<?= $warning ?> WARNING <?= $enabled ? round(100 * $warning / $enabled) : 0 ?>%
+				</span>
 				<? } ?>
-				<span class="badge badge-success"><?= $ok ?> OK <?= round(100 * $ok / ($total - $disabled))?>%</span>
+				<span class="badge badge-success">
+					<?= $ok ?> OK <?=  ($total - $disabled) ? round(100 * $ok / ($total - $disabled)) : 0?>%
+				</span>
 				<span class="badge badge-inverse"><?= $total ?> TESTS</span>
 				<a data-toggle="modal" href="#about" class="icon-info-sign"></a>
 			</div>

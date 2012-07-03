@@ -2,11 +2,12 @@
 
 # Bah command line tools for checking CSV formated output of envtesting
 # @author Ondrej Procházka, Dušan Hokův, Roman Ožana
+# Supports: Mac, Ubuntu, Debian
+printf "\033c" # cls
 
-printf "\033c"
-command -v=wget > /dev/null 2>&1 || { echo -e >&2 "[ERROR] wget command not found\n\n# install on Mac OS\nsudo port seflupdate\nsudo port install wget\n"; exit 1; }
+##################################################################################################################
+
 echo $@ > /tmp/arg
-
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 if ! ( [[ "$4" =~ ^[0-9]{1,4}:[0-9]{1,4}$ ]] && [[ "$5" =~ ^[0-9]{1,4}:[0-9]{1,4}$ ]]) ; then
@@ -23,11 +24,13 @@ URL="http://${1}${3}"               # concat url request
 HOSTHEAD="--header=\"Host: ${2}\""  # host for WGET
 
 # Mac don't know tempfile
-if command -v tempfile > /dev/null; then
-	TMPFILE=$(tempfile)
+if [[ $OSTYPE = darwin* ]]; then
+	TMPFILE=$(mktemp -t="envtesting")
 else
-	TMPFILE=$(mktemp -t="envtesting")	
+	TMPFILE=$(tempfile)
 fi
+
+##################################################################################################################
 
 MINOK_WARN=$(echo $4 | cut -d: -f1)
 MAXFAIL_WARN=$(echo $4 | cut -d: -f2)
@@ -36,33 +39,43 @@ MINOK_CRIT=$(echo $5 | cut -d: -f1)
 MAXFAIL_CRIT=$(echo $5 | cut -d: -f2)
 
 ##################################################################################################################
-# echo wget --header=\"Host: ${2}\" \"$URL\" -O\"$TMPFILE\"
-##################################################################################################################
-echo $(which wget)
-echo $(command -v=wget)
 
-wget --header="Host: ${2}" "$URL" -O"$TMPFILE"
-if wget --header="Host: ${2}" "$URL" -O"$TMPFILE" 2> /dev/null ; then
-	OKCNT=$(cat $TMPFILE | grep "^OK" | wc -l)
-	FAILCNT=$(cat $TMPFILE | grep "^CRIT" | wc -l)
-	FAILMSGS=$(cat $TMPFILE | grep "^CRIT")
-	rm $TMPFILE
-	
-	if [ "$OKCNT" -lt "$MINOK_CRIT" ] || [ "$FAILCNT" -ge "$MAXFAIL_CRIT" ] ; then
-		echo -e "APPTEST CRITICAL - $OKCNT tests passed, $FAILCNT tests failed: \n$FAILMSGS"
+if [[ $OSTYPE = darwin* ]]; then
+	DOWNLOAD=$(curl -H="Host: ${2}" "$URL" -o "$TMPFILE" 2> /dev/null)
+else
+	DOWNLOAD=$(wget --header="Host: ${2}" "$URL" -O"$TMPFILE" 2> /dev/null)
+fi
+
+##################################################################################################################
+
+if $DOWNLOAD; then
+
+	# OK messages
+	OK_COUNT=$(cat $TMPFILE | grep "^OK" | wc -l)
+
+	# errors 
+	ERROR_COUNT=$(cat $TMPFILE | grep -e "^ERROR" -e "^WARNING" | wc -l)
+	ERROR_MESSAGE=$(cat $TMPFILE | grep -e "^ERROR" -e "^WARNING") # error messages
+
+	rm $TMPFILE # delete TMP file
+
+	# ERRORS
+	if [ "$OK_COUNT" -lt "$MINOK_CRIT" ] || [ "$ERROR_COUNT" -ge "$MAXFAIL_CRIT" ] ; then
+		# ERROR need to be replace with CRIT for out nagios check
+		echo -e "APPTEST CRITICAL - $OK_COUNT tests passed, $ERROR_COUNT tests failed: \n${ERROR_MESSAGE//ERROR/CRIT}"
 		exit 2
 	fi
-	if [ "$OKCNT" -lt "$MINOK_WARN" ] || [ "$FAILCNT" -ge "$MAXFAIL_WARN" ] ; then
-		echo -e "APPTEST WARNING - $OKCNT tests passed, $FAILCNT tests failed: \n$FAILMSGS"
+	# WARNING
+	if [ "$OK_COUNT" -lt "$MINOK_WARN" ] || [ "$ERROR_COUNT" -ge "$MAXFAIL_WARN" ] ; then
+		ERROR_MESSAGE = 
+		echo -e "APPTEST WARNING - $OK_COUNT tests passed, $ERROR_COUNT tests failed: \n${ERROR_MESSAGE//ERROR/CRIT}"
 		exit 1
 	fi
 
-	echo "APPTEST OK - $OKCNT tests passed, $FAILCNT tests failed."
+	echo "APPTEST OK - $OK_COUNT tests passed, $ERROR_COUNT tests failed."
 	exit 0
 	
 else
 	echo "APPTEST CRITICAL - couldn't get requested URL $URL"
 	exit 2
 fi
-
-
