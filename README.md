@@ -66,7 +66,7 @@ $suit->group->addTest('memcache', new \tests\services\MemcacheConnection('127.0.
 $suit->group2->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
 ```
 
-You can shuffle groups of tests inside groups:
+You can shuffle groups of shuffle tests inside groups:
 
 ```php
 <?php
@@ -84,8 +84,8 @@ Envtesting can render CSV, HTML or text output:
 <?php
 require_once __DIR__ . '/Envtesting.php';
 $suit = new \envtesting\Suit('my great envtest');
-echo $suit; // produce TXT output
-$suit->render('csv'); // render CSV output
+echo $suit;            // generate TXT output
+$suit->render('csv');  // render CSV output
 $suit->render('html'); // render HTML output
 ```
 
