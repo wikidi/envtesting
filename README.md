@@ -3,7 +3,7 @@
 Fast simple and easy to use environment testing written in PHP. Can check library, services and services response.
 Produce console, HTML or CSV output.
 
-## How to
+## How to use
 
 Envtesting provide **multiple way** how to test something. You can test:
 
@@ -75,7 +75,7 @@ $suit = new \envtesting\Suit('my great envtest');
 $suit->group->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
 $suit->group->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
 $suit->group2->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
-$suit->shuffle(); // mixe only groups
+$suit->shuffle(); // mix only groups
 $suit->shuffle(true); // deep shuffle mix groups and tests inside group
 ```
 Envtesting can render CSV, HTML or text output:

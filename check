@@ -2,7 +2,7 @@
 
 # Bah command line tools for checking CSV formated output of envtesting
 # @author Ondrej Procházka, Dušan Hokův, Roman Ožana
-# Supports: Mac, Ubuntu, Debian
+# Supports: Mac, Ubuntu, Debian 
 printf "\033c" # cls
 
 ##################################################################################################################
@@ -13,6 +13,7 @@ export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 if ! ( [[ "$4" =~ ^[0-9]{1,4}:[0-9]{1,4}$ ]] && [[ "$5" =~ ^[0-9]{1,4}:[0-9]{1,4}$ ]]) ; then
 	echo "Usage: check_wikidi_apptest <ip/domain> <http HOST> <url_to_test> MINOK_WARN:MAXFAIL_WARN MINOK_CRIT:MAXFAIL_CRIT"
 	echo "${1} ${2} ${3} ${4} ${5}"
+	echo "example: ./check server.com server.com /envtesting/csv 1:7 1:10"
 	exit 3
 fi
 
@@ -54,8 +55,8 @@ if $DOWNLOAD; then
 	OK_COUNT=$(cat $TMPFILE | grep "^OK" | wc -l)
 
 	# errors 
-	ERROR_COUNT=$(cat $TMPFILE | grep -e "^ERROR" -e "^WARNING" | wc -l)
-	ERROR_MESSAGE=$(cat $TMPFILE | grep -e "^ERROR" -e "^WARNING") # error messages
+	ERROR_COUNT=$(cat $TMPFILE | grep -e "^ERROR" -e "^WARNING" -e "^CRIT"| wc -l) # count errors
+	ERROR_MESSAGE=$(cat $TMPFILE | grep -e "^ERROR" -e "^WARNING" -e "^CRIT") # error messages
 
 	rm $TMPFILE # delete TMP file
 

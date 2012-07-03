@@ -140,8 +140,11 @@
 			</table>
 
 			<div class="btn-group">
-				<a href="" class="btn btn-primary">Refresh</a><? if ($filter->isActive()) { ?>
-				<a href="?" class="btn btn-danger">Cancel filter</a><? } ?>
+				<a href="" class="btn btn-primary"><i class="icon-refresh icon-white"></i> Refresh</a>
+				<a href="csv<?= $_?>" class="btn"><i class="icon-arrow-down"></i> CSV</a>
+				<? if ($filter->isActive()) { ?>
+				<a href="?" class="btn btn-danger">Cancel filter</a>
+				<? } ?>
 			</div>
 
 			<div class="footer">
