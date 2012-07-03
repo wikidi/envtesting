@@ -50,6 +50,7 @@ class Test {
 	 * @return Test
 	 */
 	public function run() {
+		if (!$this->enabled) return $this;
 		try {
 			$this->result = 'OK';
 			call_user_func_array($this->getCallback(), $this->getOptions());
@@ -128,6 +129,15 @@ class Test {
 	 */
 	public function isOk() {
 		return !$this->isException();
+	}
+
+	/**
+	 * Oposit function for isOk
+	 *
+	 * @return bool
+	 */
+	public function isFail() {
+		return $this->isError() || $this->isException();
 	}
 
 	/**

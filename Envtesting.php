@@ -74,7 +74,7 @@ addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
 class
 Html{static
 function
-render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$suit->getFilter();}namespace {?><!DOCTYPE html>
+render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$path=isset($_SERVER['REQUEST_URI'])?parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH):'/';$query=isset($_SERVER['QUERY_STRING'])?$_SERVER['QUERY_STRING']:'';$filter=$suit->getFilter();}namespace {?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
@@ -106,7 +106,7 @@ render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$sui
 		}
 
 		body {
-			padding-top: 20px;
+			padding: 20px 0 300px 0;
 		}
 
 		.icon-info-sign {
@@ -145,7 +145,7 @@ render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$sui
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3><?=$suit->getName()?></h3>
+			<h3>Envtesting: <?=$suit->getName();?></h3>
 
 			<?if($filter->isActive()){?>
 			<div class="alert">
@@ -215,8 +215,11 @@ as$order=>$test){?>
 			</table>
 
 			<div class="btn-group">
-				<a href="" class="btn btn-primary">Refresh</a><?if($filter->isActive()){?>
-				<a href="?" class="btn btn-danger">Cancel filter</a><?}?>
+				<a href="<?=$path.'?'.$query?>" class="btn btn-primary" title="Refresh current tests"><i class="icon-refresh icon-white"></i> Refresh</a>
+				<a href="<?=$path?>/csv?<?=$query?>" class="btn" title="Download CSV output">CSV <i class="icon-arrow-down"></i></a>
+				<?if($filter->isActive()){?>
+				<a href="<?=$path?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
+				<?}?>
 			</div>
 
 			<div class="footer">
@@ -302,8 +305,8 @@ implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$nam
 __construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:new
 Filter();}function
 run(){foreach($this->groups
-as$tests){$isError=false;foreach($tests
-as$test){$test->run();$isError=$test->isError()&&$this->failGroupOnFirstError;}}return$this;}function
+as$tests){$failed=false;foreach($tests
+as$test){if($failed){$test->setResult($failed->getResult());$test->setNotice($failed->getNotice());$test->setOptions($failed->getOptions());}else{$test->run();$failed=($test->isFail()&&$this->failGroupOnFirstError)?$test:false;}}}return$this;}function
 shuffle($deep=false){if($deep||$this->hasGroups()===false)array_filter($this->groups,'shuffle');if($this->hasGroups()){$keys=array_keys($this->groups);shuffle($keys);$this->groups=array_merge(array_flip($keys),$this->groups);}return$this;}function
 addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}$test=Test::instance($name,$callback,$type);$test->enable($this->filter->isValid($test,$this));return$this->groups[$this->getCurrentGroupName()][]=$test;}function
 addFromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
@@ -336,11 +339,11 @@ getIterator(){return
 new\ArrayIterator($this->groups);}function
 __toString(){$results=\envtesting\App::header($this->name);foreach($this->groups
 as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
-render($to=null){if($to===null&&isset($_SERVER['REQUEST_URI'])){$to=basename(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH))==='csv'?'csv':'html';}if(PHP_SAPI==='cli'){echo$this;}elseif($to==='csv'){echo\envtesting\output\Csv::render($this);}else{\envtesting\output\Html::render($this);}}}class
+render($to=null){if($to===null&&isset($_SERVER['REQUEST_URI'])){$to=basename(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH))==='csv'?'csv':'html';}elseif($to===null&&PHP_SAPI==='cli'){$to='cli';}switch($to){case'cli':echo$this;break;case'csv':echo\envtesting\output\Csv::render($this);break;case'html':default:echo\envtesting\output\Html::render($this);break;}}}class
 Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
 __construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function
-run(){try{$this->result='OK';call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
+run(){if(!$this->enabled)return$this;try{$this->result='OK';call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
 __invoke(){return$this->run();}function
 getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if(!$this->enabled)return'DISABLED';if($this->isError())return'ERROR';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
 new\Exception('Invalid result type: '.gettype($this->result));}function
@@ -351,6 +354,7 @@ Warning;}function
 isError(){return$this->getResult()instanceof
 Error;}function
 isOk(){return!$this->isException();}function
+isFail(){return$this->isError()||$this->isException();}function
 isException(){return$this->getResult()instanceof\Exception;}function
 getResult(){if($this->result===null&&$this->enabled)$this->run();return$this->result;}function
 setResult($result){$this->result=$result;return$this;}function

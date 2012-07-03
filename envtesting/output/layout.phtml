@@ -33,7 +33,7 @@
 		}
 
 		body {
-			padding-top: 20px;
+			padding: 20px 0 300px 0;
 		}
 
 		.icon-info-sign {
@@ -72,7 +72,7 @@
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3><?= $suit->getName() ?></h3>
+			<h3>Envtesting: <?= $suit->getName(); ?></h3>
 
 			<? if ($filter->isActive()) { ?>
 			<div class="alert">
@@ -140,10 +140,10 @@
 			</table>
 
 			<div class="btn-group">
-				<a href="" class="btn btn-primary"><i class="icon-refresh icon-white"></i> Refresh</a>
-				<a href="csv<?= $_?>" class="btn"><i class="icon-arrow-down"></i> CSV</a>
+				<a href="<?= $path . '?' . $query ?>" class="btn btn-primary" title="Refresh current tests"><i class="icon-refresh icon-white"></i> Refresh</a>
+				<a href="<?= $path ?>/csv?<?= $query ?>" class="btn" title="Download CSV output">CSV <i class="icon-arrow-down"></i></a>
 				<? if ($filter->isActive()) { ?>
-				<a href="?" class="btn btn-danger">Cancel filter</a>
+				<a href="<?= $path ?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
 				<? } ?>
 			</div>
 

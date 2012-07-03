@@ -14,11 +14,12 @@ final class Html {
 	 * Render HTML output
 	 *
 	 * @param Suit $suit
-	 * @param string $title
 	 * @return void
 	 */
 	public static function render(Suit $suit) {
 		$total = $error = $warning = $exception = $ok = $disabled = 0;
+		$path = isset($_SERVER['REQUEST_URI']) ? parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH): '/';
+		$query = isset($_SERVER['QUERY_STRING']) ? $_SERVER['QUERY_STRING'] : '';
 		$filter = $suit->getFilter();
 		require __DIR__ . '/layout.phtml';
 	}

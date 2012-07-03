@@ -44,10 +44,16 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 */
 	public function run() {
 		foreach ($this->groups as $tests) {
-			$isError = false;
+			$failed = false;
 			foreach ($tests as $test/** @var Test $test */) {
-				$test->run(); // execute test
-				$isError = $test->isError() && $this->failGroupOnFirstError;
+				if ($failed) {
+					$test->setResult($failed->getResult());
+					$test->setNotice($failed->getNotice());
+					$test->setOptions($failed->getOptions());
+				} else {
+					$test->run(); // execute test
+					$failed = ($test->isFail() && $this->failGroupOnFirstError) ? $test : false; // on first error halt
+				}
 			}
 		}
 		return $this;
@@ -202,8 +208,10 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	}
 
 	/**
-	 * @param bool $group
-	 * @return Suit
+	 * Failed whole group when something went wrong in first test
+	 *
+	 * @param bool $fail
+	 * @return \envtesting\Suit
 	 */
 	public function failGroupOnFirstError($fail = true) {
 		$this->failGroupOnFirstError = $fail;
@@ -294,19 +302,27 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 
 
 	/**
+	 * @param null|string $to
 	 * @return mixed
 	 */
 	public function render($to = null) {
 		if ($to === null && isset($_SERVER['REQUEST_URI'])) {
 			$to = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) === 'csv' ? 'csv' : 'html';
+		} elseif ($to === null && PHP_SAPI === 'cli') {
+			$to = 'cli';
 		}
 
-		if (PHP_SAPI === 'cli') {
-			echo $this;
-		} elseif ($to === 'csv') {
-			echo \envtesting\output\Csv::render($this);
-		} else {
-			\envtesting\output\Html::render($this);
+		switch ($to) {
+			case 'cli': // PHP client
+				echo $this;
+				break;
+			case 'csv': // CSV output
+				echo \envtesting\output\Csv::render($this);
+				break;
+			case 'html': // HTML output
+			default:
+				echo \envtesting\output\Html::render($this);
+				break;
 		}
 	}
 
