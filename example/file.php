@@ -10,9 +10,9 @@ use \envtesting\Suit;
 
 $suit = new Suit('Using PHP files for test');
 
-/* ------------------------------------------------------------------------- *
- * Even simple require_once file test
- * ------------------------------------------------------------------------- */
+// ---------------------------------------------------------------------------------------------------------------------
+// Even simple require_once file test
+// ---------------------------------------------------------------------------------------------------------------------
 
 $suit->addTest('APC', 'tests/library/Apc.php', 'apc');
 $suit->addTest('APC2', 'tests/library/Apc.php', 'apc');
@@ -22,12 +22,14 @@ $suit->addTest('gd', 'tests/library/Gd.php');
 $suit->addTest('warning', 'tests/library/Warning.php');
 $suit->addTest('error', 'tests/library/Error.php');
 
-echo $suit->shuffle(); // randomize test oreder
+echo $suit->shuffle()->run(); // randomize test oreder
 
-die('TODO TODO TODO TODO');
+// ---------------------------------------------------------------------------------------------------------------------
+// print tests result yourself
+// ---------------------------------------------------------------------------------------------------------------------
 
-foreach ($suit->get() as $test/** @var \envtesting\Test $test */) {
-	echo ($test->isOk() ? '✓' : '☠') . ' ' . $test->getName() . PHP_EOL; // print resuly yourself
+foreach ($suit as $tests) {
+	foreach ($tests as $test/** @var \envtesting\Test $test */) {
+		echo ($test->isOk() ? '✓' : '☠') . ' ' . $test->getName() . PHP_EOL; // print resuly yourself
+	}
 }
-
-//echo $suit->run(); // or print it in our format

@@ -1,65 +1,65 @@
 <?php
 require_once __DIR__ . '/../Envtesting.php';
 
-use \envtesting\Check;
-use \envtesting\Suit;
+// ---------------------------------------------------------------------------------------------------------------------
+// Function callback
+// ---------------------------------------------------------------------------------------------------------------------
 
+$suit = new \envtesting\Suit('Function callback');
+function apcRequireTest() {
+	require_once 'tests/library/Apc.php';
+}
 
-/* ------------------------------------------------------------------------- *
- * Create new test suit
- * ------------------------------------------------------------------------- */
-
-$suit = new Suit('Example test suit');
-function apcRequireTest() { require_once 'tests/library/Apc.php'; }
 $suit->addTest('APC', 'apcRequireTest', 'library');
+echo $suit->run();
 
+// ---------------------------------------------------------------------------------------------------------------------
+// Static class callback
+// ---------------------------------------------------------------------------------------------------------------------
 
-echo $suit;
-die();
-
-class TestCollection {
+abstract class TestCollection {
 	public static function apcRequireTest() {
 		require_once 'tests/library/Apc.php';
 	}
 }
 
-$suit->call(array('\TestCollection', 'apcRequireTest'), 'APC', 'library testCollection');
+$suit = new \envtesting\Suit('Static class callback');
+$suit->addTest('static', '\TestCollection::apcRequireTest', 'library');
+echo $suit->run();
 
-/* ------------------------------------------------------------------------- *
- * Lambda function
- * ------------------------------------------------------------------------- */
 
-$suit->call(
-	function() {
-		throw new \envtesting\Error('not working at all');
-	}, 'working', 'library'
+// ---------------------------------------------------------------------------------------------------------------------
+// Lambda function
+// ---------------------------------------------------------------------------------------------------------------------
+
+$suit = new \envtesting\Suit('Lambda function');
+
+$suit->addTest('lambda1', function() { return 'YOU'; }, 'lib');
+
+$suit->addTest(
+	'lambda2', function() {
+		throw new \envtesting\Error('This is SPARTA !!!');
+	}, 'lib'
 );
 
-$suit->call(
-	function() {
-		throw new \envtesting\Warning('Something wrong');
-	}, 'AAA', 'library'
+$suit->addTest(
+	'lambda3', function() {
+		throw new \envtesting\Warning('Nooooooooooooooooo!');
+	}, 'lib'
 );
 
+$suit->addTest(
+	'lambda4', function() {
+		throw new \Exception('Star Wars Kid attacking');
+	}, 'lib'
+);
 
-/* ------------------------------------------------------------------------- *
- * Executing
- * ------------------------------------------------------------------------- */
+echo $suit->run();
 
-echo $suit->shuffle()->run();
+// ---------------------------------------------------------------------------------------------------------------------
+// Invoke
+// ---------------------------------------------------------------------------------------------------------------------
 
-/* ------------------------------------------------------------------------- *
- * Array access
- * ------------------------------------------------------------------------- */
-
-foreach ($suit as $test/** @var \envtesting\Test $test*/) {
-	try {
-		$test->run(); // run test
-	} catch (\envtesting\Error $e) {
-
-	} catch (\envtesting\Warning $w) {
-
-	}
-
-	echo $test . PHP_EOL;
-}
+$suit = new \envtesting\Suit('Class with invoke');
+$suit->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service'); // KISS
+echo $suit->run();

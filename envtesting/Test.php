@@ -52,8 +52,8 @@ class Test {
 	public function run() {
 		if (!$this->enabled) return $this;
 		try {
-			$this->result = 'OK';
-			call_user_func_array($this->getCallback(), $this->getOptions());
+			$this->setResult('OK');
+			$response = call_user_func_array($this->getCallback(), $this->getOptions());
 		} catch (Error $error) {
 			$this->setResult($error);
 		} catch (Warning $warning) {
@@ -82,7 +82,7 @@ class Test {
 	public function getStatus() {
 		if (is_scalar($this->getResult())) return (string)$this->getResult();
 
-		if (!$this->enabled) return 'DISABLED';
+		if ($this->isDisabled()) return 'DISABLED';
 		if ($this->isError()) return 'ERROR';
 		if ($this->isWarning()) return 'WARNING';
 		if ($this->isException()) return 'EXCEPTION';
@@ -153,7 +153,6 @@ class Test {
 	 * @return bool|\Exception|null
 	 */
 	public function getResult() {
-		if ($this->result === null && $this->enabled) $this->run();
 		return $this->result;
 	}
 
@@ -300,7 +299,7 @@ class Test {
 	 * @return bool
 	 */
 	public function isDisabled() {
-		return !$this->isEnabled();
+		return !$this->enabled;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------

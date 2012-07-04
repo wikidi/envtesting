@@ -74,7 +74,7 @@ addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
 class
 Html{static
 function
-render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$path=isset($_SERVER['REQUEST_URI'])?parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH):'/';$query=isset($_SERVER['QUERY_STRING'])?$_SERVER['QUERY_STRING']:'';$filter=$suit->getFilter();}namespace {?><!DOCTYPE html>
+render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$path=isset($_SERVER['REQUEST_URI'])?parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH):'/';$query=isset($_SERVER['QUERY_STRING'])?$_SERVER['QUERY_STRING']:'';$filter=$suit->getFilter();?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
@@ -299,7 +299,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 	Generated at <?=date('j.n.Y H:i:s')?> by Envtesting
 	https://github.com/wikidi/envtesting
 -->
-</html><?php }namespace envtesting\output{}}}namespace envtesting{class
+</html><?php }}}namespace envtesting{class
 Suit
 implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=__CLASS__;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
 __construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:new
@@ -343,9 +343,9 @@ render($to=null){if($to===null&&isset($_SERVER['REQUEST_URI'])){$to=basename(par
 Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
 __construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function
-run(){if(!$this->enabled)return$this;try{$this->result='OK';call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
+run(){if(!$this->enabled)return$this;try{$this->setResult('OK');$response=call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
 __invoke(){return$this->run();}function
-getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if(!$this->enabled)return'DISABLED';if($this->isError())return'ERROR';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
+getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if($this->isDisabled())return'DISABLED';if($this->isError())return'ERROR';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
 new\Exception('Invalid result type: '.gettype($this->result));}function
 getStatusMessage(){return($this->result
 instanceof\Exception)?$this->result->getMessage():'';}function
@@ -356,7 +356,7 @@ Error;}function
 isOk(){return!$this->isException();}function
 isFail(){return$this->isError()||$this->isException();}function
 isException(){return$this->getResult()instanceof\Exception;}function
-getResult(){if($this->result===null&&$this->enabled)$this->run();return$this->result;}function
+getResult(){return$this->result;}function
 setResult($result){$this->result=$result;return$this;}function
 __toString(){$response=array('status'=>str_pad($this->getStatus(),10,' '),'name'=>str_pad($this->getName(),20,' '),'type'=>str_pad($this->getType(),10,' '),'options'=>$this->hasOptions()?json_encode((object)$this->getOptions()):'','notice'=>$this->getNotice(),'message'=>$this->getStatusMessage());return
 implode($response,' | ');}function
@@ -373,7 +373,7 @@ getNotice(){return$this->notice;}function
 setNotice($notice=''){$this->notice=$notice;return$this;}function
 enable($enabled=true){$this->enabled=$enabled;return$this;}function
 isEnabled(){return$this->enabled;}function
-isDisabled(){return!$this->isEnabled();}static
+isDisabled(){return!$this->enabled;}static
 function
 instance($name,$callback,$type=null,$enabled=true){return
 new
