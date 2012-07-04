@@ -343,12 +343,12 @@ render($to=null){if($to===null&&isset($_SERVER['REQUEST_URI'])){$to=basename(par
 Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
 __construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function
-run(){if(!$this->enabled)return$this;try{$this->setResult('OK');$response=call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
+run(){if(!$this->enabled)return$this;try{$this->setResult('OK');call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
 __invoke(){return$this->run();}function
 getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if($this->isDisabled())return'DISABLED';if($this->isError())return'ERROR';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
 new\Exception('Invalid result type: '.gettype($this->result));}function
-getStatusMessage(){return($this->result
-instanceof\Exception)?$this->result->getMessage():'';}function
+getStatusMessage(){$message=(is_object($this->callback)&&method_exists($this->callback,'__toString'))?(string)$this->callback:'';return($this->result
+instanceof\Exception)?$this->result->getMessage():$message;}function
 isWarning(){return$this->getResult()instanceof
 Warning;}function
 isError(){return$this->getResult()instanceof

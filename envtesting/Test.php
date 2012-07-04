@@ -53,7 +53,7 @@ class Test {
 		if (!$this->enabled) return $this;
 		try {
 			$this->setResult('OK');
-			$response = call_user_func_array($this->getCallback(), $this->getOptions());
+			call_user_func_array($this->getCallback(), $this->getOptions());
 		} catch (Error $error) {
 			$this->setResult($error);
 		} catch (Warning $warning) {
@@ -97,7 +97,10 @@ class Test {
 	 * @throws \Exception
 	 */
 	public function getStatusMessage() {
-		return ($this->result instanceof \Exception) ? $this->result->getMessage() : '';
+		$message = (is_object($this->callback) && method_exists(
+			$this->callback, '__toString'
+		)) ? (string)$this->callback : '';
+		return ($this->result instanceof \Exception) ? $this->result->getMessage() : $message;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
