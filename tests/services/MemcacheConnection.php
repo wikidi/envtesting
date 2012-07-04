@@ -9,9 +9,9 @@ namespace tests\services;
 class MemcacheConnection {
 
 	/** @var string */
-	private $host = '127.0.0.1';
+	public $host = '127.0.0.1';
 	/** @var int */
-	private $port = 11211;
+	public $port = 11211;
 
 	/**
 	 * @param string $host
