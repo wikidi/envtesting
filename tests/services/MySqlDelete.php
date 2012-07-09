@@ -6,38 +6,33 @@ namespace tests\services;
 class MySqlDelete extends MySqlConnection {
 
 	/** @var string */
-	public $table = '_envtesting_';
-
-	/**
-	 * @param string $dsn
-	 * @param array $options
-	 * @param string $table
-	 */
-	public function __construct($dsn, array $options = array(), $table = '_envtesting_') {
-		parent::__construct($dsn, $options);
-		$this->table = $table;
-	}
+	private $table = '_envtesting_';
 
 	/**
 	 * @throws \envtesting\Error
 	 */
-	public function __invoke() {
-		parent::__invoke(); // connect to mysql using \PDO
-		$sql = 'DELETE FROM ' . $this->table . ' WHERE data = "testDelete"';
+	public function __invoke($table = '_envtesting_') {
+		$this->table = $table;
 		try {
-			$rowCount = $this->connection->exec($sql);
+			$sql = 'DELETE FROM ' . $this->table . ' WHERE data = "testDelete";';
+
+			$rowCount = $this->getConnection()->exec($sql);
 			$info = $this->connection->errorInfo();
 
 			if ($rowCount != 1 && $info[0] == '00000') {
-				throw new \envtesting\Error('Delete operation failed: No data found.');
+				throw new \envtesting\Error(' Delete operation failed: No data found. ' . $this);
 			} else if ($info[0] != '00000') {
-				throw new \envtesting\Error('Delete operation failed! Error #no: ' . $info[0] . ' (' . $info[2] . ')');
+				throw new \envtesting\Error('Delete operation failed! Error #no: ' . $info[0] . ' (' . $info[2] . ') ' . $this);
 			}
-
 		} catch (\PDOException $e) {
 			throw new \envtesting\Error('Delete operation failed: ' . $e->getMessage());
 		}
 
+		$sql = 'INSERT INTO ' . $this->table . ' VALUES ("testDelete");';
+		try {
+			$this->getConnection()->exec($sql);
+		} catch (\PDOException $e) {
+			throw new \envtesting\Error('Insert operation failed (clean up): ' . $e->getMessage());
+		}
 	}
-
 }

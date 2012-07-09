@@ -61,7 +61,13 @@ class  MySqlConnection {
 	 * @return void
 	 */
 	public function __invoke() {
+		return $this->getConnection();
+	}
 
+	/**
+	 * @return null|\PDO
+	 */
+	protected function getConnection() {
 		// check PDO extension
 		if (!extension_loaded('pdo')) throw new Error('PHP extension \'pdo\' is not loaded');
 		if (!class_exists('PDO')) throw new Error('PDO classs is missing.');
@@ -78,6 +84,8 @@ class  MySqlConnection {
 		} catch (\PDOException $e) {
 			throw new Error('PDOException: ' . $e->getMessage() . ' ' . $this);
 		}
+
+		return $this->connection;
 	}
 
 	/**
