@@ -25,14 +25,17 @@ class  MySqlConnection {
 	public $dbname;
 	/** @var array */
 	public $options = array();
+	/** @var \PDO */
+	public $connection = null;
 
 	/**
-	 * @param string $dsn
+	 * @param $dsn
+	 * @param array $options
 	 */
 	public function __construct($dsn, array $options = array()) {
 		$this->dsn = $dsn;
 
-		extract(parse_url($this->dsn));
+		extract(parse_url($this->dsn)); // FIXME parse_url can corrupt UTF-8 string
 
 		/**
 		 * @var string $scheme
@@ -71,7 +74,7 @@ class  MySqlConnection {
 		$dsn = $this->scheme . ':host=' . $this->host . ($this->port ? ';port=' . $this->port : null) . ';dbname=' . $this->dbname;
 
 		try {
-			new \PDO($dsn, $this->user, $this->pass, $this->options);
+			$this->connection = new \PDO($dsn, $this->user, $this->pass, $this->options);
 		} catch (\PDOException $e) {
 			throw new Error('PDOException: ' . $e->getMessage() . ' ' . $this);
 		}
