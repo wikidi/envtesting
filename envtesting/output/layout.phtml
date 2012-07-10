@@ -123,9 +123,9 @@ namespace envtesting\output;
 						</td>
 						<td><?= $test->getNotice(); ?></td>
 						<td>
-							<?= $test->getStatusMessage(); ?>
+							<?= nl2br($test->getStatusMessage()); ?>
 							<? if ($test->hasOptions()) { ?>
-							<code>Options: <?= json_encode((array)$test->getOptions()); ?></code>
+							<br><code>Options: <?= json_encode((array)$test->getOptions()); ?></code>
 							<? } ?>
 						</td>
 

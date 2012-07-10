@@ -14,7 +14,11 @@ App{public
 static$root=__DIR__;static
 function
 header($text,$ch=':'){return
-str_repeat($ch,80).PHP_EOL.str_pad($text,80,' ',STR_PAD_BOTH).PHP_EOL.str_repeat($ch,80).PHP_EOL;}}class
+str_repeat($ch,80).PHP_EOL.str_pad($text,80,' ',STR_PAD_BOTH).PHP_EOL.str_repeat($ch,80).PHP_EOL;}static
+function
+errorHandler($errno,$errstr,$errfile,$errline){echo'err';}static
+function
+exceptionHandler(\Exception$exception){var_dump($exception);}}set_exception_handler(array('\envtesting\App','exceptionHandler'));set_error_handler(array('\envtesting\App','errorHandler'));class
 Assert{static
 function
 same($actual,$expected,$message=null){if($actual!==$expected){throw

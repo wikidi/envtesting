@@ -53,7 +53,7 @@ Test using object with __invoke:
 <?php
 require_once __DIR__ . '/Envtesting.php';
 $suit = new \envtesting\Suit('my great envtest');
-$suit->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
+$suit->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 ```
 
 Tests can be grouped into group:
@@ -62,8 +62,8 @@ Tests can be grouped into group:
 <?php
 require_once __DIR__ . '/Envtesting.php';
 $suit = new \envtesting\Suit('my great envtest');
-$suit->group->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
-$suit->group2->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
+$suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suit->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 ```
 
 You can shuffle groups of shuffle tests inside groups:
@@ -72,9 +72,9 @@ You can shuffle groups of shuffle tests inside groups:
 <?php
 require_once __DIR__ . '/Envtesting.php';
 $suit = new \envtesting\Suit('my great envtest');
-$suit->group->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
-$suit->group->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
-$suit->group2->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service');
+$suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suit->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 $suit->shuffle(); // mix only groups
 $suit->shuffle(true); // deep shuffle mix groups and tests inside group
 ```

@@ -61,5 +61,5 @@ echo $suit->run();
 // ---------------------------------------------------------------------------------------------------------------------
 
 $suit = new \envtesting\Suit('Class with invoke');
-$suit->addTest('memcache', new \tests\services\MemcacheConnection('127.0.0.1', 11211), 'service'); // KISS
+$suit->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service'); // KISS
 echo $suit->run();

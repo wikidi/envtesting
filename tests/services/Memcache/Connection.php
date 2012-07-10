@@ -1,12 +1,12 @@
 <?php
-namespace tests\services;
+namespace tests\services\memcache;
 
 /**
  * Test memcached service connection
  *
  * @author Roman Ozana <roman@wikidi.com>
  */
-class MemcacheConnection {
+class Connection {
 
 	/** @var string */
 	public $host = '127.0.0.1';
@@ -40,5 +40,9 @@ class MemcacheConnection {
 				'Memcached connection faild: ' . $this->host . ':' . $this->port . ' with ' . $e->getMessage()
 			);
 		}
+	}
+
+	public function __toString() {
+		return $this->host . ':' . $this->port;
 	}
 }

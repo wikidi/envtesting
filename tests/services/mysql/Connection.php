@@ -1,13 +1,14 @@
 <?php
-namespace tests\services;
+namespace tests\services\mysql;
 use envtesting\Error;
 
 /**
  * Try connect to mysql with PDO
  *
+ * @see http://php.net/manual/en/book.pdo.php
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class  MySqlConnection {
+class Connection {
 
 	/** @var string  */
 	public $dsn;
