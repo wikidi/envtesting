@@ -69,6 +69,14 @@ class Connection {
 	 * @return null|\PDO
 	 */
 	protected function getConnection() {
+		if ($this->connection === null) $this->connect();
+		return $this->connection;
+	}
+
+	/**
+	 * @throws \envtesting\Error
+	 */
+	private function connect() {
 		// check PDO extension
 		if (!extension_loaded('pdo')) throw new Error('PHP extension \'pdo\' is not loaded');
 		if (!class_exists('PDO')) throw new Error('PDO classs is missing.');
@@ -85,8 +93,6 @@ class Connection {
 		} catch (\PDOException $e) {
 			throw new Error('PDOException: ' . $e->getMessage() . ' ' . $this);
 		}
-
-		return $this->connection;
 	}
 
 	/**

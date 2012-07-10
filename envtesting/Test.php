@@ -11,6 +11,8 @@ class Test {
 	protected $name = '';
 	/** @var callable|null */
 	protected $callback = null;
+	/** @var null|string */
+	protected $callResponse = null;
 	/** @var null */
 	protected $type = null;
 	/** @var array */
@@ -53,7 +55,7 @@ class Test {
 		if (!$this->enabled) return $this;
 		try {
 			$this->setResult('OK');
-			call_user_func_array($this->getCallback(), $this->getOptions());
+			$this->callResponse = call_user_func_array($this->getCallback(), $this->getOptions());
 		} catch (Error $error) {
 			$this->setResult($error);
 		} catch (Warning $warning) {
@@ -99,7 +101,7 @@ class Test {
 	public function getStatusMessage() {
 		$message = (is_object($this->callback) && method_exists(
 			$this->callback, '__toString'
-		)) ? (string)$this->callback : '';
+		)) ? (string)$this->callback : $this->callResponse;
 		return ($this->result instanceof \Exception) ? $this->result->getMessage() : $message;
 	}
 
