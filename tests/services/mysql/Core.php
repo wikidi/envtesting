@@ -45,7 +45,7 @@ class Core extends Connection {
 		}
 	}
 
-	const UPDATE = 'UPDATE INTO `%s` SET %s = "%s";';
+	const UPDATE = 'UPDATE `%s` SET %s = "%s" WHERE %s = "%s" LIMIT 1;';
 
 	/**
 	 * @param string $table
@@ -54,7 +54,16 @@ class Core extends Connection {
 	 * @throws \envtesting\Error
 	 */
 	public function tryUpdateData($table, $coll, $value) {
+		$sql = sprintf(
+			self::UPDATE, $table, $coll, mysql_real_escape_string($value), $coll, mysql_real_escape_string($value)
+		);
 
+		try {
+			$rowCount = $this->getConnection()->exec($sql);
+			$this->processInfo('UPDATE', $rowCount == 1, $value);
+		} catch (\PDOException $e) {
+			throw new \envtesting\Error('UPDATE operation failed: ' . $e->getMessage());
+		}
 	}
 
 	const SELECT = 'SELECT * FROM `%s` WHERE %s = "%s" LIMIT 1;';
@@ -78,8 +87,8 @@ class Core extends Connection {
 	 * Process error info
 	 *
 	 * @param string $type
-	 * @param boolean $data
-	 * @param mixed $value
+	 * @param boolean $data true when data arrives
+	 * @param mixed|string $value
 	 * @throws \envtesting\Error
 	 */
 	private function processInfo($type, $data, $value) {

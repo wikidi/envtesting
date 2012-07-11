@@ -103,6 +103,41 @@ class Operations extends Core {
 		throw new \envtesting\Error('INSERT allow to user ' . $this->user . PHP_EOL . $this);
 	}
 
+	// -------------------------------------------------------------------------------------------------------------------
+	// UPDATE
+	// -------------------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Check if iser can't insert data
+	 *
+	 * @throws \envtesting\Error
+	 */
+	private function updateAllow() {
+		$this->tryInsertData($this->table, $this->coll, __FUNCTION__);
+		return 'UPDATE allow to user ' . $this->user . PHP_EOL . $this;
+	}
+
+	/**
+	 * Check if iser can't insert data
+	 *
+	 * @throws \envtesting\Error
+	 */
+	private function updateNotAllow() {
+		try {
+			$this->tryInsertData($this->table, $this->coll, __FUNCTION__);
+		} catch (\envtesting\Error $e) {
+			if ($this->lastErrorNumber() == 1142) {
+				return 'UPDATE denied to user ' . $this->user . PHP_EOL . $this;
+			}
+		}
+
+		throw new \envtesting\Error('UPDATE allow to user ' . $this->user . PHP_EOL . $this);
+	}
+
+	// -------------------------------------------------------------------------------------------------------------------
+	// SELECT
+	// -------------------------------------------------------------------------------------------------------------------
+
 	/**
 	 * @return string
 	 */
