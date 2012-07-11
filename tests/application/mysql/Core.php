@@ -1,13 +1,13 @@
 <?php
-namespace tests\services\mysql;
-require_once __DIR__ . '/Connection.php';
+namespace tests\application\mysql;
+use tests\services\mysql\Connection;
 
 /**
- * Contains core
+ * Contains basic MySQL operations DELETE, UPDATE, INSERT, SELECT
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Core extends Connection {
+abstract class Core extends Connection {
 
 	const DELETE = 'DELETE FROM `%s` WHERE %s = "%s";';
 
@@ -90,23 +90,45 @@ class Core extends Connection {
 	 * @param boolean $data true when data arrives
 	 * @param mixed|string $value
 	 * @throws \envtesting\Error
+	 * @see http://dev.mysql.com/doc/refman/5.0/en/error-messages-server.html
 	 */
 	private function processInfo($type, $data, $value) {
-		$info = $this->getConnection()->errorInfo();
-
-		if (!$data && $info[0] == '00000') {
+		if (!$data && $this->lastErrorState() == '00000') {
 			throw new \envtesting\Warning($type . ' operation failed: Test data "' . $value . '" not found.' . PHP_EOL . $this);
-		} else if ($info[0] != '00000') {
-			throw new \envtesting\Error($type . ' operation failed! Error #no: ' . $info[1] . ' (' . $info[2] . ') ' . PHP_EOL . $this);
+		} else if ($this->lastErrorState() != '00000') {
+			throw new \envtesting\Error($type . ' operation failed! Error #no: ' . $this->lastErrorNumber(
+			) . ' (' . $this->lastErrorMessage() . ') ' . PHP_EOL . $this);
 		}
 	}
 
 	/**
+	 * Return last error number
+	 *
 	 * @return int
 	 */
 	public function lastErrorNumber() {
 		$info = $this->getConnection()->errorInfo();
 		return (int)$info[1];
+	}
+
+	/**
+	 * Return last error state
+	 *
+	 * @return int
+	 */
+	public function lastErrorState() {
+		$info = $this->getConnection()->errorInfo();
+		return (int)$info[0];
+	}
+
+	/**
+	 * Return last error message
+	 *
+	 * @return string
+	 */
+	public function lastErrorMessage() {
+		$info = $this->getConnection()->errorInfo();
+		return (string)$info[2];
 	}
 
 }

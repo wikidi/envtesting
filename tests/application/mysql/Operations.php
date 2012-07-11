@@ -1,5 +1,5 @@
 <?php
-namespace tests\services\mysql;
+namespace tests\application\mysql;
 
 /**
  * Test common MySql operation
