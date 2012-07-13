@@ -87,7 +87,8 @@ class Connection {
 	 * @return string
 	 */
 	public function __toString() {
-		return preg_replace('#:' . preg_quote($this->pass, '#') . '@#', ':~~~~~@', $this->dsn);
+		return preg_replace('#:' . preg_quote($this->pass, '#') . '@#', ':~~~~~@', $this->dsn) . PHP_EOL .
+			json_encode($this->options);
 	}
 
 }
