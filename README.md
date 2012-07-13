@@ -98,6 +98,16 @@ Visit more examples in: https://github.com/wikidi/envtesting/tree/master/example
 
 - PHP 5.3 +
 
+## API docs
+
+Don't forget update docs !!!
+
+```bash
+php ~/workspace/apigen/apigen.php --source ./envtesting --source ./tests --destination ./doc/api --todo --title "Envtesting"
+```
+
+
+
 ## Meta
 
 Author: [wikidi.com](http://wikidi.com) & [Roman Ožana](https://github.com/OzzyCzech)

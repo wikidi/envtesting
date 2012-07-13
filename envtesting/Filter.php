@@ -1,6 +1,9 @@
 <?php
 namespace envtesting;
 /**
+ * Filter content by type, group or name
+ *
+ * @todo add multiple filter support
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 class Filter {

@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="generator" content="ApiGen 2.6.1" />
+
+	<title>Class envtesting\Suit | Envtesting</title>
+
+	<script type="text/javascript" src="resources/combined.js?144019575"></script>
+	<script type="text/javascript" src="elementlist.js?2217947914"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1532301413" />
+
+</head>
+
+<body>
+<div id="left">
+	<div id="menu">
+		<a href="index.html" title="Overview"><span>Overview</span></a>
+
+
+		<div id="groups">
+			<h3>Namespaces</h3>
+			<ul>
+				<li class="active"><a href="namespace-envtesting.html">envtesting<span></span></a>
+						<ul>
+				<li><a href="namespace-envtesting.output.html">output</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
+				<li><a href="namespace-tests.html">tests<span></span></a>
+						<ul>
+				<li><a href="namespace-tests.application.html">application<span></span></a>
+						<ul>
+				<li><a href="namespace-tests.application.memcache.html">memcache</a>
+						</li>
+				<li><a href="namespace-tests.application.mongo.html">mongo</a>
+						</li>
+				<li><a href="namespace-tests.application.mysql.html">mysql</a>
+						</li>
+							</ul></li>
+				<li><a href="namespace-tests.services.html">services<span></span></a>
+						<ul>
+				<li><a href="namespace-tests.services.memcache.html">memcache</a>
+						</li>
+				<li><a href="namespace-tests.services.mongo.html">mongo</a>
+						</li>
+				<li><a href="namespace-tests.services.mysql.html">mysql</a>
+						</li>
+							</ul></li></ul></li>
+			</ul>
+		</div>
+
+		<hr />
+
+
+		<div id="elements">
+			<h3>Classes</h3>
+			<ul>
+				<li><a href="class-envtesting.App.html">App</a></li>
+				<li><a href="class-envtesting.Assert.html">Assert</a></li>
+				<li><a href="class-envtesting.Autoloader.html">Autoloader</a></li>
+				<li><a href="class-envtesting.Check.html">Check</a></li>
+				<li><a href="class-envtesting.Filter.html">Filter</a></li>
+				<li class="active"><a href="class-envtesting.Suit.html">Suit</a></li>
+				<li><a href="class-envtesting.Test.html">Test</a></li>
+				<li><a href="class-envtesting.Throws.html">Throws</a></li>
+			</ul>
+
+
+
+			<h3>Exceptions</h3>
+			<ul>
+				<li><a href="class-envtesting.Error.html">Error</a></li>
+				<li><a href="class-envtesting.Warning.html">Warning</a></li>
+			</ul>
+
+
+		</div>
+	</div>
+</div>
+
+<div id="splitter"></div>
+
+<div id="right">
+<div id="rightInner">
+	<form id="search">
+		<input type="hidden" name="cx" value="" />
+		<input type="hidden" name="ie" value="UTF-8" />
+		<input type="text" name="q" class="text" />
+		<input type="submit" value="Search" />
+	</form>
+
+	<div id="navigation">
+		<ul>
+			<li>
+				<a href="index.html" title="Overview"><span>Overview</span></a>
+			</li>
+			<li>
+				<a href="namespace-envtesting.html" title="Summary of envtesting"><span>Namespace</span></a>
+			</li>
+			<li class="active">
+<span>Class</span>			</li>
+		</ul>
+		<ul>
+			<li>
+				<a href="tree.html" title="Tree view of classes, interfaces, traits and exceptions"><span>Tree</span></a>
+			</li>
+			<li>
+				<a href="todo.html" title="Todo list"><span>Todo</span></a>
+			</li>
+		</ul>
+		<ul>
+		</ul>
+	</div>
+
+<div id="content" class="class">
+	<h1>Class Suit</h1>
+
+
+	<div class="description">
+	
+<p>Suit is envelope for tests and test groups</p>
+
+<pre>
+<span class="php-var">$suit</span> = <span
+class="php-keyword1">new</span> Suit();
+<span
+class="php-var">$tests</span>-&gt;addTest(<span
+class="php-quote">'something'</span>, <span
+class="php-keyword1">function</span> () { <span
+class="php-keyword1">throw</span> <span
+class="php-keyword1">new</span> Error(<span
+class="php-quote">'wrong'</span>);}, <span
+class="php-quote">'lib'</span>);
+<span
+class="php-var">$tests</span>-&gt;addTest(<span
+class="php-quote">'something2'</span>, <span
+class="php-keyword1">function</span> () { <span
+class="php-keyword1">throw</span> <span
+class="php-keyword1">new</span> Error(<span
+class="php-quote">'wrong'</span>);}, <span
+class="php-quote">'lib'</span>);
+<span
+class="php-var">$tests</span>-&gt;group-&gt;addTest(<span
+class="php-quote">'something2'</span>, <span
+class="php-keyword1">function</span> () { <span
+class="php-keyword1">throw</span> <span
+class="php-keyword1">new</span> Warning(<span
+class="php-quote">'wrong'</span>);}, <span
+class="php-quote">'lib'</span>);
+</pre>
+
+	</div>
+
+	<dl class="tree">
+		<dd style="padding-left:0px">
+<b><span>envtesting\Suit</span></b>			
+			 implements 
+				<a href="class-ArrayAccess.html"><span>ArrayAccess</span></a>, 
+			
+				<a href="class-IteratorAggregate.html"><span>IteratorAggregate</span></a>
+			
+			
+		</dd>
+	</dl>
+
+
+
+
+
+
+
+
+	<div class="info">
+		
+		
+		<b>Namespace:</b> <a href="namespace-envtesting.html">envtesting</a><br />
+		
+
+				<b>Author:</b>
+				Roman Ozana &lt;<a
+href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
+		<b>Located at</b> <a href="source-class-envtesting.Suit.html#4" title="Go to source code">Suit.php</a><br />
+	</div>
+
+
+	<table class="summary" id="methods">
+	<caption>Methods summary</caption>
+	<tr data-order="__construct" id="___construct">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___construct">#</a>
+		<code><a href="source-class-envtesting.Suit.html#33" title="Go to source code">__construct</a>( <span>string <var>$name</var> = __CLASS__</span>, <span><code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code> <var>$filter</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code></dd>
+					<dt><var>$filter</var></dt>
+					<dd><code><code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code>|null</code></dd>
+				</dl></div>
+
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="run" id="_run">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_run">#</a>
+		<code><a href="source-class-envtesting.Suit.html#42" title="Go to source code">run</a>( )</code>
+
+		<div class="description short">
+			
+<p>Run all tests in test suit</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Run all tests in test suit</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="shuffle" id="_shuffle">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_shuffle">#</a>
+		<code><a href="source-class-envtesting.Suit.html#65" title="Go to source code">shuffle</a>( <span>boolean <var>$deep</var> = <span class="php-keyword1">false</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Randomize tests order in suit</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Randomize tests order in suit</p>
+
+<ul>
+	<li>when there is only one group of test shuffle inner test</li>
+
+	<li>on multiple groups shuffle only groups not test inside</li>
+</ul>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$deep</var></dt>
+					<dd><code>boolean</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addTest" id="_addTest">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Test.html">envtesting\Test</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addTest">#</a>
+		<code><a href="source-class-envtesting.Suit.html#91" title="Go to source code">addTest</a>( <span>string <var>$name</var></span>, <span>mixed|callable|filepath <var>$callback</var></span>, <span>null <var>$type</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Add new callback test to suit</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Add new callback test to suit</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code></dd>
+					<dt><var>$callback</var></dt>
+					<dd><code>mixed|callable|filepath</code></dd>
+					<dt><var>$type</var></dt>
+					<dd><code>null</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Test.html">envtesting\Test</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="addFromDir" id="_addFromDir">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_addFromDir">#</a>
+		<code><a href="source-class-envtesting.Suit.html#111" title="Go to source code">addFromDir</a>( <span>string <var>$dir</var></span>, <span>string <var>$type</var> = <span class="php-quote">''</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Autoload all PHP files from directory</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Autoload all PHP files from directory</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$dir</var></dt>
+					<dd><code>string</code></dd>
+					<dt><var>$type</var></dt>
+					<dd><code>string</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__get" id="___get">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___get">#</a>
+		<code><a href="source-class-envtesting.Suit.html#130" title="Go to source code">__get</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="to" id="_to">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_to">#</a>
+		<code><a href="source-class-envtesting.Suit.html#138" title="Go to source code">to</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+<p>Begin new Suit group</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Begin new Suit group</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getName" id="_getName">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getName">#</a>
+		<code><a href="source-class-envtesting.Suit.html#150" title="Go to source code">getName</a>( )</code>
+
+		<div class="description short">
+			
+<p>Return testSuit name</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Return testSuit name</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setName" id="_setName">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setName">#</a>
+		<code><a href="source-class-envtesting.Suit.html#159" title="Go to source code">setName</a>( <span>string <var>$name</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getCurrentGroupName" id="_getCurrentGroupName">
+
+		<td class="attributes"><code>
+			 public 
+			null|string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getCurrentGroupName">#</a>
+		<code><a href="source-class-envtesting.Suit.html#168" title="Go to source code">getCurrentGroupName</a>( )</code>
+
+		<div class="description short">
+			
+<p>Return current group name</p>
+
+<ul>
+	<li>default group name is "main"</li>
+</ul>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Return current group name</p>
+
+<ul>
+	<li>default group name is "main"</li>
+</ul>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>null|string</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getGroupsNames" id="_getGroupsNames">
+
+		<td class="attributes"><code>
+			 public 
+			array
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getGroupsNames">#</a>
+		<code><a href="source-class-envtesting.Suit.html#178" title="Go to source code">getGroupsNames</a>( )</code>
+
+		<div class="description short">
+			
+<p>Return groups names</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Return groups names</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>array</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="hasGroups" id="_hasGroups">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_hasGroups">#</a>
+		<code><a href="source-class-envtesting.Suit.html#187" title="Go to source code">hasGroups</a>( )</code>
+
+		<div class="description short">
+			
+<p>Is there more then one group?</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Is there more then one group?</p>
+
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="setFilter" id="_setFilter">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_setFilter">#</a>
+		<code><a href="source-class-envtesting.Suit.html#196" title="Go to source code">setFilter</a>( <span><code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code> <var>$filter</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$filter</var></dt>
+					<dd><code><code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code></code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getFilter" id="_getFilter">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code>|null
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getFilter">#</a>
+		<code><a href="source-class-envtesting.Suit.html#205" title="Go to source code">getFilter</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code>|null</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="failGroupOnFirstError" id="_failGroupOnFirstError">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_failGroupOnFirstError">#</a>
+		<code><a href="source-class-envtesting.Suit.html#212" title="Go to source code">failGroupOnFirstError</a>( <span>boolean <var>$fail</var> = <span class="php-keyword1">true</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Failed whole group when something went wrong in first test</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Failed whole group when something went wrong in first test</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$fail</var></dt>
+					<dd><code>boolean</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="instance" id="_instance">
+
+		<td class="attributes"><code>
+			 public static
+			<code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_instance">#</a>
+		<code><a href="source-class-envtesting.Suit.html#225" title="Go to source code">instance</a>( <span>string <var>$name</var></span>, <span><code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code> <var>$filter</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+<p>Return new instance of Suit</p>
+
+		</div>
+
+		<div class="description detailed hidden">
+			
+<p>Return new instance of Suit</p>
+
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$name</var></dt>
+					<dd><code>string</code></dd>
+					<dt><var>$filter</var></dt>
+					<dd><code><code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code>|null</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Suit.html">envtesting\Suit</a></code></code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetExists" id="_offsetExists">
+
+		<td class="attributes"><code>
+			 public 
+			boolean
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetExists">#</a>
+		<code><a href="source-class-envtesting.Suit.html#240" title="Go to source code">offsetExists</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$offset</var></dt>
+					<dd><code>mixed</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>boolean</code><br />
+				</div>
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetExists">ArrayAccess::offsetExists</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetGet" id="_offsetGet">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-envtesting.Test.html">envtesting\Test</a></code>|mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetGet">#</a>
+		<code><a href="source-class-envtesting.Suit.html#248" title="Go to source code">offsetGet</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$offset</var></dt>
+					<dd><code>mixed</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-envtesting.Test.html">envtesting\Test</a></code>|mixed</code><br />
+				</div>
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetGet">ArrayAccess::offsetGet</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetSet" id="_offsetSet">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetSet">#</a>
+		<code><a href="source-class-envtesting.Suit.html#256" title="Go to source code">offsetSet</a>( <span>mixed <var>$offset</var></span>, <span>mixed <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$offset</var></dt>
+					<dd><code>mixed</code></dd>
+					<dt><var>$value</var></dt>
+					<dd><code>mixed</code></dd>
+				</dl></div>
+
+
+				<h4>Throws</h4>
+				<div class="list">
+					<code><code><a href="class-Exception.html">Exception</a></code></code><br />
+				</div>
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetSet">ArrayAccess::offsetSet</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="offsetUnset" id="_offsetUnset">
+
+		<td class="attributes"><code>
+			 public 
+			
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_offsetUnset">#</a>
+		<code><a href="source-class-envtesting.Suit.html#273" title="Go to source code">offsetUnset</a>( <span>mixed <var>$offset</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$offset</var></dt>
+					<dd><code>mixed</code></dd>
+				</dl></div>
+
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-ArrayAccess.html#_offsetUnset">ArrayAccess::offsetUnset</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="getIterator" id="_getIterator">
+
+		<td class="attributes"><code>
+			 public 
+			<code><a href="class-ArrayIterator.html">ArrayIterator</a></code>|<code><a href="class-Traversable.html">Traversable</a></code>
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_getIterator">#</a>
+		<code><a href="source-class-envtesting.Suit.html#283" title="Go to source code">getIterator</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code><code><a href="class-ArrayIterator.html">ArrayIterator</a></code>|<code><a href="class-Traversable.html">Traversable</a></code></code><br />
+				</div>
+
+
+
+				<h4>Implementation of</h4>
+				<div class="list"><code><a href="class-IteratorAggregate.html#_getIterator">IteratorAggregate::getIterator</a></code></div>
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="__toString" id="___toString">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#___toString">#</a>
+		<code><a href="source-class-envtesting.Suit.html#294" title="Go to source code">__toString</a>( )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="render" id="_render">
+
+		<td class="attributes"><code>
+			 public 
+			mixed
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_render">#</a>
+		<code><a href="source-class-envtesting.Suit.html#306" title="Go to source code">render</a>( <span>null|string <var>$to</var> = <span class="php-keyword1">null</span></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
+
+
+				<h4>Parameters</h4>
+				<div class="list"><dl>
+					<dt><var>$to</var></dt>
+					<dd><code>null|string</code></dd>
+				</dl></div>
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>mixed</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+
+
+
+
+	<table class="summary" id="properties">
+	<caption>Properties summary</caption>
+	<tr data-order="groups" id="$groups">
+
+		<td class="attributes"><code>
+			protected 
+			array
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-envtesting.Suit.html#18" title="Go to source code"><var>$groups</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">array</span>()</code></td>
+		<td class="description"><div>
+			<a href="#$groups" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="name" id="$name">
+
+		<td class="attributes"><code>
+			protected 
+			string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-envtesting.Suit.html#21" title="Go to source code"><var>$name</var></a>
+		</td>
+		<td class="value"><code>__CLASS__</code></td>
+		<td class="description"><div>
+			<a href="#$name" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="currentGroup" id="$currentGroup">
+
+		<td class="attributes"><code>
+			protected 
+			null|string
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-envtesting.Suit.html#24" title="Go to source code"><var>$currentGroup</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$currentGroup" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="failGroupOnFirstError" id="$failGroupOnFirstError">
+
+		<td class="attributes"><code>
+			protected 
+			boolean
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-envtesting.Suit.html#27" title="Go to source code"><var>$failGroupOnFirstError</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">false</span></code></td>
+		<td class="description"><div>
+			<a href="#$failGroupOnFirstError" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	<tr data-order="filter" id="$filter">
+
+		<td class="attributes"><code>
+			protected 
+			<code><a href="class-envtesting.Filter.html">envtesting\Filter</a></code>
+		</code></td>
+
+		<td class="name">
+				<a href="source-class-envtesting.Suit.html#30" title="Go to source code"><var>$filter</var></a>
+		</td>
+		<td class="value"><code><span class="php-keyword1">null</span></code></td>
+		<td class="description"><div>
+			<a href="#$filter" class="anchor">#</a>
+
+			<div class="description short">
+				
+			</div>
+
+			<div class="description detailed hidden">
+				
+
+			</div>
+		</div></td>
+	</tr>
+	</table>
+
+
+
+</div>
+
+	<div id="footer">
+		Envtesting API documentation generated by <a href="http://apigen.org">ApiGen 2.6.1</a>
+	</div>
+</div>
+</div>
+</body>
+</html>

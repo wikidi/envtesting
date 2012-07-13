@@ -2,6 +2,8 @@
 namespace envtesting;
 
 /**
+ * Suit is envelope for tests and test groups
+ *
  * <code>
  * $suit = new Suit();
  * $tests->addTest('something', function () { throw new Error('wrong');}, 'lib');
