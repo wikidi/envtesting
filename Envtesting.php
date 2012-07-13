@@ -14,11 +14,7 @@ App{public
 static$root=__DIR__;static
 function
 header($text,$ch=':'){return
-str_repeat($ch,80).PHP_EOL.str_pad($text,80,' ',STR_PAD_BOTH).PHP_EOL.str_repeat($ch,80).PHP_EOL;}static
-function
-errorHandler($errno,$errstr,$errfile,$errline){echo'err';}static
-function
-exceptionHandler(\Exception$exception){var_dump($exception);}}set_exception_handler(array('\envtesting\App','exceptionHandler'));set_error_handler(array('\envtesting\App','errorHandler'));class
+str_repeat($ch,80).PHP_EOL.str_pad($text,80,' ',STR_PAD_BOTH).PHP_EOL.str_repeat($ch,80).PHP_EOL;}}class
 Assert{static
 function
 same($actual,$expected,$message=null){if($actual!==$expected){throw
@@ -201,9 +197,9 @@ as$order=>$test){?>
 						</td>
 						<td><?=$test->getNotice();?></td>
 						<td>
-							<?=$test->getStatusMessage();?>
+							<?=nl2br($test->getStatusMessage());?>
 							<?if($test->hasOptions()){?>
-							<code>Options: <?=json_encode((array)$test->getOptions());?></code>
+							<br><code>Options: <?=json_encode((array)$test->getOptions());?></code>
 							<?}?>
 						</td>
 
@@ -344,14 +340,15 @@ new\ArrayIterator($this->groups);}function
 __toString(){$results=\envtesting\App::header($this->name);foreach($this->groups
 as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
 render($to=null){if($to===null&&isset($_SERVER['REQUEST_URI'])){$to=basename(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH))==='csv'?'csv':'html';}elseif($to===null&&PHP_SAPI==='cli'){$to='cli';}switch($to){case'cli':echo$this;break;case'csv':echo\envtesting\output\Csv::render($this);break;case'html':default:echo\envtesting\output\Html::render($this);break;}}}class
-Test{protected$name='';protected$callback=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
+Test{protected$name='';protected$callback=null;protected$callResponse=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
 __construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function
-run(){if(!$this->enabled)return$this;try{$this->setResult('OK');call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
+run(){if(!$this->enabled)return$this;try{$this->setResult('OK');$this->callResponse=call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
 __invoke(){return$this->run();}function
 getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if($this->isDisabled())return'DISABLED';if($this->isError())return'ERROR';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
 new\Exception('Invalid result type: '.gettype($this->result));}function
-getStatusMessage(){$message=(is_object($this->callback)&&method_exists($this->callback,'__toString'))?(string)$this->callback:'';return($this->result
+getStatusMessage(){if($this->isDisabled())return
+null;$message=(is_object($this->callback)&&method_exists($this->callback,'__toString'))?(string)$this->callback:$this->callResponse;return($this->result
 instanceof\Exception)?$this->result->getMessage():$message;}function
 isWarning(){return$this->getResult()instanceof
 Warning;}function

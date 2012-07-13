@@ -95,13 +95,14 @@ class Test {
 	/**
 	 * Return status message
 	 *
-	 * @return string
+	 * @return string|null
 	 * @throws \Exception
 	 */
 	public function getStatusMessage() {
+		if ($this->isDisabled()) return null;
 		$message = (is_object($this->callback) && method_exists(
 			$this->callback, '__toString'
-		)) ? (string)$this->callback : $this->callResponse;
+		)) ? (string)$this->callback : $this->callResponse; // return response
 		return ($this->result instanceof \Exception) ? $this->result->getMessage() : $message;
 	}
 

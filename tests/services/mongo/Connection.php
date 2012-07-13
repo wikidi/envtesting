@@ -1,11 +1,10 @@
 <?php
-namespace tests\services\mysql;
+namespace tests\services\mongo;
 use envtesting\Error;
 
 /**
- * Try connect to mysql with PDO
+ * Check mongo connection
  *
- * @see http://php.net/manual/en/book.pdo.php
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 class Connection {
@@ -26,15 +25,16 @@ class Connection {
 	public $dbname;
 	/** @var array */
 	public $options = array();
-	/** @var \PDO */
+	/** @var Mongo */
 	public $connection = null;
 
 	/**
-	 * @param $dsn
+	 * @param string $dsn
 	 * @param array $options
 	 */
 	public function __construct($dsn, array $options = array()) {
 		$this->dsn = $dsn;
+		$this->options = $options;
 
 		extract(parse_url($this->dsn)); // FIXME parse_url can corrupt UTF-8 string
 
@@ -46,53 +46,41 @@ class Connection {
 		 * @var string $pass
 		 * @var string $path
 		 */
-
 		$this->scheme = isset($scheme) ? $scheme : null;
 		$this->port = isset($port) ? $port : null;
 		$this->host = isset($host) ? $host : null;
 		$this->user = isset($user) ? $user : null;
 		$this->pass = isset($pass) ? $pass : null;
 		$this->dbname = isset($path) ? substr($path, 1) : null;
-
-		$this->options = $options;
 	}
 
 	/**
-	 * @throws \envtesting\Error
-	 * @return void
+	 * @return null|Mongo
 	 */
 	public function __invoke() {
 		return $this->getConnection();
 	}
 
 	/**
-	 * @return null|\PDO
+	 * @throws \envtesting\Error
 	 */
-	protected function getConnection() {
-		if ($this->connection === null) $this->connect();
-		return $this->connection;
+	public function connect() {
+		if (!$this->dbname) throw new \envtesting\Warning('Database not selected.');
+
+		try {
+			if (!class_exists('Mongo')) throw new Error('PHP Mongo support is missing.');
+			$this->connection = new \Mongo($this->dsn, $this->options);
+		} catch (\MongoConnectionException $e) {
+			throw new Error('Connection failed: ' . $e->getMessage());
+		}
 	}
 
 	/**
-	 * @throws \envtesting\Error
+	 * @return null|Mongo
 	 */
-	private function connect() {
-		// check PDO extension
-		if (!extension_loaded('pdo')) throw new Error('PHP extension \'pdo\' is not loaded');
-		if (!class_exists('PDO')) throw new Error('PDO classs is missing.');
-
-		// check schema and database name
-		if ($this->scheme !== 'mysql') throw new Error('Incorect scheme ' . $this->scheme);
-		if ($this->dbname === null || $this->dbname == '' || $this->dbname == '/') throw new Error('No database available in data source name');
-		if ($this->dbname === null || $this->host == '') throw new Error('No hostname set in data source name');
-
-		$dsn = $this->scheme . ':host=' . $this->host . ($this->port ? ';port=' . $this->port : null) . ';dbname=' . $this->dbname;
-
-		try {
-			$this->connection = new \PDO($dsn, $this->user, $this->pass, $this->options);
-		} catch (\PDOException $e) {
-			throw new Error('PDOException: ' . $e->getMessage() . ' ' . $this);
-		}
+	public function getConnection() {
+		if ($this->connection === null) $this->connect();
+		return $this->connection;
 	}
 
 	/**
