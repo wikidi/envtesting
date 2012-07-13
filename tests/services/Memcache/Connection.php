@@ -1,6 +1,5 @@
 <?php
 namespace tests\services\memcache;
-
 /**
  * Test memcached service connection
  *
@@ -12,6 +11,8 @@ class Connection {
 	public $host = '127.0.0.1';
 	/** @var int */
 	public $port = 11211;
+	/** @var null|Memcache */
+	public $memcache = null;
 
 	/**
 	 * @param string $host
@@ -27,11 +28,18 @@ class Connection {
 	 * @return void
 	 */
 	public function __invoke() {
-		try {
-			$memcache = new \Memcache();
-			$memcache->connect($this->host, $this->port, true);
+		$this->connect();
+	}
 
-			if ($memcache->getStats() == false) {
+	/**
+	 * @throws \envtesting\Error
+	 */
+	public function connect() {
+		try {
+			$this->memcache = new \Memcache();
+			$this->memcache->connect($this->host, $this->port, true);
+
+			if ($this->memcache->getStats() == false) {
 				throw new \envtesting\Error('Memcached connection faild: ' . $this->host . ':' . $this->port);
 			}
 
@@ -42,7 +50,18 @@ class Connection {
 		}
 	}
 
+	/**
+	 * @return Memcache|null
+	 */
+	public function getMemcache() {
+		if ($this->memcache == null) $this->connect();
+		return $this->memcache;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function __toString() {
-		return $this->host . ':' . $this->port;
+		return 'memcache:://' . $this->host . ':' . $this->port;
 	}
 }
