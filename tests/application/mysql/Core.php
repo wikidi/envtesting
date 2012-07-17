@@ -9,7 +9,7 @@ use tests\services\mysql\Connection;
  */
 abstract class Core extends Connection {
 
-	const DELETE = 'DELETE FROM `%s` WHERE %s = "%s";';
+	const DELETE = 'DELETE FROM `%s` WHERE %s = %s;';
 
 	/**
 	 * @param string $table
@@ -18,8 +18,8 @@ abstract class Core extends Connection {
 	 * @throws \envtesting\Error
 	 */
 	public function tryDeleteData($table, $coll, $value) {
-		$sql = sprintf(self::DELETE, $table, $coll, mysql_real_escape_string($value));
 		try {
+			$sql = sprintf(self::DELETE, $table, $coll, $this->exc($value));
 			$rowCount = $this->getConnection()->exec($sql);
 			$this->processInfo('DELETE', $rowCount == 1, $value);
 		} catch (\PDOException $e) {
@@ -27,7 +27,7 @@ abstract class Core extends Connection {
 		}
 	}
 
-	const INSERT = 'INSERT INTO `%s` SET %s = "%s";';
+	const INSERT = 'INSERT INTO `%s` SET %s = %s;';
 
 	/**
 	 * @param string $table
@@ -36,8 +36,8 @@ abstract class Core extends Connection {
 	 * @throws \envtesting\Error
 	 */
 	public function tryInsertData($table, $coll, $value) {
-		$sql = sprintf(self::INSERT, $table, $coll, mysql_real_escape_string($value));
-		try {
+		try {			
+			$sql = sprintf(self::INSERT, $table, $coll, $this->esc($value));
 			$rowCount = $this->getConnection()->exec($sql);
 			$this->processInfo('INSERT', $rowCount == 1, $value);
 		} catch (\PDOException $e) {
@@ -45,7 +45,7 @@ abstract class Core extends Connection {
 		}
 	}
 
-	const UPDATE = 'UPDATE `%s` SET %s = "%s" WHERE %s = "%s" LIMIT 1;';
+	const UPDATE = 'UPDATE `%s` SET `%s` = %s WHERE `%s` = %s LIMIT 1;';
 
 	/**
 	 * @param string $table
@@ -54,11 +54,8 @@ abstract class Core extends Connection {
 	 * @throws \envtesting\Error
 	 */
 	public function tryUpdateData($table, $coll, $value) {
-		$sql = sprintf(
-			self::UPDATE, $table, $coll, mysql_real_escape_string($value), $coll, mysql_real_escape_string($value)
-		);
-
 		try {
+			$sql = sprintf(self::UPDATE, $table, $coll, $this->esc($value), $coll, $this->esc($value));
 			$rowCount = $this->getConnection()->exec($sql);
 			$this->processInfo('UPDATE', $rowCount == 1, $value);
 		} catch (\PDOException $e) {
@@ -66,15 +63,15 @@ abstract class Core extends Connection {
 		}
 	}
 
-	const SELECT = 'SELECT * FROM `%s` WHERE %s = "%s" LIMIT 1;';
+	const SELECT = 'SELECT * FROM `%s` WHERE `%s` = %s LIMIT 1;';
 
 	/**
 	 * @param string $table
 	 * @throws \envtesting\Error
 	 */
-	public function trySelectData($table, $coll, $value) {
-		$sql = sprintf(self::SELECT, $table, $coll, mysql_real_escape_string($value));
+	public function trySelectData($table, $coll, $value) {		
 		try {
+			$sql = sprintf(self::SELECT, $table, $coll, $this->esc($value));
 			$stm = $this->getConnection()->query($sql);
 			if ($stm) $row = $stm->fetch();
 			$this->processInfo('SELECT', isset($row[$coll]), $value);
@@ -129,6 +126,13 @@ abstract class Core extends Connection {
 	public function lastErrorMessage() {
 		$info = $this->getConnection()->errorInfo();
 		return (string)$info[2];
+	}
+
+	/**	 
+	 * @return string
+	 */
+	public function esc($value) {
+		return $this->getConnection()->quote($value);
 	}
 
 }

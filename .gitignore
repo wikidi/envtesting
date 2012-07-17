@@ -1,2 +1,5 @@
 .DS_Storage
-Envtesting.min.php
+.project
+.settings
+/nbproject
+idea
