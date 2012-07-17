@@ -379,5 +379,13 @@ function
 instance($name,$callback,$type=null,$enabled=true){return
 new
 self($name,$callback,$type,$enabled);}}class
+Throws{static
+function
+allErrors(){set_error_handler(array('\\envtesting\\Throws','handleError'),E_ALL&~E_DEPRECATED);}static
+function
+handleError($code,$text,$file,$line,$context){if(error_reporting()==0)return;throw
+new\Exception($text.' in file '.$file.' on line '.$line,$code);}static
+function
+nothing(){restore_error_handler();}}class
 Warning
 extends\Exception{}}
