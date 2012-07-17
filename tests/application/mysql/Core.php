@@ -19,7 +19,7 @@ abstract class Core extends Connection {
 	 */
 	public function tryDeleteData($table, $coll, $value) {
 		try {
-			$sql = sprintf(self::DELETE, $table, $coll, $this->exc($value));
+			$sql = sprintf(self::DELETE, $table, $coll, $this->esc($value));
 			$rowCount = $this->getConnection()->exec($sql);
 			$this->processInfo('DELETE', $rowCount == 1, $value);
 		} catch (\PDOException $e) {
@@ -36,7 +36,7 @@ abstract class Core extends Connection {
 	 * @throws \envtesting\Error
 	 */
 	public function tryInsertData($table, $coll, $value) {
-		try {			
+		try {
 			$sql = sprintf(self::INSERT, $table, $coll, $this->esc($value));
 			$rowCount = $this->getConnection()->exec($sql);
 			$this->processInfo('INSERT', $rowCount == 1, $value);
@@ -69,7 +69,7 @@ abstract class Core extends Connection {
 	 * @param string $table
 	 * @throws \envtesting\Error
 	 */
-	public function trySelectData($table, $coll, $value) {		
+	public function trySelectData($table, $coll, $value) {
 		try {
 			$sql = sprintf(self::SELECT, $table, $coll, $this->esc($value));
 			$stm = $this->getConnection()->query($sql);
@@ -128,7 +128,7 @@ abstract class Core extends Connection {
 		return (string)$info[2];
 	}
 
-	/**	 
+	/**
 	 * @return string
 	 */
 	public function esc($value) {

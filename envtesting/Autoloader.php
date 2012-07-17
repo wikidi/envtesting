@@ -56,4 +56,4 @@ final class Autoloader {
 	}
 }
 
-spl_autoload_register(array('envtesting\Autoloader', 'cls'));
+spl_autoload_register(array('\\envtesting\\Autoloader', 'cls'));
