@@ -1,5 +1,6 @@
 <?php
 namespace tests\services\memcache;
+
 /**
  * Test memcached service connection
  *
