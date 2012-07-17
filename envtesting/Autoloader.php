@@ -33,6 +33,7 @@ final class Autoloader {
 	public static function cls($className) {
 		if (self::$init) {
 			self::$paths[] = get_include_path();
+			self::$paths[] = __DIR__; // envtesting home dir
 			self::$paths[] = dirname(__DIR__); // envtesting home dir
 			self::$init = false; // init just once
 		}
