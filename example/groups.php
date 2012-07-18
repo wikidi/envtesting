@@ -4,7 +4,7 @@
  */
 require_once __DIR__ . '/../Envtesting.php';
 
-$suit = new \envtesting\Suit('Super group test');
+$suit = new \envtesting\Suite('Super group test');
 
 // ---------------------------------------------------------------------------------------------------------------------
 // organize tests to groups

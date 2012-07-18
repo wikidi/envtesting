@@ -10,6 +10,8 @@ namespace tests\application\mysql;
  * @method insertNotAllow()
  * @method updateAllow()
  * @method updateNotAllow()
+ * @method selectAllow()
+ * @method selectNotAllow()
  *
  * @see http://dev.mysql.com/doc/refman/5.0/en/error-messages-server.html
  * @author Roman Ozana <ozana@omdesign.cz>
@@ -144,6 +146,21 @@ class Operations extends Core {
 	private function selectAllow() {
 		$this->trySelectData($this->table, $this->coll, __FUNCTION__);
 		return 'SELECT allow to use ' . $this->user . PHP_EOL . $this;
+	}
+
+	/**
+	 * @return string
+	 */
+	private function selectNotAllow() {
+		try {
+			$this->trySelectData($this->table, $this->coll, __FUNCTION__);
+		} catch (\envtesting\Error $e) {
+			if ($this->lastErrorNumber() == 1142) {
+				return 'SELECT denied to user ' . $this->user . PHP_EOL . $this;
+			}
+		}
+
+		throw new \envtesting\Error('SELECT allow to user ' . $this->user . PHP_EOL . $this);
 	}
 
 }

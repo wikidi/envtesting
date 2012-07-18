@@ -1,12 +1,14 @@
 <?php
 namespace envtesting\output;
-/** @var \envtesting\Suit $suit */
-/** @var \envtesting\Filter $filter */
+/**
+ * @var \envtesting\Suite $suite
+ * @var \envtesting\Filter $filter
+ */
 ?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
-	<title><?= $suit->getName() ?></title>
+	<title><?= $suite->getName() ?></title>
 	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
 
 	<link rel="stylesheet" type="text/css" media="all"
@@ -73,11 +75,11 @@ namespace envtesting\output;
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3>Envtesting: <?= $suit->getName(); ?></h3>
+			<h3>Envtesting: <?= $suite->getName(); ?></h3>
 
 			<? if ($filter->isActive()) { ?>
 			<div class="alert">
-				<a href="?" class="close">&times;</a>Test results are filtered!
+				<a href="<? Html::link()?>" class="close">&times;</a>Test results are filtered!
 			</div>
 			<? } ?>
 
@@ -107,8 +109,8 @@ namespace envtesting\output;
 				</thead>
 
 				<tbody>
-
-				<? foreach ($suit as $group => $tests) { ?>
+					<? $total = $ok = $disabled = $error = $warning = 0; ?>
+					<? foreach ($suite as $group => $tests) { ?>
 					<? foreach ($tests as $order => $test/** @var \envtesting\Test $test */) { ?>
 						<? $total++; ?>
 					<tr class="<?= strtolower($test->getStatus())?>">
@@ -116,10 +118,10 @@ namespace envtesting\output;
 							<i class="icon-<?= $test->isOk() ? 'ok' : 'remove' ?>"></i>
 						</td>
 						<td><?= $test->getStatus(); ?></td>
-						<td><a href="?name=<?= $test->getName(); ?>"><?= $test->getName(); ?></a></td>
-						<td><a href="?group=<?= $group ?>"><?= $group ?></a></td>
+						<td><a href="<?= Html::link('name=' . $test->getName())?>"><?= $test->getName(); ?></a></td>
+						<td><a href="<?= Html::link('group=' . $group);?>"><?= $group ?></a></td>
 						<td>
-							<a href="?type=<?= $test->getType(); ?>"><?= $test->getType(); ?></a>
+							<a href="<?= Html::link('type=' . $test->getType()) ?>"><?= $test->getType(); ?></a>
 						</td>
 						<td><?= $test->getNotice(); ?></td>
 						<td>
@@ -141,10 +143,12 @@ namespace envtesting\output;
 			</table>
 
 			<div class="btn-group">
-				<a href="<?= $path . '?' . $query ?>" class="btn btn-primary" title="Refresh current tests"><i class="icon-refresh icon-white"></i> Refresh</a>
-				<a href="<?= $path ?>/csv?<?= $query ?>" class="btn" title="Download CSV output">CSV <i class="icon-arrow-down"></i></a>
+				<a href="<?= Html::link(null, false) ?>" class="btn btn-primary" title="Refresh current tests"><i
+					class="icon-refresh icon-white"></i> Refresh</a>
+				<a href="<?= Html::link('output=csv', true) ?>" class="btn" title="Download CSV output">CSV <i
+					class="icon-arrow-down"></i></a>
 				<? if ($filter->isActive()) { ?>
-				<a href="<?= $path ?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
+				<a href="<?= Html::link(null) ?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
 				<? } ?>
 			</div>
 

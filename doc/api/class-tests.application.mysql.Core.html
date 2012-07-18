@@ -7,7 +7,7 @@
 	<title>Class tests\application\mysql\Core | Envtesting</title>
 
 	<script type="text/javascript" src="resources/combined.js?144019575"></script>
-	<script type="text/javascript" src="elementlist.js?2217947914"></script>
+	<script type="text/javascript" src="elementlist.js?3384075445"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1532301413" />
 
 </head>
@@ -288,7 +288,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 
 		<td class="name"><div>
 		<a class="anchor" href="#_trySelectData">#</a>
-		<code><a href="source-class-tests.application.mysql.Core.html#71" title="Go to source code">trySelectData</a>( <span>string <var>$table</var></span>, <span> <var>$coll</var></span>, <span> <var>$value</var></span> )</code>
+		<code><a href="source-class-tests.application.mysql.Core.html#68" title="Go to source code">trySelectData</a>( <span>string <var>$table</var></span>, <span> <var>$coll</var></span>, <span> <var>$value</var></span> )</code>
 
 		<div class="description short">
 			
@@ -329,7 +329,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 
 		<td class="name"><div>
 		<a class="anchor" href="#_lastErrorNumber">#</a>
-		<code><a href="source-class-tests.application.mysql.Core.html#104" title="Go to source code">lastErrorNumber</a>( )</code>
+		<code><a href="source-class-tests.application.mysql.Core.html#101" title="Go to source code">lastErrorNumber</a>( )</code>
 
 		<div class="description short">
 			
@@ -365,7 +365,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 
 		<td class="name"><div>
 		<a class="anchor" href="#_lastErrorState">#</a>
-		<code><a href="source-class-tests.application.mysql.Core.html#114" title="Go to source code">lastErrorState</a>( )</code>
+		<code><a href="source-class-tests.application.mysql.Core.html#111" title="Go to source code">lastErrorState</a>( )</code>
 
 		<div class="description short">
 			
@@ -401,7 +401,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 
 		<td class="name"><div>
 		<a class="anchor" href="#_lastErrorMessage">#</a>
-		<code><a href="source-class-tests.application.mysql.Core.html#124" title="Go to source code">lastErrorMessage</a>( )</code>
+		<code><a href="source-class-tests.application.mysql.Core.html#121" title="Go to source code">lastErrorMessage</a>( )</code>
 
 		<div class="description short">
 			
@@ -413,6 +413,38 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 			
 <p>Return last error message</p>
 
+
+
+
+				<h4>Returns</h4>
+				<div class="list">
+					<code>string</code><br />
+				</div>
+
+
+
+		</div>
+		</div></td>
+	</tr>
+	<tr data-order="esc" id="_esc">
+
+		<td class="attributes"><code>
+			 public 
+			string
+			
+			</code>
+		</td>
+
+		<td class="name"><div>
+		<a class="anchor" href="#_esc">#</a>
+		<code><a href="source-class-tests.application.mysql.Core.html#131" title="Go to source code">esc</a>( <span> <var>$value</var></span> )</code>
+
+		<div class="description short">
+			
+		</div>
+
+		<div class="description detailed hidden">
+			
 
 
 
@@ -452,7 +484,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 		<td class="name"><code>
 				<a href="source-class-tests.application.mysql.Core.html#12" title="Go to source code"><b>DELETE</b></a>
 		</code></td>
-		<td class="value"><code><span class="php-quote">'DELETE FROM `%s` WHERE %s = &quot;%s&quot;;'</span></code></td>
+		<td class="value"><code><span class="php-quote">'DELETE FROM `%s` WHERE %s = %s;'</span></code></td>
 		<td class="description"><div>
 			<a href="#DELETE" class="anchor">#</a>
 
@@ -474,7 +506,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 		<td class="name"><code>
 				<a href="source-class-tests.application.mysql.Core.html#30" title="Go to source code"><b>INSERT</b></a>
 		</code></td>
-		<td class="value"><code><span class="php-quote">'INSERT INTO `%s` SET %s = &quot;%s&quot;;'</span></code></td>
+		<td class="value"><code><span class="php-quote">'INSERT INTO `%s` SET %s = %s;'</span></code></td>
 		<td class="description"><div>
 			<a href="#INSERT" class="anchor">#</a>
 
@@ -496,7 +528,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 		<td class="name"><code>
 				<a href="source-class-tests.application.mysql.Core.html#48" title="Go to source code"><b>UPDATE</b></a>
 		</code></td>
-		<td class="value"><code><span class="php-quote">'UPDATE `%s` SET %s = &quot;%s&quot; WHERE %s = &quot;%s&quot; LIMIT 1;'</span></code></td>
+		<td class="value"><code><span class="php-quote">'UPDATE `%s` SET `%s` = %s WHERE `%s` = %s LIMIT 1;'</span></code></td>
 		<td class="description"><div>
 			<a href="#UPDATE" class="anchor">#</a>
 
@@ -516,9 +548,9 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 			string
 		</code></td>
 		<td class="name"><code>
-				<a href="source-class-tests.application.mysql.Core.html#69" title="Go to source code"><b>SELECT</b></a>
+				<a href="source-class-tests.application.mysql.Core.html#66" title="Go to source code"><b>SELECT</b></a>
 		</code></td>
-		<td class="value"><code><span class="php-quote">'SELECT * FROM `%s` WHERE %s = &quot;%s&quot; LIMIT 1;'</span></code></td>
+		<td class="value"><code><span class="php-quote">'SELECT * FROM `%s` WHERE `%s` = %s LIMIT 1;'</span></code></td>
 		<td class="description"><div>
 			<a href="#SELECT" class="anchor">#</a>
 

@@ -5,7 +5,7 @@ require_once __DIR__ . '/../Envtesting.php';
 // Function callback
 // ---------------------------------------------------------------------------------------------------------------------
 
-$suit = new \envtesting\Suit('Function callback');
+$suit = new \envtesting\Suite('Function callback');
 function apcRequireTest() {
 	require_once 'tests/library/Apc.php';
 }
@@ -23,7 +23,7 @@ abstract class TestCollection {
 	}
 }
 
-$suit = new \envtesting\Suit('Static class callback');
+$suit = new \envtesting\Suite('Static class callback');
 $suit->addTest('static', '\TestCollection::apcRequireTest', 'library');
 echo $suit->run();
 
@@ -32,7 +32,7 @@ echo $suit->run();
 // Lambda function
 // ---------------------------------------------------------------------------------------------------------------------
 
-$suit = new \envtesting\Suit('Lambda function');
+$suit = new \envtesting\Suite('Lambda function');
 
 $suit->addTest('lambda1', function() { return 'YOU'; }, 'lib');
 
@@ -60,6 +60,6 @@ echo $suit->run();
 // Invoke
 // ---------------------------------------------------------------------------------------------------------------------
 
-$suit = new \envtesting\Suit('Class with invoke');
+$suit = new \envtesting\Suite('Class with invoke');
 $suit->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service'); // KISS
 echo $suit->run();

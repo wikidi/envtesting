@@ -15,7 +15,7 @@ Envtesting provide **multiple way** how to test something. You can test:
 
 ```php
 <?php
-$suit = new \envtesting\Suit('my great envtest');
+$suit = new \envtesting\Suite('my great envtest');
 $suit->addTest('APC', 'tests/library/Apc.php', 'apc'); // by file
 ```
 
@@ -24,7 +24,7 @@ Using anonymous function:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suit('my great envtest');
+$suit = new \envtesting\Suite('my great envtest');
 $suit->addTest('SOMETHING', function() {
 	if (true === false) throw new \envtesting\Error('True === false');
 	}, 'boolean');
@@ -35,7 +35,7 @@ Usin regular callback:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suit('my great envtest');
+$suit = new \envtesting\Suite('my great envtest');
 $suit->addTest('callback', array($test, 'perform_test'), 'callback');
 ```
 Using static callback string:
@@ -43,7 +43,7 @@ Using static callback string:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suit('my great envtest');
+$suit = new \envtesting\Suite('my great envtest');
 $suit->addTest('callback', '\we\can\call\Something::static', 'call');
 ```
 
@@ -52,7 +52,7 @@ Test using object with __invoke:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suit('my great envtest');
+$suit = new \envtesting\Suite('my great envtest');
 $suit->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 ```
 
@@ -61,7 +61,7 @@ Tests can be grouped into group:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suit('my great envtest');
+$suit = new \envtesting\Suite('my great envtest');
 $suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 $suit->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 ```
@@ -71,7 +71,7 @@ You can shuffle groups of shuffle tests inside groups:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suit('my great envtest');
+$suit = new \envtesting\Suite('my great envtest');
 $suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 $suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 $suit->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
@@ -83,7 +83,7 @@ Envtesting can render CSV, HTML or text output:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suit('my great envtest');
+$suit = new \envtesting\Suite('my great envtest');
 echo $suit;            // generate TXT output
 $suit->render('csv');  // render CSV output
 $suit->render('html'); // render HTML output

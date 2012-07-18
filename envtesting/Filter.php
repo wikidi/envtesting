@@ -38,13 +38,13 @@ class Filter {
 	 * Check if input test is active
 	 *
 	 * @param Test $test
-	 * @param Suit $suit
+	 * @param Suite $suite
 	 * @return boolean
 	 */
-	public function isValid(Test $test, Suit $suit) {
+	public function isValid(Test $test, Suite $suite) {
 		return $this->isActive() ? ($this->name && $test->getName() === $this->name) ||
 			($this->type && $test->getType() === $this->type) ||
-			($this->group && $suit->getCurrentGroupName() === $this->group) : true;
+			($this->group && $suite->getCurrentGroupName() === $this->group) : true;
 	}
 
 

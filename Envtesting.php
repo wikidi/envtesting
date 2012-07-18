@@ -58,23 +58,23 @@ extends\Exception{}class
 Filter{public$type=null;public$group=null;public$name=null;function
 __construct($name=null,$type=null,$group=null){$this->name=$name;$this->group=$group;$this->type=$type;}function
 isActive(){return$this->type!==null||$this->name!==null||$this->group!==null;}function
-isValid(Test$test,Suit$suit){return$this->isActive()?($this->name&&$test->getName()===$this->name)||($this->type&&$test->getType()===$this->type)||($this->group&&$suit->getCurrentGroupName()===$this->group):true;}static
+isValid(Test$test,Suite$suit){return$this->isActive()?($this->name&&$test->getName()===$this->name)||($this->type&&$test->getType()===$this->type)||($this->group&&$suit->getCurrentGroupName()===$this->group):true;}static
 function
 instanceFromArray(array$array){return
 new
 self(isset($array['name'])?(string)$array['name']:null,isset($array['type'])?(string)$array['type']:null,isset($array['group'])?(string)$array['group']:null);}}}namespace envtesting\output{use
-envtesting\Suit;final
+envtesting\Suite;final
 class
 Csv{static
 function
-render(Suit$suit){$name=preg_replace('#[^a-z0-9]+#i','-',strtolower($suit->getName()));header('Content-type: text/csv');header('Content-Disposition: attachment; filename='.trim($name,'-').'.env.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suit
+render(Suite$suit){$name=preg_replace('#[^a-z0-9]+#i','-',strtolower($suit->getName()));header('Content-type: text/csv');header('Content-Disposition: attachment; filename='.trim($name,'-').'.env.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suit
 as$group=>$tests){foreach($tests
 as$order=>$test){$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':$test->getStatusMessage().$options,$order);echo
 addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
 class
 Html{static
 function
-render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$path=isset($_SERVER['REQUEST_URI'])?parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH):'/';$query=isset($_SERVER['QUERY_STRING'])?$_SERVER['QUERY_STRING']:'';$filter=$suit->getFilter();?><!DOCTYPE html>
+render(Suite$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$suit->getFilter();?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
@@ -149,7 +149,7 @@ render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$path=isset(
 
 			<?if($filter->isActive()){?>
 			<div class="alert">
-				<a href="?" class="close">&times;</a>Test results are filtered!
+				<a href="<?Html::link()?>" class="close">&times;</a>Test results are filtered!
 			</div>
 			<?}?>
 
@@ -179,8 +179,8 @@ render(Suit$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$path=isset(
 				</thead>
 
 				<tbody>
-
-				<?foreach($suit
+					<?$total=$ok=$disabled=$error=$warning=0;?>
+					<?foreach($suit
 as$group=>$tests){?>
 					<?foreach($tests
 as$order=>$test){?>
@@ -190,10 +190,10 @@ as$order=>$test){?>
 							<i class="icon-<?=$test->isOk()?'ok':'remove'?>"></i>
 						</td>
 						<td><?=$test->getStatus();?></td>
-						<td><a href="?name=<?=$test->getName();?>"><?=$test->getName();?></a></td>
-						<td><a href="?group=<?=$group?>"><?=$group?></a></td>
+						<td><a href="<?=Html::link('name='.$test->getName())?>"><?=$test->getName();?></a></td>
+						<td><a href="<?=Html::link('group='.$group);?>"><?=$group?></a></td>
 						<td>
-							<a href="?type=<?=$test->getType();?>"><?=$test->getType();?></a>
+							<a href="<?=Html::link('type='.$test->getType())?>"><?=$test->getType();?></a>
 						</td>
 						<td><?=$test->getNotice();?></td>
 						<td>
@@ -215,10 +215,12 @@ as$order=>$test){?>
 			</table>
 
 			<div class="btn-group">
-				<a href="<?=$path.'?'.$query?>" class="btn btn-primary" title="Refresh current tests"><i class="icon-refresh icon-white"></i> Refresh</a>
-				<a href="<?=$path?>/csv?<?=$query?>" class="btn" title="Download CSV output">CSV <i class="icon-arrow-down"></i></a>
+				<a href="<?=Html::link(null,false)?>" class="btn btn-primary" title="Refresh current tests"><i
+					class="icon-refresh icon-white"></i> Refresh</a>
+				<a href="<?=Html::link('output=csv',true)?>" class="btn" title="Download CSV output">CSV <i
+					class="icon-arrow-down"></i></a>
 				<?if($filter->isActive()){?>
-				<a href="<?=$path?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
+				<a href="<?=Html::link(null)?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
 				<?}?>
 			</div>
 
@@ -299,8 +301,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 	Generated at <?=date('j.n.Y H:i:s')?> by Envtesting
 	https://github.com/wikidi/envtesting
 -->
-</html><?php }}}namespace envtesting{class
-Suit
+</html>
+<?php }static
+function
+link($query=null,$add=false){$url=isset($_SERVER['REQUEST_URI'])?trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/'):null;if($add&&isset($_SERVER['QUERY_STRING']))$query.='&'.$_SERVER['QUERY_STRING'];parse_str($query,$params);return($params)?$url.'?'.http_build_query($params):$url;}}}namespace envtesting{class
+Suite
 implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=__CLASS__;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
 __construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:new
 Filter();}function

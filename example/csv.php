@@ -6,6 +6,6 @@ require_once __DIR__ . '/../Envtesting.php';
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-\envtesting\Suit::instance('Simple test')->addFromDir(
+\envtesting\Suite::instance('Simple test')->addFromDir(
 	\envtesting\App::$root . '/tests/library', 'library'
 )->run()->render('csv');

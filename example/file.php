@@ -2,13 +2,13 @@
 require_once __DIR__ . '/../Envtesting.php';
 
 use \envtesting\Check;
-use \envtesting\Suit;
+use \envtesting\Suite;
 
 /**
  * @author Roman Ozana <roman@wikidi.com>
  */
 
-$suit = new Suit('Using PHP files for test');
+$suit = new Suite('Using PHP files for test');
 
 // ---------------------------------------------------------------------------------------------------------------------
 // Even simple require_once file test

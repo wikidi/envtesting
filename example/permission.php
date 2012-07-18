@@ -6,7 +6,7 @@
  */
 require_once __DIR__ . '/../Envtesting.php';
 
-$suit = new \envtesting\Suit('memcached');
+$suit = new \envtesting\Suite('memcached');
 $suit->addTest(
 	'memcache', function() {
 		$tmp = substr(decoct(fileperms('tmp')), -3); // or -4

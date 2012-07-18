@@ -2,10 +2,10 @@
 namespace envtesting;
 
 /**
- * Suit is envelope for tests and test groups
+ * Suite is envelope for tests and test groups
  *
  * <code>
- * $suit = new Suit();
+ * $suite = new Suite();
  * $tests->addTest('something', function () { throw new Error('wrong');}, 'lib');
  * $tests->addTest('something2', function () { throw new Error('wrong');}, 'lib');
  * $tests->group->addTest('something2', function () { throw new Warning('wrong');}, 'lib');
@@ -13,7 +13,7 @@ namespace envtesting;
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-class Suit implements \ArrayAccess, \IteratorAggregate {
+class Suite implements \ArrayAccess, \IteratorAggregate {
 
 	/** @var array */
 	protected $groups = array();
@@ -42,7 +42,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	/**
 	 * Run all tests in test suit
 	 *
-	 * @return Suit
+	 * @return Suite
 	 */
 	public function run() {
 		foreach ($this->groups as $tests) {
@@ -69,7 +69,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 * - on multiple groups shuffle only groups not test inside
 	 *
 	 * @param bool $deep
-	 * @return \envtesting\Suit
+	 * @return \envtesting\Suite
 	 */
 	public function shuffle($deep = false) {
 		if ($deep || $this->hasGroups() === false) array_filter($this->groups, 'shuffle');
@@ -113,7 +113,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 *
 	 * @param string $dir
 	 * @param string $type
-	 * @return Suit
+	 * @return Suite
 	 */
 	public function addFromDir($dir, $type = '') {
 		$iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)), '/\.php$/i');
@@ -129,17 +129,17 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 
 	/**
 	 * @param string $name
-	 * @return Suit
+	 * @return Suite
 	 */
 	public function __get($name) {
 		return $this->to($name);
 	}
 
 	/**
-	 * Begin new Suit group
+	 * Begin new Suite group
 	 *
 	 * @param string $name
-	 * @return Suit
+	 * @return Suite
 	 */
 	public function to($name) {
 		$this->currentGroup = $name;
@@ -158,7 +158,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 
 	/**
 	 * @param string $name
-	 * @return Suit
+	 * @return Suite
 	 */
 	public function setName($name) {
 		$this->name = $name;
@@ -195,7 +195,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 
 	/**
 	 * @param Filter $filter
-	 * @return Suit
+	 * @return Suite
 	 */
 	public function setFilter(Filter $filter) {
 		$this->filter = $filter;
@@ -213,7 +213,7 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	 * Failed whole group when something went wrong in first test
 	 *
 	 * @param bool $fail
-	 * @return \envtesting\Suit
+	 * @return \envtesting\Suite
 	 */
 	public function failGroupOnFirstError($fail = true) {
 		$this->failGroupOnFirstError = $fail;
@@ -223,11 +223,11 @@ class Suit implements \ArrayAccess, \IteratorAggregate {
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**
-	 * Return new instance of Suit
+	 * Return new instance of Suite
 	 *
 	 * @param string $name
 	 * @param Filter|null $filter
-	 * @return Suit
+	 * @return Suite
 	 */
 	public static function instance($name, Filter $filter = null) {
 		return new self($name, $filter);
