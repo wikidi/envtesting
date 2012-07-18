@@ -304,7 +304,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 </html>
 <?php }static
 function
-link($query=null,$add=false){$url=isset($_SERVER['REQUEST_URI'])?trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/'):null;if($add&&isset($_SERVER['QUERY_STRING']))$query.='&'.$_SERVER['QUERY_STRING'];parse_str($query,$params);return($params)?$url.'?'.http_build_query($params):$url;}}}namespace envtesting{class
+link($query=null,$add=false){$url=isset($_SERVER['REQUEST_URI'])?'/'.trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/'):'/';if($add&&isset($_SERVER['QUERY_STRING']))$query.='&'.$_SERVER['QUERY_STRING'];parse_str($query,$params);return($params)?$url.'?'.http_build_query($params):$url;}}}namespace envtesting{class
 Suite
 implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=__CLASS__;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
 __construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:new
@@ -344,7 +344,7 @@ getIterator(){return
 new\ArrayIterator($this->groups);}function
 __toString(){$results=\envtesting\App::header($this->name);foreach($this->groups
 as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
-render($to=null){if($to===null&&isset($_SERVER['REQUEST_URI'])){$to=basename(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH))==='csv'?'csv':'html';}elseif($to===null&&PHP_SAPI==='cli'){$to='cli';}switch($to){case'cli':echo$this;break;case'csv':echo\envtesting\output\Csv::render($this);break;case'html':default:echo\envtesting\output\Html::render($this);break;}}}class
+render($to=null){if($to===null&&isset($_GET['output'])){$to=$_GET['output']==='csv'?'csv':'html';}elseif($to===null&&PHP_SAPI==='cli'){$to='cli';}switch($to){case'cli':echo$this;break;case'csv':echo\envtesting\output\Csv::render($this);break;case'html':default:echo\envtesting\output\Html::render($this);break;}}}class
 Test{protected$name='';protected$callback=null;protected$callResponse=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
 __construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function

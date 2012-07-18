@@ -308,8 +308,8 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 	 * @return mixed
 	 */
 	public function render($to = null) {
-		if ($to === null && isset($_SERVER['REQUEST_URI'])) {
-			$to = basename(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)) === 'csv' ? 'csv' : 'html';
+		if ($to === null && isset($_GET['output'])) {
+			$to = $_GET['output'] === 'csv' ? 'csv' : 'html';
 		} elseif ($to === null && PHP_SAPI === 'cli') {
 			$to = 'cli';
 		}
