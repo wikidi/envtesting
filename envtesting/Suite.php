@@ -19,7 +19,7 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 	protected $groups = array();
 
 	/** @var string */
-	protected $name = __CLASS__;
+	protected $name = null;
 
 	/** @var null|string */
 	protected $currentGroup = null;

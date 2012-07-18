@@ -75,11 +75,11 @@ namespace envtesting\output;
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3>Envtesting: <?= $suite->getName(); ?></h3>
+			<h3>Envtesting<?= $suite->getName() ? ' : ' . $suite->getName() : null; ?></h3>
 
 			<? if ($filter->isActive()) { ?>
 			<div class="alert">
-				<a href="<? Html::link()?>" class="close">&times;</a>Test results are filtered!
+				<a href="<?= Html::link()?>" class="close">&times;</a>Test results are filtered!
 			</div>
 			<? } ?>
 

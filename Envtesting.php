@@ -145,11 +145,11 @@ render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$s
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3>Envtesting: <?=$suite->getName();?></h3>
+			<h3>Envtesting<?=$suite->getName()?' : '.$suite->getName():null;?></h3>
 
 			<?if($filter->isActive()){?>
 			<div class="alert">
-				<a href="<?Html::link()?>" class="close">&times;</a>Test results are filtered!
+				<a href="<?=Html::link()?>" class="close">&times;</a>Test results are filtered!
 			</div>
 			<?}?>
 
@@ -306,7 +306,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 function
 link($query=null,$add=false){$url=isset($_SERVER['REQUEST_URI'])?'/'.trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/'):'/';if($add&&isset($_SERVER['QUERY_STRING']))$query.='&'.$_SERVER['QUERY_STRING'];parse_str($query,$params);return($params)?$url.'?'.http_build_query($params):$url;}}}namespace envtesting{class
 Suite
-implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=__CLASS__;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
+implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=null;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
 __construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:new
 Filter();}function
 run(){foreach($this->groups
