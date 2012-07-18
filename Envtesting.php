@@ -58,7 +58,7 @@ extends\Exception{}class
 Filter{public$type=null;public$group=null;public$name=null;function
 __construct($name=null,$type=null,$group=null){$this->name=$name;$this->group=$group;$this->type=$type;}function
 isActive(){return$this->type!==null||$this->name!==null||$this->group!==null;}function
-isValid(Test$test,Suite$suit){return$this->isActive()?($this->name&&$test->getName()===$this->name)||($this->type&&$test->getType()===$this->type)||($this->group&&$suit->getCurrentGroupName()===$this->group):true;}static
+isValid(Test$test,Suite$suite){return$this->isActive()?($this->name&&$test->getName()===$this->name)||($this->type&&$test->getType()===$this->type)||($this->group&&$suite->getCurrentGroupName()===$this->group):true;}static
 function
 instanceFromArray(array$array){return
 new
@@ -67,7 +67,7 @@ envtesting\Suite;final
 class
 Csv{static
 function
-render(Suite$suit){$name=preg_replace('#[^a-z0-9]+#i','-',strtolower($suit->getName()));header('Content-type: text/csv');header('Content-Disposition: attachment; filename='.trim($name,'-').'.env.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suit
+render(Suite$suite){$name=preg_replace('#[^a-z0-9]+#i','-',strtolower($suite->getName()));header('Content-type: text/csv');header('Content-Disposition: attachment; filename='.trim($name,'-').'.env.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suite
 as$group=>$tests){foreach($tests
 as$order=>$test){$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':$test->getStatusMessage().$options,$order);echo
 addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
@@ -78,7 +78,7 @@ render(Suite$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$su
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
-	<title><?=$suit->getName()?></title>
+	<title><?=$suite->getName()?></title>
 	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
 
 	<link rel="stylesheet" type="text/css" media="all"
@@ -145,7 +145,7 @@ render(Suite$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$su
 <div class="container">
 	<div class="row">
 		<div class="span12">
-			<h3>Envtesting: <?=$suit->getName();?></h3>
+			<h3>Envtesting: <?=$suite->getName();?></h3>
 
 			<?if($filter->isActive()){?>
 			<div class="alert">
@@ -180,7 +180,7 @@ render(Suite$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$su
 
 				<tbody>
 					<?$total=$ok=$disabled=$error=$warning=0;?>
-					<?foreach($suit
+					<?foreach($suite
 as$group=>$tests){?>
 					<?foreach($tests
 as$order=>$test){?>

@@ -21,7 +21,7 @@ final class Permission {
 
 		$current = substr(decoct(fileperms($path)), $permission > 1000 ? -4 : -3);
 		if ($current < $permission) {
-			throw new \envtesting\Error('Invalid permission permission ' . $current . ' for "' . $msgPath . '"');
+			throw new \envtesting\Error('Invalid permission ' . $current . ' for "' . $msgPath . '"');
 		}
 	}
 }

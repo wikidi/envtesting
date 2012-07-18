@@ -7,10 +7,10 @@
 require_once __DIR__ . '/../Envtesting.php';
 
 $suit = new \envtesting\Suite('memcached');
+
 $suit->addTest(
 	'memcache', function() {
-		$tmp = substr(decoct(fileperms('tmp')), -3); // or -4
-		if ($tmp < 777) throw new \envtesting\Error('Invalid folder permission');
+		\tests\application\Permission::check(__DIR__, 777, __DIR__);
 	}, 'service'
 ); // KISS
 echo $suit->run();

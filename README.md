@@ -15,8 +15,8 @@ Envtesting provide **multiple way** how to test something. You can test:
 
 ```php
 <?php
-$suit = new \envtesting\Suite('my great envtest');
-$suit->addTest('APC', 'tests/library/Apc.php', 'apc'); // by file
+$suite = new \envtesting\Suite('my great envtest');
+$suite->addTest('APC', 'tests/library/Apc.php', 'apc'); // by file
 ```
 
 Using anonymous function:
@@ -24,8 +24,8 @@ Using anonymous function:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suite('my great envtest');
-$suit->addTest('SOMETHING', function() {
+$suite = new \envtesting\Suite('my great envtest');
+$suite->addTest('SOMETHING', function() {
 	if (true === false) throw new \envtesting\Error('True === false');
 	}, 'boolean');
 ```
@@ -35,16 +35,16 @@ Usin regular callback:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suite('my great envtest');
-$suit->addTest('callback', array($test, 'perform_test'), 'callback');
+$suite = new \envtesting\Suite('my great envtest');
+$suite->addTest('callback', array($test, 'perform_test'), 'callback');
 ```
 Using static callback string:
 
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suite('my great envtest');
-$suit->addTest('callback', '\we\can\call\Something::static', 'call');
+$suite = new \envtesting\Suite('my great envtest');
+$suite->addTest('callback', '\we\can\call\Something::static', 'call');
 ```
 
 Test using object with __invoke:
@@ -52,8 +52,8 @@ Test using object with __invoke:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suite('my great envtest');
-$suit->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite = new \envtesting\Suite('my great envtest');
+$suite->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 ```
 
 Tests can be grouped into group:
@@ -61,9 +61,9 @@ Tests can be grouped into group:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suite('my great envtest');
-$suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
-$suit->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite = new \envtesting\Suite('my great envtest');
+$suite->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 ```
 
 You can shuffle groups of shuffle tests inside groups:
@@ -71,22 +71,22 @@ You can shuffle groups of shuffle tests inside groups:
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suite('my great envtest');
-$suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
-$suit->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
-$suit->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
-$suit->shuffle(); // mix only groups
-$suit->shuffle(true); // deep shuffle mix groups and tests inside group
+$suite = new \envtesting\Suite('my great envtest');
+$suite->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->shuffle(); // mix only groups
+$suite->shuffle(true); // deep shuffle mix groups and tests inside group
 ```
 Envtesting can render CSV, HTML or text output:
 
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-$suit = new \envtesting\Suite('my great envtest');
-echo $suit;            // generate TXT output
-$suit->render('csv');  // render CSV output
-$suit->render('html'); // render HTML output
+$suite = new \envtesting\Suite('my great envtest');
+echo $suite;            // generate TXT output
+$suite->render('csv');  // render CSV output
+$suite->render('html'); // render HTML output
 ```
 
 ![HTML output example](/wikidi/envtesting/raw/master/doc/images/html-output-example.png "HTML output")
