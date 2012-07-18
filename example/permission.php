@@ -14,6 +14,7 @@ $suit->addTest(
 	}, 'app'
 );
 
+
 echo $suit->run();
 
 

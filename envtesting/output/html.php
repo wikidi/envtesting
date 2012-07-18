@@ -13,16 +13,24 @@ final class Html {
 	/**
 	 * Render HTML output
 	 *
-	 * @param Suite $suit
+	 * @param Suite $suite
 	 * @return void
 	 */
-	public static function render(Suite $suit) {
+	public static function render(Suite $suite) {
 		$total = $error = $warning = $exception = $ok = $disabled = 0;
-		$filter = $suit->getFilter();
+		$filter = $suite->getFilter();
 		require __DIR__ . '/layout.phtml';
 	}
 
 	/**
+	 * Generate link with get params
+	 *
+	 * <code>
+	 * Hmtl::link();                // return home url
+	 * Hmtl::link('param=a');       // return url with param=a
+	 * Hmtl::link('param=b', true); // will add all params from current url and new params
+	 * </code>
+	 *
 	 * @param $query
 	 * @param bool $add
 	 * @return string
