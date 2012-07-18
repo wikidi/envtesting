@@ -11,8 +11,9 @@ $suit = new \envtesting\Suite('permission');
 $suit->addTest(
 	'permission', function() {
 		\tests\application\Permission::check(__DIR__, 777, __DIR__);
-	}, 'service'
-); // KISS
+	}, 'app'
+);
+
 echo $suit->run();
 
 
