@@ -74,7 +74,7 @@ addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
 class
 Html{static
 function
-render(Suite$suit){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$suit->getFilter();?><!DOCTYPE html>
+render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$suite->getFilter();?><!DOCTYPE html>
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
