@@ -8,7 +8,7 @@
 	<title>File Suite.php | Envtesting</title>
 
 	<script type="text/javascript" src="resources/combined.js?144019575"></script>
-	<script type="text/javascript" src="elementlist.js?3384075445"></script>
+	<script type="text/javascript" src="elementlist.js?3841038289"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1532301413" />
 
 </head>
@@ -27,28 +27,28 @@
 				<li><a href="namespace-envtesting.output.html">output</a>
 						</li>
 							</ul></li>
-				<li><a href="namespace-PHP.html">PHP</a>
-						</li>
-				<li><a href="namespace-tests.html">tests<span></span></a>
+				<li><a href="namespace-envtests.html">envtests<span></span></a>
 						<ul>
-				<li><a href="namespace-tests.application.html">application<span></span></a>
+				<li><a href="namespace-envtests.application.html">application<span></span></a>
 						<ul>
-				<li><a href="namespace-tests.application.memcache.html">memcache</a>
+				<li><a href="namespace-envtests.application.memcache.html">memcache</a>
 						</li>
-				<li><a href="namespace-tests.application.mongo.html">mongo</a>
+				<li><a href="namespace-envtests.application.mongo.html">mongo</a>
 						</li>
-				<li><a href="namespace-tests.application.mysql.html">mysql</a>
+				<li><a href="namespace-envtests.application.mysql.html">mysql</a>
 						</li>
 							</ul></li>
-				<li><a href="namespace-tests.services.html">services<span></span></a>
+				<li><a href="namespace-envtests.services.html">services<span></span></a>
 						<ul>
-				<li><a href="namespace-tests.services.memcache.html">memcache</a>
+				<li><a href="namespace-envtests.services.memcache.html">memcache</a>
 						</li>
-				<li><a href="namespace-tests.services.mongo.html">mongo</a>
+				<li><a href="namespace-envtests.services.mongo.html">mongo</a>
 						</li>
-				<li><a href="namespace-tests.services.mysql.html">mysql</a>
+				<li><a href="namespace-envtests.services.mysql.html">mysql</a>
 						</li>
 							</ul></li></ul></li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
 			</ul>
 		</div>
 
@@ -137,7 +137,7 @@
 <a href="#19" id="19" class="l"> 19: </a>    <span class="php-keyword1">protected</span> <span class="php-var">$groups</span> = <span class="php-keyword1">array</span>();
 <a href="#20" id="20" class="l"> 20: </a>
 <a href="#21" id="21" class="l"> 21: </a>    <span class="php-comment">/** @var string */</span>
-<a href="#22" id="22" class="l"> 22: </a>    <span class="php-keyword1">protected</span> <span class="php-var">$name</span> = __CLASS__;
+<a href="#22" id="22" class="l"> 22: </a>    <span class="php-keyword1">protected</span> <span class="php-var">$name</span> = <span class="php-keyword1">null</span>;
 <a href="#23" id="23" class="l"> 23: </a>
 <a href="#24" id="24" class="l"> 24: </a>    <span class="php-comment">/** @var null|string */</span>
 <a href="#25" id="25" class="l"> 25: </a>    <span class="php-keyword1">protected</span> <span class="php-var">$currentGroup</span> = <span class="php-keyword1">null</span>;
@@ -426,8 +426,8 @@
 </span><a href="#308" id="308" class="l">308: </a><span class="php-comment">     * @return mixed
 </span><a href="#309" id="309" class="l">309: </a><span class="php-comment">     */</span>
 <a href="#310" id="310" class="l">310: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> render(<span class="php-var">$to</span> = <span class="php-keyword1">null</span>) {
-<a href="#311" id="311" class="l">311: </a>        <span class="php-keyword1">if</span> (<span class="php-var">$to</span> === <span class="php-keyword1">null</span> &amp;&amp; <span class="php-keyword1">isset</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>])) {
-<a href="#312" id="312" class="l">312: </a>            <span class="php-var">$to</span> = <span class="php-keyword2">basename</span>(<span class="php-keyword2">parse_url</span>(<span class="php-var">$_SERVER</span>[<span class="php-quote">'REQUEST_URI'</span>], PHP_URL_PATH)) === <span class="php-quote">'csv'</span> ? <span class="php-quote">'csv'</span> : <span class="php-quote">'html'</span>;
+<a href="#311" id="311" class="l">311: </a>        <span class="php-keyword1">if</span> (<span class="php-var">$to</span> === <span class="php-keyword1">null</span> &amp;&amp; <span class="php-keyword1">isset</span>(<span class="php-var">$_GET</span>[<span class="php-quote">'output'</span>])) {
+<a href="#312" id="312" class="l">312: </a>            <span class="php-var">$to</span> = <span class="php-var">$_GET</span>[<span class="php-quote">'output'</span>] === <span class="php-quote">'csv'</span> ? <span class="php-quote">'csv'</span> : <span class="php-quote">'html'</span>;
 <a href="#313" id="313" class="l">313: </a>        } <span class="php-keyword1">elseif</span> (<span class="php-var">$to</span> === <span class="php-keyword1">null</span> &amp;&amp; PHP_SAPI === <span class="php-quote">'cli'</span>) {
 <a href="#314" id="314" class="l">314: </a>            <span class="php-var">$to</span> = <span class="php-quote">'cli'</span>;
 <a href="#315" id="315" class="l">315: </a>        }

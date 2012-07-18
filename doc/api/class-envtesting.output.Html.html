@@ -7,7 +7,7 @@
 	<title>Class envtesting\output\Html | Envtesting</title>
 
 	<script type="text/javascript" src="resources/combined.js?144019575"></script>
-	<script type="text/javascript" src="elementlist.js?3384075445"></script>
+	<script type="text/javascript" src="elementlist.js?3841038289"></script>
 	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1532301413" />
 
 </head>
@@ -26,28 +26,28 @@
 				<li class="active"><a href="namespace-envtesting.output.html">output</a>
 						</li>
 							</ul></li>
-				<li><a href="namespace-PHP.html">PHP</a>
-						</li>
-				<li><a href="namespace-tests.html">tests<span></span></a>
+				<li><a href="namespace-envtests.html">envtests<span></span></a>
 						<ul>
-				<li><a href="namespace-tests.application.html">application<span></span></a>
+				<li><a href="namespace-envtests.application.html">application<span></span></a>
 						<ul>
-				<li><a href="namespace-tests.application.memcache.html">memcache</a>
+				<li><a href="namespace-envtests.application.memcache.html">memcache</a>
 						</li>
-				<li><a href="namespace-tests.application.mongo.html">mongo</a>
+				<li><a href="namespace-envtests.application.mongo.html">mongo</a>
 						</li>
-				<li><a href="namespace-tests.application.mysql.html">mysql</a>
+				<li><a href="namespace-envtests.application.mysql.html">mysql</a>
 						</li>
 							</ul></li>
-				<li><a href="namespace-tests.services.html">services<span></span></a>
+				<li><a href="namespace-envtests.services.html">services<span></span></a>
 						<ul>
-				<li><a href="namespace-tests.services.memcache.html">memcache</a>
+				<li><a href="namespace-envtests.services.memcache.html">memcache</a>
 						</li>
-				<li><a href="namespace-tests.services.mongo.html">mongo</a>
+				<li><a href="namespace-envtests.services.mongo.html">mongo</a>
 						</li>
-				<li><a href="namespace-tests.services.mysql.html">mysql</a>
+				<li><a href="namespace-envtests.services.mysql.html">mysql</a>
 						</li>
 							</ul></li></ul></li>
+				<li><a href="namespace-PHP.html">PHP</a>
+						</li>
 			</ul>
 		</div>
 
@@ -147,7 +147,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 
 		<td class="name"><div>
 		<a class="anchor" href="#_render">#</a>
-		<code><a href="source-class-envtesting.output.Html.html#13" title="Go to source code">render</a>( <span><code><a href="class-envtesting.Suite.html">envtesting\Suite</a></code> <var>$suit</var></span> )</code>
+		<code><a href="source-class-envtesting.output.Html.html#13" title="Go to source code">render</a>( <span><code><a href="class-envtesting.Suite.html">envtesting\Suite</a></code> <var>$suite</var></span> )</code>
 
 		<div class="description short">
 			
@@ -163,7 +163,7 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 
 				<h4>Parameters</h4>
 				<div class="list"><dl>
-					<dt><var>$suit</var></dt>
+					<dt><var>$suite</var></dt>
 					<dd><code><code><a href="class-envtesting.Suite.html">envtesting\Suite</a></code></code></dd>
 				</dl></div>
 
@@ -188,10 +188,27 @@ href="mailto:ozana&#64;omdesign.cz">ozana&#64;<!---->omdesign.cz</a>&gt;<br />
 
 		<div class="description short">
 			
+<p>Generate link with get params</p>
+
 		</div>
 
 		<div class="description detailed hidden">
 			
+<p>Generate link with get params</p>
+
+<pre>
+Hmtl::<span class="php-keyword2">link</span>();                <span
+class="php-comment">// return home url</span>
+Hmtl::<span
+class="php-keyword2">link</span>(<span
+class="php-quote">'param=a'</span>);       <span
+class="php-comment">// return url with param=a</span>
+Hmtl::<span
+class="php-keyword2">link</span>(<span class="php-quote">'param=b'</span>, <span
+class="php-keyword1">true</span>); <span
+class="php-comment">// will add all params from current url and new params</span>
+</pre>
+
 
 
 				<h4>Parameters</h4>

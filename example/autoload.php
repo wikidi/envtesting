@@ -11,7 +11,7 @@ use envtesting\Check;
  */
 
 // run tests and show result
-echo $suite = Suite::instance('All libs autoloaded')->addFromDir(__DIR__ . '/../tests/library', 'library')->run();
+echo $suite = Suite::instance('All libs autoloaded')->addFromDir(__DIR__ . '/../envtests/library', 'library')->run();
 
 // change fitst test
 $suite[0] = new \envtesting\Test('NEW TEST', function() {
@@ -41,11 +41,11 @@ echo $suite->shuffle()->run();
 $group = Suite::instance('Groups');
 
 // autoload tests to group
-$group->to('Autoloaded dir')->addFromDir(__DIR__ . '/../tests/library', 'something');
+$group->to('Autoloaded dir')->addFromDir(__DIR__ . '/../envtests/library', 'something');
 
 // add tests to new Group
-$group->newGroup->addTest('APC', Check::file('tests/library/Apc.php'), 'apc');
-$group->newGroup->addTest('GETTEXT', Check::file('tests/library/Gettext.php'), 'apc');
+$group->newGroup->addTest('APC', Check::file('envtests/library/Apc.php'), 'apc');
+$group->newGroup->addTest('GETTEXT', Check::file('envtests/library/Gettext.php'), 'apc');
 
 $group->shuffle(false);
 

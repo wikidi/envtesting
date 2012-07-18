@@ -12,5 +12,5 @@ if (PHP_SAPI === 'cli') { // client
 }
 
 $suite = \envtesting\Suite::instance('memcached suit');
-$suite->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service'); // KISS
+$suite->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service'); // KISS
 $suite->run()->render('html');

@@ -10,7 +10,7 @@ $suit = new \envtesting\Suite('permission');
 
 $suit->addTest(
 	'permission', function() {
-		\tests\application\Permission::check(__DIR__, 777, __DIR__);
+		\envtests\application\Permission::check(__DIR__, 777, __DIR__);
 	}, 'app'
 );
 

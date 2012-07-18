@@ -11,9 +11,9 @@ $suit = new \envtesting\Suite('Super group test');
 // ---------------------------------------------------------------------------------------------------------------------
 
 // group 1
-$suit->group1->addTest('APC', 'tests/library/Apc.php')->setType('library')->setNotice('1/3');
-$suit->group1->addTest('GD', 'tests/library/Gd.php')->setType('library')->setNotice('2/3');
-$suit->group1->addTest('Gettext', 'tests/library/Gettext.php')->setType('library')->setNotice('3/3');
+$suit->group1->addTest('APC', 'envtests/library/Apc.php')->setType('library')->setNotice('1/3');
+$suit->group1->addTest('GD', 'envtests/library/Gd.php')->setType('library')->setNotice('2/3');
+$suit->group1->addTest('Gettext', 'envtests/library/Gettext.php')->setType('library')->setNotice('3/3');
 
 // group 2
 $suit->group2->addTest(
@@ -21,8 +21,8 @@ $suit->group2->addTest(
 		throw new \envtesting\Error('Die with me');
 	}
 )->setType('library')->setNotice('1/3');
-$suit->group2->addTest('PDO', 'tests/library/Pdo.php')->setType('library')->setNotice('2/3');
-$suit->group2->addTest('Mongo', 'tests/library/Mongo.php')->setType('library')->setNotice('3/3');
+$suit->group2->addTest('PDO', 'envtests/library/Pdo.php')->setType('library')->setNotice('2/3');
+$suit->group2->addTest('Mongo', 'envtests/library/Mongo.php')->setType('library')->setNotice('3/3');
 
 // ---------------------------------------------------------------------------------------------------------------------
 // fail (not run) all tests in group when on first error

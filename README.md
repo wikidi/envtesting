@@ -16,7 +16,7 @@ Envtesting provide **multiple way** how to test something. You can test:
 ```php
 <?php
 $suite = new \envtesting\Suite('my great envtest');
-$suite->addTest('APC', 'tests/library/Apc.php', 'apc'); // by file
+$suite->addTest('APC', 'envtests/library/Apc.php', 'apc'); // by file
 ```
 
 Using anonymous function:
@@ -53,7 +53,7 @@ Test using object with __invoke:
 <?php
 require_once __DIR__ . '/Envtesting.php';
 $suite = new \envtesting\Suite('my great envtest');
-$suite->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 ```
 
 Tests can be grouped into group:
@@ -62,8 +62,8 @@ Tests can be grouped into group:
 <?php
 require_once __DIR__ . '/Envtesting.php';
 $suite = new \envtesting\Suite('my great envtest');
-$suite->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
-$suite->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->group->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->group2->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 ```
 
 You can shuffle groups of shuffle tests inside groups:
@@ -72,9 +72,9 @@ You can shuffle groups of shuffle tests inside groups:
 <?php
 require_once __DIR__ . '/Envtesting.php';
 $suite = new \envtesting\Suite('my great envtest');
-$suite->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
-$suite->group->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
-$suite->group2->addTest('memcache', new \tests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->group->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->group->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service');
+$suite->group2->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service');
 $suite->shuffle(); // mix only groups
 $suite->shuffle(true); // deep shuffle mix groups and tests inside group
 ```
@@ -103,7 +103,7 @@ Visit more examples in: https://github.com/wikidi/envtesting/tree/master/example
 Don't forget update docs !!!
 
 ```bash
-php ~/workspace/apigen/apigen.php --source ./envtesting --source ./tests --destination ./doc/api --todo --title "Envtesting"
+php ~/workspace/apigen/apigen.php --source ./envtesting --source ./envtests --destination ./doc/api --todo --title "Envtesting"
 ```
 
 
