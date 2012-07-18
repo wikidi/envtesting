@@ -36,7 +36,7 @@ final class Html {
 	 * @return string
 	 */
 	public static function link($query = null, $add = false) {
-		$url = isset($_SERVER['REQUEST_URI']) ? trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') : null;
+		$url = isset($_SERVER['REQUEST_URI']) ? '/' . trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/') : '/';
 		if ($add && isset($_SERVER['QUERY_STRING'])) $query .= '&' . $_SERVER['QUERY_STRING'];
 		parse_str($query, $params);
 		return ($params) ? $url . '?' . http_build_query($params) : $url;
