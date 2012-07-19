@@ -216,7 +216,7 @@ as$order=>$test){?>
 			</table>
 
 			<div class="btn-group">
-				<a href="<?=Html::link(null,false)?>" class="btn btn-primary" title="Refresh current tests"><i
+				<a href="<?=Html::link(null,true)?>" class="btn btn-primary" title="Refresh current tests"><i
 					class="icon-refresh icon-white"></i> Refresh</a>
 				<a href="<?=Html::link('output=csv',true)?>" class="btn" title="Download CSV output">CSV <i
 					class="icon-arrow-down"></i></a>
