@@ -12,3 +12,5 @@ namespace envtests\library;
 	\envtesting\Check::lib('apc', 'apc_inc'),
 	'APC not found'
 );
+
+echo 'APC found';

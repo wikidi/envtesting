@@ -12,3 +12,5 @@ namespace envtests\library;
 	\envtesting\Check::lib('gettext', 'gettext'),
 	'Gettext library not found'
 );
+
+echo 'Gettext found';

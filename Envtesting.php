@@ -52,7 +52,8 @@ function
 ini($variable,$value=null){return($value===null)?ini_get($variable):$value===ini_get($variable);}static
 function
 file($file,$dir=__DIR__){return
-function()use($file,$dir){ include $dir . DIRECTORY_SEPARATOR . $file;};}}class
+function()use($file,$dir){ob_start(); include $dir . DIRECTORY_SEPARATOR . $file;return
+ob_get_clean();};}}class
 Error
 extends\Exception{}class
 Filter{public$type=null;public$group=null;public$name=null;function

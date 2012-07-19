@@ -12,3 +12,5 @@ namespace envtests\library;
 	\envtesting\Check::cls('MongoDB'),
 	'MongoDB class not found'
 );
+
+echo 'mongo found';

@@ -52,7 +52,9 @@ class Check {
 	 */
 	public static function file($file, $dir = __DIR__) {
 		return function () use ($file, $dir) {
+			ob_start();
 			include $dir . DIRECTORY_SEPARATOR . $file;
+			return ob_get_clean();
 		};
 	}
 }

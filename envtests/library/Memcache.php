@@ -12,3 +12,5 @@ namespace envtests\library;
 	\envtesting\Check::lib('memcache'),
 	'memcache library not found'
 );
+
+echo 'memcache found';

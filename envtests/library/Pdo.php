@@ -12,3 +12,5 @@ namespace envtests\library;
 	\envtesting\Check::cls('PDO'),
 	'PDO class not found'
 );
+
+echo 'PDO found';
