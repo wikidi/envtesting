@@ -35,17 +35,16 @@ class Connection {
 	 * @throws \envtesting\Error
 	 */
 	public function connect() {
+		if (!extension_loaded('memcache')) throw new \envtesting\Error('PHP extension \'memcache\' is not loaded');
+		if (!class_exists('Memcache')) throw new \envtesting\Error('Memcache classs is missing.');
+
 		try {
 			$this->memcache = new \Memcache();
 			$this->memcache->connect($this->host, $this->port, true);
-
-			if ($this->memcache->getStats() == false) {
-				throw new \envtesting\Error('Memcached connection faild: ' . $this->host . ':' . $this->port);
-			}
-
+			if ($this->memcache->getStats() == false) throw new \Exception('Memcache status return false.');
 		} catch (\Exception $e) {
 			throw new \envtesting\Error(
-				'Memcached connection faild: ' . $this->host . ':' . $this->port . ' with ' . $e->getMessage()
+				'Memcached connection faild: ' . $this->host . ':' . $this->port . ' : ' . $e->getMessage()
 			);
 		}
 	}
