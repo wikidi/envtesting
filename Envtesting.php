@@ -307,14 +307,15 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 function
 link($query=null,$add=false){$url=isset($_SERVER['REQUEST_URI'])?'/'.trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/'):'/';if($add&&isset($_SERVER['QUERY_STRING']))$query.='&'.$_SERVER['QUERY_STRING'];parse_str($query,$params);return($params)?$url.'?'.http_build_query($params):$url;}}}namespace envtesting{class
 Suite
-implements\ArrayAccess,\IteratorAggregate{protected$groups=array();protected$name=null;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
-__construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:new
-Filter();}function
+implements\ArrayAccess,\IteratorAggregate{private
+static$instance=null;protected$groups=array();protected$name=null;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
+__construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:Filter::instanceFromArray($_GET);}function
 run(){foreach($this->groups
 as$tests){$failed=false;foreach($tests
 as$test){if($failed){$test->setResult($failed->getResult());$test->setNotice($failed->getNotice());$test->setOptions($failed->getOptions());}else{$test->run();$failed=($test->isFail()&&$this->failGroupOnFirstError)?$test:false;}}}return$this;}function
 shuffle($deep=false){if($deep||$this->hasGroups()===false)array_filter($this->groups,'shuffle');if($this->hasGroups()){$keys=array_keys($this->groups);shuffle($keys);$this->groups=array_merge(array_flip($keys),$this->groups);}return$this;}function
-addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}$test=Test::instance($name,$callback,$type);$test->enable($this->filter->isValid($test,$this));return$this->groups[$this->getCurrentGroupName()][]=$test;}function
+addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}$test=new
+Test($name,$callback,$type);$test->enable($this->filter->isValid($test,$this));return$this->groups[$this->getCurrentGroupName()][]=$test;}function
 addFromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
 as$filePath=>$fileInfo){$this->addTest($fileInfo->getBasename('.php'),$filePath,$type);}return$this;}function
 __get($name){return$this->to($name);}function
@@ -330,9 +331,9 @@ setFilter(Filter$filter){$this->filter=$filter;return$this;}function
 getFilter(){return$this->filter;}function
 failGroupOnFirstError($fail=true){$this->failGroupOnFirstError=$fail;return$this;}static
 function
-instance($name,Filter$filter=null){return
-new
-self($name,$filter);}function
+instance($name=null,Filter$filter=null){if(self::$instance==null)self::$instance=new
+self($name,$filter);return
+self::$instance;}function
 offsetExists($offset){return
 array_key_exists($offset,$this->groups[$this->getCurrentGroupName()]);}function
 offsetGet($offset){return$this->offsetExists($offset)?$this->groups[$this->getCurrentGroupName()][$offset]:null;}function
@@ -380,11 +381,7 @@ getNotice(){return$this->notice;}function
 setNotice($notice=''){$this->notice=$notice;return$this;}function
 enable($enabled=true){$this->enabled=$enabled;return$this;}function
 isEnabled(){return$this->enabled;}function
-isDisabled(){return!$this->enabled;}static
-function
-instance($name,$callback,$type=null,$enabled=true){return
-new
-self($name,$callback,$type,$enabled);}}class
+isDisabled(){return!$this->enabled;}}class
 Throws{static
 function
 allErrors(){set_error_handler(array('\\envtesting\\Throws','handleError'),E_ALL&~E_DEPRECATED);}static

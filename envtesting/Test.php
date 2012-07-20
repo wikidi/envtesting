@@ -307,23 +307,4 @@ class Test {
 	public function isDisabled() {
 		return !$this->enabled;
 	}
-
-	// -------------------------------------------------------------------------------------------------------------------
-
-	/**
-	 * Return instance of test
-	 *
-	 * <code>
-	 * Test::instance('something', function(){ return true; }, 'dummy');
-	 * </code>
-	 *
-	 * @param string $name
-	 * @param mixed $callback
-	 * @param string|null $type
-	 * @param bool $enabled
-	 * @return Test
-	 */
-	public static function instance($name, $callback, $type = null, $enabled = true) {
-		return new self($name, $callback, $type, $enabled);
-	}
 }

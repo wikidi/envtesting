@@ -15,6 +15,9 @@ namespace envtesting;
  */
 class Suite implements \ArrayAccess, \IteratorAggregate {
 
+	/** @var Suite */
+	private static $instance = null;
+
 	/** @var array */
 	protected $groups = array();
 
@@ -36,7 +39,7 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 	 */
 	public function __construct($name = __CLASS__, Filter $filter = null) {
 		$this->name = $name;
-		$this->filter = ($filter) ? $filter : new Filter();
+		$this->filter = ($filter) ? $filter : Filter::instanceFromArray($_GET);
 	}
 
 	/**
@@ -102,7 +105,7 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 		}
 
 		// create new Test instance
-		$test = Test::instance($name, $callback, $type);
+		$test = new Test($name, $callback, $type);
 		$test->enable($this->filter->isValid($test, $this));
 
 		return $this->groups[$this->getCurrentGroupName()][] = $test;
@@ -229,8 +232,9 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 	 * @param Filter|null $filter
 	 * @return Suite
 	 */
-	public static function instance($name, Filter $filter = null) {
-		return new self($name, $filter);
+	public static function instance($name = null, Filter $filter = null) {
+		if (self::$instance == null) self::$instance = new self($name, $filter);
+		return self::$instance;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
