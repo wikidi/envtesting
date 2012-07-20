@@ -4,40 +4,40 @@
  */
 require_once __DIR__ . '/../Envtesting.php';
 
-$suit = new \envtesting\Suite('Super group test');
+$suite = new \envtesting\Suite('Super group test');
 
 // ---------------------------------------------------------------------------------------------------------------------
 // organize tests to groups
 // ---------------------------------------------------------------------------------------------------------------------
 
 // group 1
-$suit->group1->addTest('APC', 'envtests/library/Apc.php')->setType('library')->setNotice('1/3');
-$suit->group1->addTest('GD', 'envtests/library/Gd.php')->setType('library')->setNotice('2/3');
-$suit->group1->addTest('Gettext', 'envtests/library/Gettext.php')->setType('library')->setNotice('3/3');
+$suite->group1->addTest('APC', 'envtests/library/Apc.php')->setType('library')->setNotice('1/3');
+$suite->group1->addTest('GD', 'envtests/library/Gd.php')->setType('library')->setNotice('2/3');
+$suite->group1->addTest('Gettext', 'envtests/library/Gettext.php')->setType('library')->setNotice('3/3');
 
 // group 2
-$suit->group2->addTest(
+$suite->group2->addTest(
 	'PDO', function() {
 		throw new \envtesting\Error('Die with me');
 	}
 )->setType('library')->setNotice('1/3');
-$suit->group2->addTest('PDO', 'envtests/library/Pdo.php')->setType('library')->setNotice('2/3');
-$suit->group2->addTest('Mongo', 'envtests/library/Mongo.php')->setType('library')->setNotice('3/3');
+$suite->group2->addTest('PDO', 'envtests/library/Pdo.php')->setType('library')->setNotice('2/3');
+$suite->group2->addTest('Mongo', 'envtests/library/Mongo.php')->setType('library')->setNotice('3/3');
 
 // ---------------------------------------------------------------------------------------------------------------------
 // fail (not run) all tests in group when on first error
 // ---------------------------------------------------------------------------------------------------------------------
 
-echo $suit->setName('Group die')->failGroupOnFirstError()->run(); // fail group on first error
+echo $suite->setName('Group die')->failGroupOnFirstError()->run(); // fail group on first error
 
 // ---------------------------------------------------------------------------------------------------------------------
 // shuffle
 // ---------------------------------------------------------------------------------------------------------------------
 
-$suit->failGroupOnFirstError(false); // return fail group back
+$suite->failGroupOnFirstError(false); // return fail group back
 
-echo $suit->setName('shuffle groups')->shuffle()->run(); // group mix
-echo $suit->setName('deep shuffle')->shuffle(true)->run(); // deep mix
+echo $suite->setName('shuffle groups')->shuffle()->run(); // group mix
+echo $suite->setName('deep shuffle')->shuffle(true)->run(); // deep mix
 
 
 

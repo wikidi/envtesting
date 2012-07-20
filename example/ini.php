@@ -10,17 +10,17 @@ use \envtesting\Check;
 use \envtesting\Suite;
 use \envtesting\Assert;
 
-$suit = new Suite('php.ini settings');
+$suite = new Suite('php.ini settings');
 
 // check log_errors
-$suit->addTest(
+$suite->addTest(
 	'error_reporting', function() {
 		Assert::true(Check::ini('log_errors', '1'), 'log_errors is OFF');
 	}
 )->setType('INI');
 
 // check display errors
-$suit->addTest(
+$suite->addTest(
 	'display_errors', function() {
 		Assert::true(Check::ini('display_errors', '1'), 'display_errors is OFF');
 	}
@@ -28,14 +28,14 @@ $suit->addTest(
 
 // check post_max_size
 
-$suit->addTest(
+$suite->addTest(
 	'post_max_size', function() {
 		$size = Check::ini('post_max_size');
 		Assert::true($size > 256, 'post_max_size = ' . $size . ' is smaller then 256MB');
 	}
 )->setType('INI');
 
-echo $suit->run();
+echo $suite->run();
 
 
 echo '--------------------------------------------------------------------------------' . PHP_EOL; // or KISS way

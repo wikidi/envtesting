@@ -6,15 +6,15 @@
  */
 require_once __DIR__ . '/../Envtesting.php';
 
-$suit = new \envtesting\Suite('permission');
+$suite = new \envtesting\Suite('permission');
 
-$suit->addTest(
+$suite->addTest(
 	'permission', function() {
 		\envtests\application\Permission::check(__DIR__, 777, __DIR__);
 	}, 'app'
 );
 
 
-echo $suit->run();
+echo $suite->run();
 
 

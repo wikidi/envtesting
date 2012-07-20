@@ -6,6 +6,6 @@
  */
 require_once __DIR__ . '/../Envtesting.php';
 
-$suit = new \envtesting\Suite('memcached');
-$suit->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service'); // KISS
-echo $suit->run();
+$suite = new \envtesting\Suite('memcached');
+$suite->addTest('memcache', new \envtests\services\memcache\Connection('127.0.0.1', 11211), 'service'); // KISS
+echo $suite->run();
