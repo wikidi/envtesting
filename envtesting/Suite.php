@@ -26,6 +26,8 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 	protected $failGroupOnFirstError = false;
 	/** @var Filter */
 	protected $filter = null;
+	/** @var bool */
+	protected $run = false;
 
 	/**
 	 * @param string $name
@@ -55,6 +57,7 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 				}
 			}
 		}
+		$this->run = true;
 		return $this;
 	}
 
@@ -293,6 +296,7 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 	 * @return string
 	 */
 	public function __toString() {
+		if ($this->run === false) return 'Call ->run() before try getting results' . PHP_EOL;
 		$results = \envtesting\App::header($this->name);
 		foreach ($this->groups as $group => $tests) {
 			$results .= implode(PHP_EOL, $tests) . PHP_EOL;
@@ -306,12 +310,12 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 	 * @return mixed
 	 */
 	public function render($to = null) {
+		if ($this->run === false) throw new \Exception('Call run before try getting results');
 		if ($to === null && isset($_GET['output'])) {
 			$to = $_GET['output'] === 'csv' ? 'csv' : 'html';
 		} elseif ($to === null && PHP_SAPI === 'cli') {
 			$to = 'cli';
 		}
-
 		switch ($to) {
 			case 'cli': // PHP client
 				echo $this;

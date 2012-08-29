@@ -179,6 +179,7 @@ class Test {
 	 * @return string
 	 */
 	public function __toString() {
+		echo 'ano';
 		$response = array(
 			'status' => str_pad($this->getStatus(), 10, ' '),
 			'name' => str_pad($this->getName(), 20, ' '),
