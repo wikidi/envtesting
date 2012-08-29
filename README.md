@@ -5,6 +5,16 @@ Produce console, HTML or CSV output.
 
 ## How to use
 
+1. copy Envtesting.php and folder envtests
+2. create index.php
+
+<?php
+require_once __DIR__ . '/Envtesting.php';
+$suite = new \envtesting\Suite('my great envtest');
+
+
+## Envtesting advantages
+
 Envtesting provide **multiple way** how to test something. You can test:
 
 - using regular PHP file
@@ -15,8 +25,17 @@ Envtesting provide **multiple way** how to test something. You can test:
 
 ```php
 <?php
+require_once __DIR__ . '/Envtesting.php';
 $suite = new \envtesting\Suite('my great envtest');
 $suite->addTest('APC', 'envtests/library/Apc.php', 'apc'); // by file
+```
+or
+```php
+<?php
+require_once __DIR__ . '/Envtesting.php';
+Suite::instance();
+Suite::instance()->addTest('APC', 'envtests/library/Apc.php', 'apc'); // by file
+
 ```
 
 Using anonymous function:
@@ -30,7 +49,7 @@ $suite->addTest('SOMETHING', function() {
 	}, 'boolean');
 ```
 
-Usin regular callback:
+Using regular callback:
 
 ```php
 <?php
@@ -107,6 +126,9 @@ php ~/workspace/apigen/apigen.php --source ./envtesting --source ./envtests --de
 ```
 
 
+## Media
+
+- http://www.zdrojak.cz/clanky/envtesting-overujeme-nastaveni-prostredi/
 
 ## Meta
 

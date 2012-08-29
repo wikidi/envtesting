@@ -14,22 +14,16 @@ namespace envtesting;
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 class Suite implements \ArrayAccess, \IteratorAggregate {
-
 	/** @var Suite */
 	private static $instance = null;
-
 	/** @var array */
 	protected $groups = array();
-
 	/** @var string */
 	protected $name = null;
-
 	/** @var null|string */
 	protected $currentGroup = null;
-
 	/** @var bool */
 	protected $failGroupOnFirstError = false;
-
 	/** @var Filter */
 	protected $filter = null;
 
