@@ -6,12 +6,9 @@ Produce console, HTML or CSV output.
 ## How to use
 
 1. copy Envtesting.php and folder envtests
-2. create index.php
-
-<?php
-require_once __DIR__ . '/Envtesting.php';
-$suite = new \envtesting\Suite('my great envtest');
-
+2. create index.php and require Envtesting.php
+3. add some test to Suite
+4. return output as html/csv/txt
 
 ## Envtesting advantages
 
