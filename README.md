@@ -28,14 +28,15 @@ Envtesting provide **multiple way** how to test something. You can test:
 require_once __DIR__ . '/Envtesting.php';
 $suite = new \envtesting\Suite('my great envtest');
 $suite->addTest('APC', 'envtests/library/Apc.php', 'apc'); // by file
+echo $suite;
 ```
-or
+or using singelton instance of Suite
+
 ```php
 <?php
 require_once __DIR__ . '/Envtesting.php';
-Suite::instance();
 Suite::instance()->addTest('APC', 'envtests/library/Apc.php', 'apc'); // by file
-
+echo Suite::instance();
 ```
 
 Using anonymous function:
