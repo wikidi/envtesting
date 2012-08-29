@@ -22,4 +22,4 @@ $mysql->addTest('PDO', __DIR__ . '/../envtests/library/Pdo.php', 'library');
 $mysql->addTest('PDO', __DIR__ . '/../envtests/library/Pdo.php', 'library');
 
 // output
-echo Suite::instance();
+echo Suite::instance()->run();
