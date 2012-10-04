@@ -13,3 +13,4 @@ namespace envtests\library;
 	'Tidy'
 );
 
+echo 'Tidy found';
