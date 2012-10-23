@@ -23,7 +23,8 @@ class Minicrawler {
 
 		if (!$read) throw new \envtesting\Error('Minicrawler not found');
 
-		if ($this->version && stristr($read, 'minicrawler, version ' . $this->version) == false) {
+		preg_match('/[0-9\.]+/', $read, $version);
+		if ($this->version && isset($version[0]) && floatval($version[0]) < floatval($this->version)) {
 			throw new \envtesting\Error('Wrong minicrawler version' . $read);
 		}
 
