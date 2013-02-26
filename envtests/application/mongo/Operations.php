@@ -28,9 +28,9 @@ class Operations extends \envtests\services\mongo\Connection {
 			}
 
 			// REMOVE
-			$response = $this->getCollection()->remove($data);
+			$this->getCollection()->remove($data);
 			$deleted = $this->getCollection()->findOne($data);
-			if ($response !== true || $deleted !== null) {
+			if ($deleted !== null) {
 				throw new \envtesting\Error('Data saved, but not removed!' . PHP_EOL . $this);
 			}
 
