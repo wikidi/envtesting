@@ -6,17 +6,23 @@ use envtesting\Error;
  * Try store session to session storage and get response back
  *
  * @author Roman Ozana <ozana@omdesign.cz>
+ * @author Jan Prachař <jan.prachar@gmail.com>
  */
 class Session {
 
-	/** @var string */
-	public $savePath = null;
+	/** @var Object */
+	public $config;
 
 	/**
-	 * @param string $savePath
+	 * @param string|Object $config
 	 */
-	public function __construct($savePath) {
-		$this->savePath = $savePath;
+	public function __construct($config) {
+		if (is_string($config)) {
+			$this->config = new \stdClass;
+			$this->config->save_path = $config;
+		} else {
+			$this->config = $config;
+		}
 	}
 
 	public function __invoke() {
@@ -26,7 +32,12 @@ class Session {
 
 	public function tryConnectSession() {
 		try {
-			session_save_path($this->savePath);
+			if (isset($config->handler)) {
+				session_set_save_handler($config->handler);
+			}
+			if (isset($config->save_path)) {
+				session_save_path($config->save_path);
+			}
 			if (!session_start()) throw new Error('Session failed: session was not created');
 		} catch (\Exception $e) {
 			throw new Error('Session failed: ' . $e->getMessage());
