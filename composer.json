@@ -5,7 +5,11 @@
 	"homepage": "http://www.wikidi.com/",
 	"type": "tool",
 	"license": ["MIT"],
-	"authors": [
+	"author": {
+		"name" : "Devel.cz"
+		"url" : "http://www.devel.cz"
+	},
+	"contributors": [
 		{
 			"name": "Roman Ožana",
 			"email": "ozana@omdesign.cz",
