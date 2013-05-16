@@ -6,7 +6,7 @@
 	"type": "tool",
 	"license": ["MIT"],
 	"author": {
-		"name" : "Devel.cz"
+		"name" : "Devel.cz",
 		"url" : "http://www.devel.cz"
 	},
 	"contributors": [
