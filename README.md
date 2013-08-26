@@ -3,11 +3,11 @@
 Fast simple and easy to use environment testing written in PHP. Can check library, services and services response.
 Produce console, HTML or CSV output.
 
-![HTML output example](/wikidi/envtesting/raw/master/doc/envtesting.png "HTML output")
+![HTML output example](https://raw.github.com/wikidi/envtesting/master/doc/envtesting.png "HTML output")
 
 ## How to use
 
-1. copy [Envtesting.php](https://raw.github.com/wikidi/envtesting/master/doc/envtesting.php) and folder [envtests](https://github.com/wikidi/envtesting/tree/master/envtests)
+1. copy [Envtesting.php](https://github.com/wikidi/envtesting/blob/master/Envtesting.php) and folder [envtests](https://github.com/wikidi/envtesting/tree/master/envtests)
 2. create index.php and require Envtesting.php
 3. add some test to Suite
 4. return output as html/csv/txt
