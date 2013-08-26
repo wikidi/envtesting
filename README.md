@@ -3,6 +3,8 @@
 Fast simple and easy to use environment testing written in PHP. Can check library, services and services response.
 Produce console, HTML or CSV output.
 
+![HTML output example](/wikidi/envtesting/raw/master/doc/envtesting.png "HTML output")
+
 ## How to use
 
 1. copy [Envtesting.php](https://raw.github.com/wikidi/envtesting/master/doc/envtesting.php) and folder [envtests](https://github.com/wikidi/envtesting/tree/master/envtests)
@@ -16,7 +18,7 @@ Envtesting provide **multiple way** how to test something. You can test:
 
 - using regular PHP file
 - using [anonymous function](http://php.net/manual/en/functions.anonymous.php)
-- using static or regular "callback"(http://php.net/manual/en/language.types.callable.php)
+- using static or regular [callback](http://php.net/manual/en/language.types.callable.php)
 - using object with [__invoke function](http://www.php.net/manual/en/language.oop5.magic.php#object.invoke)
 
 
@@ -105,8 +107,6 @@ echo $suite;            // generate TXT output
 $suite->render('csv');  // render CSV output
 $suite->render('html'); // render HTML output
 ```
-
-![HTML output example](/wikidi/envtesting/raw/master/doc/images/html-output-example.png "HTML output")
 
 Visit more examples in: https://github.com/wikidi/envtesting/tree/master/example
 
