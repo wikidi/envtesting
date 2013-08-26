@@ -128,7 +128,7 @@ namespace envtesting\output;
 						</td>
 						<td><?= $test->getNotice(); ?></td>
 						<td>
-							<?= nl2br($test->getStatusMessage()); ?>
+							<?= $test->getStatusMessage(true) ?>
 							<? if ($test->hasOptions()) { ?>
 								<br><code>Options: <?= json_encode((array)$test->getOptions()); ?></code>
 							<? } ?>
@@ -141,9 +141,8 @@ namespace envtesting\output;
 					<? if ($test->isWarning()) $warning++; ?>
 				<? } ?>
 
-			<?
-			}
-			$enabled = $total - $disabled; ?>
+			<? } ?>
+			<? $enabled = $total - $disabled; ?>
 			</tbody>
 		</table>
 

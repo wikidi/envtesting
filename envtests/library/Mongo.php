@@ -8,9 +8,9 @@ namespace envtests\library;
  * @author Roman Ozana <ozana@omdesign.cz>
  */
 
-\envtesting\Assert::true(
-	\envtesting\Check::cls('MongoDB'),
-	'MongoDB class not found'
-);
+use envtesting\Assert;
+use envtesting\Check;
+
+Assert::true(Check::cls('MongoDB'), 'MongoDB class not found');
 
 echo 'mongo found';

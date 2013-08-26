@@ -105,12 +105,20 @@ class Test {
 	 * @return string|null
 	 * @throws \Exception
 	 */
-	public function getStatusMessage() {
+	public function getStatusMessage($html = false, $null = false) {
 		if ($this->isDisabled()) return null;
 		$message = (is_object($this->callback) && method_exists(
 				$this->callback, '__toString'
 			)) ? (string)$this->callback : $this->callResponse; // return response
-		return ($this->result instanceof \Exception) ? $this->result->getMessage() : $message;
+		$message = ($this->result instanceof \Exception) ? $this->result->getMessage() : $message;
+
+		if (($null && $message === null) || is_bool($message)) {
+			return var_export($message);
+		} elseif (is_scalar($message)) {
+			return $html ? nl2br($message) : $message;
+		} else {
+			return ($html ? '<code>' : null) . json_encode($message) . ($html ? '</code>' : null);
+		}
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------
@@ -214,6 +222,11 @@ class Test {
 		// static callback
 		if (is_string($this->callback) && strpos($this->callback, '::')) {
 			return $this->callback = explode('::', $this->callback);
+		}
+
+		// check if is file
+		if (basename($this->callback) && !file_exists($this->callback)) {
+			throw new \Exception('Invalid callback: test file not found ' . PHP_EOL . $this->callback);
 		}
 
 		throw new \Exception('Invalid callback');

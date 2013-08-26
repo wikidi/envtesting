@@ -17,7 +17,7 @@ $suite = Suite::instance('My Suite', $filter)->failGroupOnFirstError();
 $memcache = $suite->memcache;
 /** @var Suit $memcache */
 
-$memcache->addTest('Memcache', App::$root . '/envtests/library/Memcache.php', 'library');
+$memcache->addTest('Memcache', dirname(__DIR__) . '/envtests/library/Memcache.php', 'library');
 $memcache->addTest(
 	'APP Memcache', new \envtests\application\memcache\Operations('127.0.0.1', 11211), 'application'
 )->setNotice('server');
@@ -27,11 +27,11 @@ $memcache->addTest(
 // mongo
 // ---------------------------------------------------------------------------------------------------------------------
 $dsn = 'mongodb://localhost:27017/testomato'; // can be read from your config;
-$options = array();
+$options = array('connectTimeoutMS' => 3000);
 
 $mongo = $suite->mongo;
 /** @var Suit $mongo */
-$mongo->addTest('Mongo', App::$root . '/envtests/library/Mongo.php', 'library');
+$mongo->addTest('Mongo', dirname(__DIR__) . '/envtests/library/Mongo.php', 'library');
 $mongo->addTest('mongo:connect', new \envtests\services\mongo\Connection($dsn, $options), 'service');
 $mongo->addTest('mongo:operations', new \envtests\application\mongo\Operations($dsn, $options), 'application');
 

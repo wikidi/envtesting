@@ -24,14 +24,16 @@ final class Csv {
 
 		foreach ($suite as $group => $tests) {
 			foreach ($tests as $order => $test/** @var \envtesting\Test $test */) {
+				$message = is_scalar($message = $test->getStatusMessage()) ? $message : json_encode($message);
 				$options = ($test->getOptions() ? '<br/>' . json_encode($test->getOptions()) : '');
+
 				if ($test->isEnabled()) {
 					$data = array(
 						$test->getStatus(),
 						$group . ':' . $test->getName(),
 						$test->getNotice(),
 						$test->getType(),
-						$test->isOk() ? 'OK' : preg_replace('/\s+/i', ' ', trim($test->getStatusMessage() . $options)),
+						$test->isOk() ? 'OK' : preg_replace('/\s+/i', ' ', trim($message . $options)),
 						$order,
 					);
 					echo addslashes(implode(', ', $data)) . PHP_EOL;

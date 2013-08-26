@@ -5,7 +5,7 @@ Produce console, HTML or CSV output.
 
 ## How to use
 
-1. copy [Envtesting.php](https://raw.github.com/wikidi/envtesting/master/Envtesting.php) and folder [envtests](https://github.com/wikidi/envtesting/tree/master/envtests)
+1. copy [Envtesting.php](https://raw.github.com/wikidi/envtesting/master/doc/envtesting.php) and folder [envtests](https://github.com/wikidi/envtesting/tree/master/envtests)
 2. create index.php and require Envtesting.php
 3. add some test to Suite
 4. return output as html/csv/txt

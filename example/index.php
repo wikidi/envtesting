@@ -31,6 +31,15 @@ $libs = Suite::instance()->libs;
 $libs->addTest('APC', dirname(__DIR__) . '/envtests/library/Apc.php', 'library');
 $libs->addTest('PDO', dirname(__DIR__) . '/envtests/library/Pdo.php', 'library');
 
+// Returns
+$returns = Suite::instance()->callback;
+$returns->addTest('JSON', function(){ return array('array'=> 'ok');}, 'return');
+$returns->addTest('JSON', function(){ return (object)array('stdClass'=> 'ok');}, 'return');
+$returns->addTest('BOOL', function(){ return false;}, 'return');
+$returns->addTest('BOOL', function(){ return true;}, 'return');
+$returns->addTest('empty', function(){ /* empty */ }, 'return');
+$returns->addTest('NULL', function(){ return null; }, 'return');
+
 // callbacks
 $callback = Suite::instance()->callback;
 $callback->addTest('MISSING', 'missing file', 'callback');

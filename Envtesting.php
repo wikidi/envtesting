@@ -63,7 +63,7 @@ Csv{static
 function
 render(Suite$suite){$name=preg_replace('#[^a-z0-9]+#i','-',strtolower($suite->getName()));header('Content-type: text/csv');header('Content-Disposition: attachment; filename='.trim($name,'-').'.env.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suite
 as$group=>$tests){foreach($tests
-as$order=>$test){$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':preg_replace('/\s+/i',' ',trim($test->getStatusMessage().$options)),$order);echo
+as$order=>$test){$message=is_scalar($message=$test->getStatusMessage())?$message:json_encode($message);$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':preg_replace('/\s+/i',' ',trim($message.$options)),$order);echo
 addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
 class
 Html{static
@@ -194,7 +194,7 @@ as$order=>$test){?>
 						</td>
 						<td><?=$test->getNotice();?></td>
 						<td>
-							<?=nl2br($test->getStatusMessage());?>
+							<?=$test->getStatusMessage(true)?>
 							<?if($test->hasOptions()){?>
 								<br><code>Options: <?=json_encode((array)$test->getOptions());?></code>
 							<?}?>
@@ -207,7 +207,8 @@ as$order=>$test){?>
 					<?if($test->isWarning())$warning++;?>
 				<?}?>
 
-			<?}$enabled=$total-$disabled;?>
+			<?}?>
+			<?$enabled=$total-$disabled;?>
 			</tbody>
 		</table>
 
@@ -352,9 +353,10 @@ instanceof\Exception){$this->setResult($result);}return$this;}function
 __invoke(){return$this->run();}function
 getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if($this->isDisabled())return'DISABLED';if($this->isError())return'CRIT';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
 new\Exception('Invalid result type: '.gettype($this->result));}function
-getStatusMessage(){if($this->isDisabled())return
-null;$message=(is_object($this->callback)&&method_exists($this->callback,'__toString'))?(string)$this->callback:$this->callResponse;return($this->result
-instanceof\Exception)?$this->result->getMessage():$message;}function
+getStatusMessage($html=false,$null=false){if($this->isDisabled())return
+null;$message=(is_object($this->callback)&&method_exists($this->callback,'__toString'))?(string)$this->callback:$this->callResponse;$message=($this->result
+instanceof\Exception)?$this->result->getMessage():$message;if(($null&&$message===null)||is_bool($message)){return
+var_export($message);}elseif(is_scalar($message)){return$html?nl2br($message):$message;}else{return($html?'<code>':null).json_encode($message).($html?'</code>':null);}}function
 isWarning(){return$this->getResult()instanceof
 Warning;}function
 isError(){return$this->getResult()instanceof
@@ -366,7 +368,8 @@ getResult(){return$this->result;}function
 setResult($result){$this->result=$result;return$this;}function
 __toString(){$response=array('status'=>str_pad($this->getStatus(),10,' '),'name'=>str_pad($this->getName(),20,' '),'type'=>str_pad($this->getType(),10,' '),'options'=>$this->hasOptions()?json_encode((object)$this->getOptions()):'','notice'=>$this->getNotice(),'message'=>$this->getStatusMessage());return
 implode($response,' | ');}function
-getCallback(){if(is_callable($this->callback))return$this->callback;if(is_string($this->callback)&&strpos($this->callback,'::')){return$this->callback=explode('::',$this->callback);}throw
+getCallback(){if(is_callable($this->callback))return$this->callback;if(is_string($this->callback)&&strpos($this->callback,'::')){return$this->callback=explode('::',$this->callback);}if(basename($this->callback)&&!file_exists($this->callback)){throw
+new\Exception('Invalid callback: test file not found '.PHP_EOL.$this->callback);}throw
 new\Exception('Invalid callback');}function
 setName($name=''){$this->name=$name;return$this;}function
 getName(){return$this->name;}function
