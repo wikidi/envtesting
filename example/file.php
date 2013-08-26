@@ -1,8 +1,6 @@
 <?php
-require_once __DIR__ . '/../Envtesting.php';
-
-use \envtesting\Check;
-use \envtesting\Suite;
+namespace envtesting;
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 /**
  * @author Roman Ozana <roman@wikidi.com>

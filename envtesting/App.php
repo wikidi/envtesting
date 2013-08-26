@@ -26,7 +26,7 @@ class App {
 	 */
 	public static function header($text, $ch = ':') {
 		return str_repeat($ch, 80) . PHP_EOL .
-			str_pad($text, 80, ' ', STR_PAD_BOTH) . PHP_EOL .
-			str_repeat($ch, 80) . PHP_EOL;
+		str_pad($text, 80, ' ', STR_PAD_BOTH) . PHP_EOL .
+		str_repeat($ch, 80) . PHP_EOL;
 	}
 }

@@ -1,0 +1,38 @@
+{
+	"name": "envtesting",
+	"version": "1.0.2",
+	"description": "Fast simple and easy to use environment testing written in PHP. ",
+	"repository": {
+		"type": "git",
+		"url": "git://github.com/wikidi/envtesting.git"
+	},
+	"keywords": [
+		"php",
+		"env",
+		"testing"
+	],
+	"author": {
+		"name": "Devel lab s.r.o.",
+		"url": "http://www.wikidi.cz"
+	},
+	"contributors": [
+		{
+			"name": "Roman Ožana",
+			"email": "ozana@omdesign.cz",
+			"homepage": "http://www.omdesign.cz"
+		},
+		{
+			"name": "Jan Prachař",
+			"email": "jan@prachar.eu",
+			"homepage": "http://www.prachar.eu"
+		}
+	],
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/wikidi/envtesting/issues"
+	},
+	"dependencies": {
+		"grunt-bump": "~0.0.11",
+		"grunt-exec": "~0.4.2"
+	}
+}

@@ -112,7 +112,7 @@ class ShrinkPHP {
 					$space = TRUE;
 					continue;
 
-				} elseif (preg_match('# @[A-Z]#', $token)) { // phpDoc annotations leave unchanged
+				} elseif (preg_match('# @[mA-Z]#', $token)) { // phpDoc annotations leave unchanged
 
 				} else {
 					$space = TRUE;

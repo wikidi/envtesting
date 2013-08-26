@@ -31,16 +31,7 @@ Error($message);}}static
 function
 false($value,$message=null){if($value!==false){throw
 new
-Error($message);}}}final
-class
-Autoloader{private
-static$update=true;private
-static$init=true;private
-static$paths=array();static
-function
-addPath($path){self::$paths[]=$path;self::$update=true;}static
-function
-cls($className){if(self::$init){self::$paths[]=get_include_path();self::$paths[]=__DIR__;self::$paths[]=dirname(__DIR__);self::$init=false;}if(self::$update){set_include_path(implode(PATH_SEPARATOR,self::$paths));self::$update=false;}$className=ltrim($className,'\\');$fileName='';if($lastNsPos=strripos($className,'\\')){$namespace=substr($className,0,$lastNsPos);$className=substr($className,$lastNsPos+1);$fileName=str_replace('\\',DIRECTORY_SEPARATOR,$namespace).DIRECTORY_SEPARATOR;}$fileName.=str_replace('_',DIRECTORY_SEPARATOR,$className).'.php';return(bool)@ include_once $fileName;}}spl_autoload_register(array('\\envtesting\\Autoloader','cls'));class
+Error($message);}}}class
 Check{static
 function
 lib($extensionName,$infoFunction=''){return
@@ -56,6 +47,8 @@ function()use($file,$dir){ob_start(); include $dir . DIRECTORY_SEPARATOR . $file
 ob_get_clean();};}}class
 Error
 extends\Exception{}class
+Warning
+extends\Exception{}class
 Filter{public$type=null;public$group=null;public$name=null;function
 __construct($name=null,$type=null,$group=null){$this->name=$name;$this->group=$group;$this->type=$type;}function
 isActive(){return$this->type!==null||$this->name!==null||$this->group!==null;}function
@@ -70,7 +63,7 @@ Csv{static
 function
 render(Suite$suite){$name=preg_replace('#[^a-z0-9]+#i','-',strtolower($suite->getName()));header('Content-type: text/csv');header('Content-Disposition: attachment; filename='.trim($name,'-').'.env.csv');header('Pragma: no-cache');header('Expires: 0');foreach($suite
 as$group=>$tests){foreach($tests
-as$order=>$test){$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':$test->getStatusMessage().$options,$order);echo
+as$order=>$test){$options=($test->getOptions()?'<br/>'.json_encode($test->getOptions()):'');if($test->isEnabled()){$data=array($test->getStatus(),$group.':'.$test->getName(),$test->getNotice(),$test->getType(),$test->isOk()?'OK':preg_replace('/\s+/i',' ',trim($test->getStatusMessage().$options)),$order);echo
 addslashes(implode(', ',$data)).PHP_EOL;}}}}}final
 class
 Html{static
@@ -82,23 +75,41 @@ render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$s
 	<title><?=$suite->getName()?></title>
 	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
 
-	<link rel="stylesheet" type="text/css" media="all"
-	      href="//current.bootstrapcdn.com/bootstrap-v204/css/bootstrap-combined.min.css"/>
+	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
+
 	<style type="text/css">
-		tr.warning {
-			background: #F89406;
+		.table>tbody>tr.disabled>td,
+		.table>tbody>tr.disabled>td>a {
+			background-color: #cfcfcf;
+			border-color: rgba(255, 255, 255, .3);
+			color: #555;
 		}
 
-		tr.disabled, tr.disabled a {
-			color: #a0a0a0;
+		.table>thead>tr>th {
+			border: 0;
 		}
 
-		tr.error, tr.exception {
-			background: #BD362F;
+		.table>tbody>tr.warning>td,
+		.table>tbody>tr.warning>td>a {
+			background-color: #F89406;
+			border-color: rgba(255, 255, 255, .3);
+			color: #593503;
 		}
 
-		tr.ok {
+		.table>tbody>tr.danger>td,
+		.table>tbody>tr.danger>td>a,
+		.table>tbody>tr.exception>td,
+		.table>tbody>tr.exception>td>a {
+			background-color: #BD362F;
+			border-color: rgba(255, 255, 255, .3);
+			color: #661c1a;
+		}
+
+		.table>tbody>tr.success>td,
+		.table>tbody>tr.success>td>a {
 			background: #5BB75B;
+			border-color: rgba(255, 255, 255, .3);
+			color: #204020;
 		}
 
 		.modal pre {
@@ -106,87 +117,72 @@ render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$s
 			height: 150px;
 		}
 
-		body {
-			padding: 20px 0 300px 0;
-		}
-
-		.icon-info-sign {
+		.glyphicon-question-sign {
 			float: right;
+			font-size: 18px;
+			color: #555;
 		}
 
-		table a {
+		table a, table a:hover {
 			color: #333;
 		}
 
-		h3 {
-			text-align: center;
-			color: #05C;
-			padding-bottom: 1em;
-		}
-
-		thead {
-			border-top: 1px solid #ddd;
-		}
-
-		.btn-group {
-			padding-bottom: 1em;
-		}
-
-		.footer {
-			border-top: 1px solid #ddd;
+		footer {
 			padding-top: 1em;
 		}
 
-		.footer .badge {
-			margin: 0 2px;
+		footer .label {
+			margin-right: 5px;
 		}
+
 	</style>
 </head>
 <body>
 <div class="container">
-	<div class="row">
-		<div class="span12">
-			<h3>Envtesting<?=$suite->getName()?' : '.$suite->getName():null;?></h3>
+	<header class="row">
+		<h3>Envtesting<?=$suite->getName()?' : '.$suite->getName():null;?></h3>
 
-			<?if($filter->isActive()){?>
-			<div class="alert">
+		<?if($filter->isActive()){?>
+			<div class="alert alert-info">
 				<a href="<?=Html::link()?>" class="close">&times;</a>Test results are filtered!
 			</div>
-			<?}?>
+		<?}?>
+	</header>
 
-			<table class="table table-condensed">
-				<colgroup style="width:25px;"/>
-				<colgroup style="width:80px;"/>
-				<colgroup style="width:150px;"/>
-				<colgroup style="width:150px;"/>
-				<colgroup style="width:120px;"/>
-				<colgroup style="width:100px;"/>
-				<thead>
-				<tr>
-					<th></th>
-					<th title="Warning | Error | Ok or disabled">Result</th>
-					<th title="Unique test name">
-						Name<?=$filter->name?' = <span class="label label-inverse">'.$filter->name.'</span>':''?>
-					</th>
-					<th title="Test group">
-						Group<?=$filter->group?' = <span class="label label-inverse">'.$filter->group.'</span>':''?>
-					</th>
-					<th title="Test type">
-						Type<?=$filter->type?' = <span class="label label-inverse">'.$filter->type.'</span>':''?>
-					</th>
-					<th title="Notice eg. stable server">Notice</th>
-					<th title="Response message">Message</th>
-				</tr>
-				</thead>
+	<div class="row">
+		<table class="table table-condensed ">
+			<colgroup style="width:25px;"/>
+			<colgroup style="width:80px;"/>
+			<colgroup style="width:150px;"/>
+			<colgroup style="width:150px;"/>
+			<colgroup style="width:120px;"/>
+			<colgroup style="width:100px;"/>
+			<thead>
+			<tr>
+				<th></th>
+				<th title="Warning | Error | Ok or disabled">Result</th>
+				<th title="Unique test name">
+					Name<?=$filter->name?' = <span class="label label-default">'.$filter->name.'</span>':''?>
+				</th>
+				<th title="Test group">
+					Group<?=$filter->group?' = <span class="label label-default">'.$filter->group.'</span>':''?>
+				</th>
+				<th title="Test type">
+					Type<?=$filter->type?' = <span class="label label-default">'.$filter->type.'</span>':''?>
+				</th>
+				<th title="Notice eg. stable server">Notice</th>
+				<th title="Response message">Message</th>
+			</tr>
+			</thead>
 
-				<tbody>
-					<?$total=$ok=$disabled=$error=$warning=0;?>
-					<?foreach($suite
+			<tbody>
+			<?$total=$ok=$disabled=$error=$warning=0;?>
+			<?foreach($suite
 as$group=>$tests){?>
-					<?foreach($tests
+				<?foreach($tests
 as$order=>$test){?>
-						<?$total++;?>
-					<tr class="<?=strtolower($test->getStatus())?>">
+					<?$total++;?>
+					<tr class="<?=Html::getStatusAsClass($test->getStatus())?>">
 						<td>
 							<i class="icon-<?=$test->isOk()?'ok':'remove'?>"></i>
 						</td>
@@ -200,80 +196,79 @@ as$order=>$test){?>
 						<td>
 							<?=nl2br($test->getStatusMessage());?>
 							<?if($test->hasOptions()){?>
-							<br><code>Options: <?=json_encode((array)$test->getOptions());?></code>
+								<br><code>Options: <?=json_encode((array)$test->getOptions());?></code>
 							<?}?>
 						</td>
 
 					</tr>
-						<?if($test->isOk()&&$test->isEnabled())$ok++;?>
-						<?if(!$test->isEnabled())$disabled++;?>
-						<?if($test->isError())$error++;?>
-						<?if($test->isWarning())$warning++;?>
-						<?}?>
+					<?if($test->isOk()&&$test->isEnabled())$ok++;?>
+					<?if(!$test->isEnabled())$disabled++;?>
+					<?if($test->isError())$error++;?>
+					<?if($test->isWarning())$warning++;?>
+				<?}?>
 
-					<?}$enabled=$total-$disabled;?>
-				</tbody>
-			</table>
+			<?}$enabled=$total-$disabled;?>
+			</tbody>
+		</table>
 
-			<div class="btn-group">
-				<a href="<?=Html::link(null,true)?>" class="btn btn-primary" title="Refresh current tests"><i
+
+		<div class="btn-group">
+			<a href="<?=Html::link(null,true)?>" class="btn btn-primary" title="Refresh current tests"><i
 					class="icon-refresh icon-white"></i> Refresh</a>
-				<a href="<?=Html::link('output=csv',true)?>" class="btn" title="Download CSV output">CSV <i
+			<a href="<?=Html::link('output=csv',true)?>" class="btn btn-default" title="Download CSV output">CSV <i
 					class="icon-arrow-down"></i></a>
-				<?if($filter->isActive()){?>
+			<?if($filter->isActive()){?>
 				<a href="<?=Html::link(null)?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
-				<?}?>
-			</div>
-
-			<div class="footer">
-				<?if($disabled>0){?>
-				<span class="badge badge-info">
-					<?=$disabled?> DISABLED <?=$total?round(100*$disabled/$total):0?>%
-				</span>
-				<?}?>
-				<?if($error>0){?>
-				<span class="badge badge-important">
-					<?=$error?> ERROR <?=$enabled?round(100*$error/$enabled):0?>%
-				</span>
-				<?}?>
-				<?if($warning>0){?>
-				<span class="badge badge-warning">
-					<?=$warning?> WARNING <?=$enabled?round(100*$warning/$enabled):0?>%
-				</span>
-				<?}?>
-				<span class="badge badge-success">
-					<?=$ok?> OK <?=($total-$disabled)?round(100*$ok/($total-$disabled)):0?>%
-				</span>
-				<span class="badge badge-inverse"><?=$total?> TESTS</span>
-				<a data-toggle="modal" href="#about" class="icon-info-sign"></a>
-			</div>
-
+			<?}?>
 		</div>
 	</div>
 
+	<footer class="row">
+		<?if($disabled>0){?>
+			<span class="label label-default">
+					<?=$disabled?> DISABLED <?=$total?round(100*$disabled/$total):0?>%
+				</span>
+		<?}?>
+		<?if($error>0){?>
+			<span class="label label-danger">
+					<?=$error?> ERROR <?=$enabled?round(100*$error/$enabled):0?>%
+				</span>
+		<?}?>
+		<?if($warning>0){?>
+			<span class="label label-warning">
+					<?=$warning?> WARNING <?=$enabled?round(100*$warning/$enabled):0?>%
+				</span>
+		<?}?>
+		<span class="label label-success">
+					<?=$ok?> OK <?=($total-$disabled)?round(100*$ok/($total-$disabled)):0?>%
+				</span>
+		<span class="label label-default"><?=$total?> TESTS</span>
+		<a data-toggle="modal" href="#about" class="glyphicon glyphicon-question-sign"></a>
+	</footer>
 
-	<div class="row">
 
-		<div class="modal hide" id="about">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal">×</button>
-				<h3>Envtesting</h3>
-			</div>
-			<div class="modal-body">
-				<p>Envtesting is fast simple and <strong>easy to use</strong> environment testing written in PHP.
-					Can check library, services and services response. Produce console, HTML or CSV output.
-				</p>
+	<div class="modal" id="about" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">×</button>
+					<h3>Envtesting</h3>
+				</div>
+				<div class="modal-body">
+					<p>Envtesting is fast simple and <strong>easy to use</strong> environment testing written in PHP.
+						Can check library, services and services response. Produce console, HTML or CSV output.
+					</p>
 
-				<h4>Authors</h4>
+					<h4>Authors</h4>
 
-				<p>
-					<a href="http://www.wikidi.com">wikidi.com</a> +
-					<a href="https://twitter.com/#!/OzzyCzech" title="Roman Ožana" target="_blank">@OzzyCzech</a>
-				</p>
+					<p>
+						<a href="http://www.wikidi.com">wikidi.com</a> +
+						<a href="https://twitter.com/#!/OzzyCzech" title="Roman Ožana" target="_blank">@OzzyCzech</a>
+					</p>
 
-				<h4>Copyright & License</h4>
+					<h4>Copyright & License</h4>
 
-				<pre><??>Copyright (c) 2012, Envtesting (Roman Ozana <ozana@omdesign.cz>) All rights reserved.
+					<pre><??>Copyright (c) 2012, Envtesting (Roman Ozana <ozana@omdesign.cz>) All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -285,18 +280,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 
 </pre>
 
-			</div>
+				</div>
 
-			<div class="modal-footer">
-				<a href="https://github.com/wikidi/envtesting" class="btn btn-primary" target="blank">Fork me on GitHub</a>
-				<a href="#" class="btn btn-success" data-dismiss="modal">Thanks!</a>
+				<div class="modal-footer">
+					<a href="https://github.com/wikidi/envtesting" class="btn btn-primary" target="blank">Fork me on GitHub</a>
+					<a href="#" class="btn btn-success" data-dismiss="modal">Thanks!</a>
+				</div>
 			</div>
 		</div>
-
 	</div>
 </div>
+
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-<script src="//current.bootstrapcdn.com/bootstrap-v204/js/bootstrap.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </body>
 <!--
 	Generated at <?=date('j.n.Y H:i:s')?> by Envtesting
@@ -305,19 +301,19 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 </html>
 <?php }static
 function
-link($query=null,$add=false){$url=isset($_SERVER['REQUEST_URI'])?'/'.trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/'):'/';if($add&&isset($_SERVER['QUERY_STRING']))$query.='&'.$_SERVER['QUERY_STRING'];parse_str($query,$params);return($params)?$url.'?'.http_build_query($params):$url;}}}namespace envtesting{class
+link($query=null,$add=false){$url=isset($_SERVER['REQUEST_URI'])?'/'.trim(parse_url($_SERVER['REQUEST_URI'],PHP_URL_PATH),'/'):'/';if($add&&isset($_SERVER['QUERY_STRING']))$query.='&'.$_SERVER['QUERY_STRING'];parse_str($query,$params);return($params)?$url.'?'.http_build_query($params):$url;}static
+function
+getStatusAsClass($status){$statuses=array('CRIT'=>'danger','OK'=>'success','DISABLED'=>'disabled','WARNING'=>'warning','EXCEPTION'=>'danger exception');return$statuses[$status];}}}namespace envtesting{class
 Suite
 implements\ArrayAccess,\IteratorAggregate{private
-static$instance=null;protected$groups=array();protected$name=null;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;function
+static$instance=null;protected$groups=array();protected$name=null;protected$currentGroup=null;protected$failGroupOnFirstError=false;protected$filter=null;protected$run=false;function
 __construct($name=__CLASS__,Filter$filter=null){$this->name=$name;$this->filter=($filter)?$filter:Filter::instanceFromArray($_GET);}function
 run(){foreach($this->groups
 as$tests){$failed=false;foreach($tests
-as$test){if($failed){$test->setResult($failed->getResult());$test->setNotice($failed->getNotice());$test->setOptions($failed->getOptions());}else{$test->run();$failed=($test->isFail()&&$this->failGroupOnFirstError)?$test:false;}}}return$this;}function
+as$test){if($failed){$test->setResult($failed->getResult());$test->setNotice($failed->getNotice());$test->setOptions($failed->getOptions());}else{$test->run();$failed=($test->isFail()&&$this->failGroupOnFirstError)?$test:false;}}}$this->run=true;return$this;}function
 shuffle($deep=false){if($deep||$this->hasGroups()===false)array_filter($this->groups,'shuffle');if($this->hasGroups()){$keys=array_keys($this->groups);shuffle($keys);$this->groups=array_merge(array_flip($keys),$this->groups);}return$this;}function
 addTest($name,$callback,$type=null){if(is_string($callback)&&(is_file(__DIR__.$callback)||is_file($callback))){$callback=Check::file(basename($callback),dirname($callback));}$test=new
 Test($name,$callback,$type);$test->enable($this->filter->isValid($test,$this));return$this->groups[$this->getCurrentGroupName()][]=$test;}function
-addFromDir($dir,$type=''){$iterator=new\RegexIterator(new\RecursiveIteratorIterator(new\RecursiveDirectoryIterator($dir)),'/\.php$/i');foreach($iterator
-as$filePath=>$fileInfo){$this->addTest($fileInfo->getBasename('.php'),$filePath,$type);}return$this;}function
 __get($name){return$this->to($name);}function
 to($name){$this->currentGroup=$name;if(!array_key_exists($name,$this->groups))$this->groups[$name]=array();return$this;}function
 getName(){return$this->name;}function
@@ -344,15 +340,17 @@ new\Exception('Usupported test type');}if($offset===null){$this->groups[$this->g
 offsetUnset($offset){if(isset($this->groups[$this->getCurrentGroupName()][$offset])){unset($this->groups[$this->getCurrentGroupName()][$offset]);}}function
 getIterator(){return
 new\ArrayIterator($this->groups);}function
-__toString(){$results=\envtesting\App::header($this->name);foreach($this->groups
+__toString(){if($this->run===false)return'Call ->run() before try getting results'.PHP_EOL;$results=\envtesting\App::header($this->name);foreach($this->groups
 as$group=>$tests){$results.=implode(PHP_EOL,$tests).PHP_EOL;}return$results.PHP_EOL;}function
-render($to=null){if($to===null&&isset($_GET['output'])){$to=$_GET['output']==='csv'?'csv':'html';}elseif($to===null&&PHP_SAPI==='cli'){$to='cli';}switch($to){case'cli':echo$this;break;case'csv':echo\envtesting\output\Csv::render($this);break;case'html':default:echo\envtesting\output\Html::render($this);break;}}}class
+render($to=null){if($this->run===false)throw
+new\Exception('Call run before try getting results');if($to===null&&isset($_GET['output'])){$to=$_GET['output']==='csv'?'csv':'html';}elseif($to===null&&PHP_SAPI==='cli'){$to='cli';}switch($to){case'cli':echo$this;break;case'csv':echo\envtesting\output\Csv::render($this);break;case'html':default:echo\envtesting\output\Html::render($this);break;}}}class
 Test{protected$name='';protected$callback=null;protected$callResponse=null;protected$type=null;protected$options=array();protected$notice='';protected$result=null;protected$enabled=true;function
 __construct($name,$callback,$type=null,$enabled=true){$this->name=$name;$this->callback=$callback;$this->type=$type;$this->enabled=$enabled;}function
 withOptions(){$this->options=func_get_args();return$this;}function
-run(){if(!$this->enabled)return$this;try{$this->setResult('OK');$this->callResponse=call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}return$this;}function
+run(){if(!$this->enabled)return$this;try{$this->setResult('OK');$this->callResponse=$result=call_user_func_array($this->getCallback(),$this->getOptions());}catch(Error$error){$this->setResult($error);}catch(Warning$warning){$this->setResult($warning);}catch(\Exception$e){$this->setResult($e);}if($this->callResponse
+instanceof\Exception){$this->setResult($result);}return$this;}function
 __invoke(){return$this->run();}function
-getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if($this->isDisabled())return'DISABLED';if($this->isError())return'ERROR';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
+getStatus(){if(is_scalar($this->getResult()))return(string)$this->getResult();if($this->isDisabled())return'DISABLED';if($this->isError())return'CRIT';if($this->isWarning())return'WARNING';if($this->isException())return'EXCEPTION';throw
 new\Exception('Invalid result type: '.gettype($this->result));}function
 getStatusMessage(){if($this->isDisabled())return
 null;$message=(is_object($this->callback)&&method_exists($this->callback,'__toString'))?(string)$this->callback:$this->callResponse;return($this->result
@@ -389,6 +387,4 @@ function
 handleError($code,$text,$file,$line,$context){if(error_reporting()==0)return;throw
 new\Exception($text.' in file '.$file.' on line '.$line,$code);}static
 function
-nothing(){restore_error_handler();}}class
-Warning
-extends\Exception{}}
+nothing(){restore_error_handler();}}}

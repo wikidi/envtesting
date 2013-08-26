@@ -1,5 +1,7 @@
 <?php
 namespace envtesting;
+require_once dirname(__DIR__) . '/vendor/autoload.php';
+
 /**
  * @author Roman Ozana <ozana@omdesign.cz>
  */

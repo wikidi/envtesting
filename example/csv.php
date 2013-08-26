@@ -1,11 +1,14 @@
 <?php
-require_once __DIR__ . '/../Envtesting.php';
+namespace envtesting;
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 /**
  * Generat CSV output
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-\envtesting\Suite::instance('Simple test')->addFromDir(
-	\envtesting\App::$root . '/envtests/library', 'library'
-)->run()->render('csv');
+$suite = Suite::instance('CSV sample');
+
+$suite->addTest('csv', function(){ return 'response'; }, 'lib');
+$suite->addTest('csv', function(){ return new Error('test' . PHP_EOL . 'now line' . PHP_EOL);}, 'lib');
+$suite->run()->render('csv');

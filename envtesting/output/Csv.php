@@ -31,7 +31,7 @@ final class Csv {
 						$group . ':' . $test->getName(),
 						$test->getNotice(),
 						$test->getType(),
-						$test->isOk() ? 'OK' : $test->getStatusMessage() . $options,
+						$test->isOk() ? 'OK' : preg_replace('/\s+/i', ' ', trim($test->getStatusMessage() . $options)),
 						$order,
 					);
 					echo addslashes(implode(', ', $data)) . PHP_EOL;

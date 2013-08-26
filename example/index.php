@@ -5,28 +5,42 @@ namespace envtesting;
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-require_once __DIR__ . '/../Envtesting.php'; // or
-// require_once __DIR__ . '/Envtesting.php'; // depends on your structure
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
-Throws::allErrors(); // throws everything (warnings, notices, fatals) as reular Exceptions
+Throws::allErrors(); // throws everything (warnings, notices, PHP fatals) as Exception
 
-Suite::instance('Copy & Paste example'); // change Suite name
-Suite::instance()->failGroupOnFirstError(); // fail whole group on first error
+Suite::instance('Envtesting examples'); // change Suite name
+//Suite::instance()->failGroupOnFirstError(); // fail whole group on first error
 
-// add some tests here
+// Create new group
+$group = Suite::instance()->group; /** @var Suite $group */
 
-$mysql = Suite::instance()->mysql; // create new Group
-/** @var Suite $mysl */
+// ERROR
+$group->addTest('return', function(){ return new Error();}, 'return');
+$group->addTest('throw', function(){ throw new Error();}, 'throw');
+$group->addTest('return', function(){ return new Error('error with message');}, 'return');
 
-$mysql->addTest('PDO', __DIR__ . '/../envtests/library/Pdo.php', 'library');
-
-// create another group
-$apc = Suite::instance()->apc;
-/** @var Suite $apc */
-$apc->addTest('APC', __DIR__ . '/../envtests/library/Apc.php', 'library');
+// warning
+$group->addTest('return', function(){ return new Warning();}, 'return');
+$group->addTest('return', function(){ throw new Warning();}, 'return');
+$group->addTest('return', function(){ return new Warning('warning with message');}, 'return');
 
 
-echo Suite::instance()->run(); // or
-// Suite::instance()->run()->render(); // for getting HTML and CSV output
+// check some tests
+$libs = Suite::instance()->libs;
+$libs->addTest('APC', dirname(__DIR__) . '/envtests/library/Apc.php', 'library');
+$libs->addTest('PDO', dirname(__DIR__) . '/envtests/library/Pdo.php', 'library');
+
+// callbacks
+$callback = Suite::instance()->callback;
+$callback->addTest('MISSING', 'missing file', 'callback');
+$callback->addTest('PHP BUG', function(){ return $response; }, 'callback');
+
+$multiline = Suite::instance()->multiline;
+$multiline->addTest('PHP BUG', function(){ throw new Warning('add' . PHP_EOL . 'multiline' . PHP_EOL . 'text'); }, 'callback');
+$multiline->addTest('PHP BUG', function(){ return 'ok' . PHP_EOL . 'multiline' . PHP_EOL . 'text'; }, 'callback');
+
+// render HTML
+Suite::instance()->run()->render();
 
 Throws::nothing();

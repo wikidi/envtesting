@@ -4,7 +4,7 @@
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-require_once __DIR__ . '/../Envtesting.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $suite = new \envtesting\Suite('permission');
 
@@ -15,6 +15,6 @@ $suite->addTest(
 );
 
 
-echo $suite->run();
+$suite->run()->render();
 
 

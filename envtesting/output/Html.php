@@ -42,4 +42,17 @@ final class Html {
 		return ($params) ? $url . '?' . http_build_query($params) : $url;
 	}
 
+	/**
+	 * @param $status
+	 * @return mixed
+	 */
+	public static function getStatusAsClass($status) {
+		$statuses = array(
+			'CRIT' => 'danger', 'OK' => 'success', 'DISABLED' => 'disabled', 'WARNING' => 'warning',
+			'EXCEPTION' => 'danger exception'
+		);
+
+		return $statuses[$status];
+	}
+
 }

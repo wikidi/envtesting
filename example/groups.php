@@ -2,7 +2,7 @@
 /**
  * @author Roman Ozana <roman@wikidi.com>
  */
-require_once __DIR__ . '/../Envtesting.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $suite = new \envtesting\Suite('Super group test');
 

@@ -108,21 +108,33 @@ $suite->render('html'); // render HTML output
 
 ![HTML output example](/wikidi/envtesting/raw/master/doc/images/html-output-example.png "HTML output")
 
-
 Visit more examples in: https://github.com/wikidi/envtesting/tree/master/example
 
 ## Requirments
 
 - PHP 5.3 +
 
-## API docs
+## Update
 
-Don't forget update docs !!!
+```
+npm intall         # install all NPM deps
+composer install   # install Apigen
 
-```bash
-php ~/workspace/apigen/apigen.php --source ./envtesting --source ./envtests --destination ./doc/api --todo --title "Envtesting"
+# reelase
+grunt release      # update api docs, minify and release minor version
+
+# or one by one
+grunt minify       # minify (shrink) PHP file
+grunt doc          # generate Apigen docs
+grunt bump         # release minor version
+
+# or release major version
+
+grunt bump:major   # release major version
+
 ```
 
+- PHP 5.3 +
 
 ## Media
 

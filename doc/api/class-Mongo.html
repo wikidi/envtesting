@@ -2,13 +2,13 @@
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="generator" content="ApiGen 2.6.1" />
+	<meta name="generator" content="ApiGen 2.8.0" />
 
 	<title>Class Mongo | Envtesting</title>
 
-	<script type="text/javascript" src="resources/combined.js?144019575"></script>
-	<script type="text/javascript" src="elementlist.js?3841038289"></script>
-	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?1532301413" />
+	<script type="text/javascript" src="resources/combined.js?2115748074"></script>
+	<script type="text/javascript" src="elementlist.js?2505944537"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
 
 </head>
 
@@ -60,6 +60,7 @@
 				<li><a href="class-ArrayIterator.html">ArrayIterator</a></li>
 				<li><a href="class-Memcache.html">Memcache</a></li>
 				<li class="active"><a href="class-Mongo.html">Mongo</a></li>
+				<li><a href="class-MongoClient.html">MongoClient</a></li>
 				<li><a href="class-PDO.html">PDO</a></li>
 			</ul>
 
@@ -125,6 +126,20 @@
 
 
 
+	<dl class="tree">
+		<dd style="padding-left:0px">
+			<a href="class-MongoClient.html"><span>MongoClient</span></a>
+			
+			
+			
+		</dd>
+		<dd style="padding-left:30px">
+			<img src="resources/inherit.png" alt="Extended by" />
+<b><span>Mongo</span></b>			
+			
+			
+		</dd>
+	</dl>
 
 
 
@@ -143,6 +158,7 @@
 	</div>
 
 
+
 	<table class="summary" id="methods">
 	<caption>Methods summary</caption>
 	<tr data-order="__construct" id="___construct">
@@ -156,7 +172,7 @@
 
 		<td class="name"><div>
 		<a class="anchor" href="#___construct">#</a>
-		<code><a href="http://php.net/manual/mongo.construct.php" title="Go to PHP documentation">__construct</a>( )</code>
+		<code><a href="http://php.net/manual/mongo.construct.php" title="Go to PHP documentation">__construct</a>( <span>mixed <var>$server</var></span>, <span>array <var>$options</var></span> )</code>
 
 		<div class="description short">
 			
@@ -170,33 +186,8 @@
 
 
 
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="connect" id="_connect">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_connect">#</a>
-		<code><a href="http://php.net/manual/mongo.connect.php" title="Go to PHP documentation">connect</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
+				<h4>Overrides</h4>
+				<div class="list"><code><a href="class-MongoClient.html#___construct">MongoClient::__construct()</a></code></div>
 
 		</div>
 		</div></td>
@@ -226,640 +217,78 @@
 
 
 
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="__toString" id="___toString">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#___toString">#</a>
-		<code><a href="http://php.net/manual/mongo.tostring.php" title="Go to PHP documentation">__toString</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="__get" id="___get">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#___get">#</a>
-		<code><a href="http://php.net/manual/mongo.get.php" title="Go to PHP documentation">__get</a>( <span> <var>$name</var></span> )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="selectDB" id="_selectDB">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_selectDB">#</a>
-		<code><a href="http://php.net/manual/mongo.selectdb.php" title="Go to PHP documentation">selectDB</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="selectCollection" id="_selectCollection">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_selectCollection">#</a>
-		<code><a href="http://php.net/manual/mongo.selectcollection.php" title="Go to PHP documentation">selectCollection</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="getSlaveOkay" id="_getSlaveOkay">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_getSlaveOkay">#</a>
-		<code><a href="http://php.net/manual/mongo.getslaveokay.php" title="Go to PHP documentation">getSlaveOkay</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="setSlaveOkay" id="_setSlaveOkay">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_setSlaveOkay">#</a>
-		<code><a href="http://php.net/manual/mongo.setslaveokay.php" title="Go to PHP documentation">setSlaveOkay</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="dropDB" id="_dropDB">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_dropDB">#</a>
-		<code><a href="http://php.net/manual/mongo.dropdb.php" title="Go to PHP documentation">dropDB</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="listDBs" id="_listDBs">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_listDBs">#</a>
-		<code><a href="http://php.net/manual/mongo.listdbs.php" title="Go to PHP documentation">listDBs</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="getHosts" id="_getHosts">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_getHosts">#</a>
-		<code><a href="http://php.net/manual/mongo.gethosts.php" title="Go to PHP documentation">getHosts</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="getSlave" id="_getSlave">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_getSlave">#</a>
-		<code><a href="http://php.net/manual/mongo.getslave.php" title="Go to PHP documentation">getSlave</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="switchSlave" id="_switchSlave">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_switchSlave">#</a>
-		<code><a href="http://php.net/manual/mongo.switchslave.php" title="Go to PHP documentation">switchSlave</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="close" id="_close">
-
-		<td class="attributes"><code>
-			 public 
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_close">#</a>
-		<code><a href="http://php.net/manual/mongo.close.php" title="Go to PHP documentation">close</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="setPoolSize" id="_setPoolSize">
-
-		<td class="attributes"><code>
-			 public static
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_setPoolSize">#</a>
-		<code><a href="http://php.net/manual/mongo.setpoolsize.php" title="Go to PHP documentation">setPoolSize</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="getPoolSize" id="_getPoolSize">
-
-		<td class="attributes"><code>
-			 public static
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_getPoolSize">#</a>
-		<code><a href="http://php.net/manual/mongo.getpoolsize.php" title="Go to PHP documentation">getPoolSize</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="poolDebug" id="_poolDebug">
-
-		<td class="attributes"><code>
-			 public static
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_poolDebug">#</a>
-		<code><a href="http://php.net/manual/mongo.pooldebug.php" title="Go to PHP documentation">poolDebug</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
-
-		</div>
-		</div></td>
-	</tr>
-	<tr data-order="serverInfo" id="_serverInfo">
-
-		<td class="attributes"><code>
-			 public static
-			
-			
-			</code>
-		</td>
-
-		<td class="name"><div>
-		<a class="anchor" href="#_serverInfo">#</a>
-		<code><a href="http://php.net/manual/mongo.serverinfo.php" title="Go to PHP documentation">serverInfo</a>( )</code>
-
-		<div class="description short">
-			
-		</div>
-
-		<div class="description detailed hidden">
-			
-
-
-
-
-
 
 		</div>
 		</div></td>
 	</tr>
 	</table>
 
-
-
-
-	<table class="summary" id="constants">
-	<caption>Constants summary</caption>
-	<tr data-order="DEFAULT_HOST" id="DEFAULT_HOST">
-
-		<td class="attributes"><code>
-			string
+	<table class="summary inherited">
+	<caption>Methods inherited from <a href="class-MongoClient.html#methods">MongoClient</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-MongoClient.html#___get">__get()</a>, 
+			<a href="class-MongoClient.html#___toString">__toString()</a>, 
+			<a href="class-MongoClient.html#_close">close()</a>, 
+			<a href="class-MongoClient.html#_connect">connect()</a>, 
+			<a href="class-MongoClient.html#_dropDB">dropDB()</a>, 
+			<a href="class-MongoClient.html#_getConnections">getConnections()</a>, 
+			<a href="class-MongoClient.html#_getHosts">getHosts()</a>, 
+			<a href="class-MongoClient.html#_getReadPreference">getReadPreference()</a>, 
+			<a href="class-MongoClient.html#_listDBs">listDBs()</a>, 
+			<a href="class-MongoClient.html#_selectCollection">selectCollection()</a>, 
+			<a href="class-MongoClient.html#_selectDB">selectDB()</a>, 
+			<a href="class-MongoClient.html#_setReadPreference">setReadPreference()</a>
 		</code></td>
-		<td class="name"><code>
-				<a href="http://php.net/manual/class.mongo.php#mongo.constants.default-host" title="Go to PHP documentation"><b>DEFAULT_HOST</b></a>
-		</code></td>
-		<td class="value"><code><span class="php-quote">'localhost'</span></code></td>
-		<td class="description"><div>
-			<a href="#DEFAULT_HOST" class="anchor">#</a>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="DEFAULT_PORT" id="DEFAULT_PORT">
-
-		<td class="attributes"><code>
-			integer
-		</code></td>
-		<td class="name"><code>
-				<a href="http://php.net/manual/class.mongo.php#mongo.constants.default-port" title="Go to PHP documentation"><b>DEFAULT_PORT</b></a>
-		</code></td>
-		<td class="value"><code><span class="php-num">27017</span></code></td>
-		<td class="description"><div>
-			<a href="#DEFAULT_PORT" class="anchor">#</a>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="VERSION" id="VERSION">
-
-		<td class="attributes"><code>
-			string
-		</code></td>
-		<td class="name"><code>
-				<a href="http://php.net/manual/class.mongo.php#mongo.constants.version" title="Go to PHP documentation"><b>VERSION</b></a>
-		</code></td>
-		<td class="value"><code><span class="php-quote">'1.2.10'</span></code></td>
-		<td class="description"><div>
-			<a href="#VERSION" class="anchor">#</a>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-			</div>
-		</div></td>
 	</tr>
 	</table>
 
 
 
-	<table class="summary" id="properties">
-	<caption>Properties summary</caption>
-	<tr data-order="connected" id="$connected">
 
-		<td class="attributes"><code>
-			public 
-			boolean
+
+
+
+
+	<table class="summary inherited">
+	<caption>Constants inherited from <a href="class-MongoClient.html#constants">MongoClient</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-MongoClient.html#DEFAULT_HOST"><b>DEFAULT_HOST</b></a>, 
+			<a href="class-MongoClient.html#DEFAULT_PORT"><b>DEFAULT_PORT</b></a>, 
+			<a href="class-MongoClient.html#RP_NEAREST"><b>RP_NEAREST</b></a>, 
+			<a href="class-MongoClient.html#RP_PRIMARY"><b>RP_PRIMARY</b></a>, 
+			<a href="class-MongoClient.html#RP_PRIMARY_PREFERRED"><b>RP_PRIMARY_PREFERRED</b></a>, 
+			<a href="class-MongoClient.html#RP_SECONDARY"><b>RP_SECONDARY</b></a>, 
+			<a href="class-MongoClient.html#RP_SECONDARY_PREFERRED"><b>RP_SECONDARY_PREFERRED</b></a>, 
+			<a href="class-MongoClient.html#VERSION"><b>VERSION</b></a>
 		</code></td>
-
-		<td class="name">
-				<a href="http://php.net/manual/class.mongo.php#mongo.props.connected" title="Go to PHP documentation"><var>$connected</var></a>
-		</td>
-		<td class="value"><code><span class="php-keyword1">false</span></code></td>
-		<td class="description"><div>
-			<a href="#$connected" class="anchor">#</a>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="status" id="$status">
-
-		<td class="attributes"><code>
-			public 
-			
-		</code></td>
-
-		<td class="name">
-				<a href="http://php.net/manual/class.mongo.php#mongo.props.status" title="Go to PHP documentation"><var>$status</var></a>
-		</td>
-		<td class="value"><code></code></td>
-		<td class="description"><div>
-			<a href="#$status" class="anchor">#</a>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="server" id="$server">
-
-		<td class="attributes"><code>
-			protected 
-			
-		</code></td>
-
-		<td class="name">
-				<a href="http://php.net/manual/class.mongo.php#mongo.props.server" title="Go to PHP documentation"><var>$server</var></a>
-		</td>
-		<td class="value"><code></code></td>
-		<td class="description"><div>
-			<a href="#$server" class="anchor">#</a>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-			</div>
-		</div></td>
-	</tr>
-	<tr data-order="persistent" id="$persistent">
-
-		<td class="attributes"><code>
-			protected 
-			
-		</code></td>
-
-		<td class="name">
-				<a href="http://php.net/manual/class.mongo.php#mongo.props.persistent" title="Go to PHP documentation"><var>$persistent</var></a>
-		</td>
-		<td class="value"><code></code></td>
-		<td class="description"><div>
-			<a href="#$persistent" class="anchor">#</a>
-
-			<div class="description short">
-				
-			</div>
-
-			<div class="description detailed hidden">
-				
-
-			</div>
-		</div></td>
 	</tr>
 	</table>
+
+
+
+
+	<table class="summary inherited">
+	<caption>Properties inherited from <a href="class-MongoClient.html#properties">MongoClient</a></caption>
+	<tr>
+		<td><code>
+			<a href="class-MongoClient.html#$connected"><var>$connected</var></a>, 
+			<a href="class-MongoClient.html#$persistent"><var>$persistent</var></a>, 
+			<a href="class-MongoClient.html#$server"><var>$server</var></a>, 
+			<a href="class-MongoClient.html#$status"><var>$status</var></a>
+		</code></td>
+	</tr>
+	</table>
+
+
 
 
 
 </div>
 
 	<div id="footer">
-		Envtesting API documentation generated by <a href="http://apigen.org">ApiGen 2.6.1</a>
+		Envtesting API documentation generated by <a href="http://apigen.org">ApiGen 2.8.0</a>
 	</div>
 </div>
 </div>

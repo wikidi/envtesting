@@ -1,14 +1,11 @@
 <?php
+namespace envtesting;
 /**
  * Test chek php.ini variables
  *
  * @author Roman Ozana <roman@omdesign.cz>
  */
-require_once __DIR__ . '/../Envtesting.php';
-
-use \envtesting\Check;
-use \envtesting\Suite;
-use \envtesting\Assert;
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 $suite = new Suite('php.ini settings');
 
@@ -35,15 +32,12 @@ $suite->addTest(
 	}
 )->setType('INI');
 
-echo $suite->run();
-
-
-echo '--------------------------------------------------------------------------------' . PHP_EOL; // or KISS way
+echo '<pre>' . $suite->run() . '</pre>';
 
 try {
 	Assert::true(Check::ini('post_max_size') > 10000, 'post_max_size is smaller then 10000 MB');
 	Assert::true(Check::ini('log_errors', '1'), 'log_errors is OFF');
 	Assert::true(Check::ini('display_errors', '1'), 'log_errors is OFF');
 } catch (\envtesting\Error $e) {
-	echo 'Error: ' . $e->getMessage() . PHP_EOL;
+	echo '<pre>Error: ' . $e->getMessage() . '</pre>';
 }

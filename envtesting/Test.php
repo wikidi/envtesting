@@ -28,6 +28,7 @@ class Test {
 	 * @param string $name
 	 * @param mixed $callback
 	 * @param null|string $type
+	 * @param bool $enabled
 	 */
 	public function __construct($name, $callback, $type = null, $enabled = true) {
 		$this->name = $name;
@@ -53,15 +54,21 @@ class Test {
 	 */
 	public function run() {
 		if (!$this->enabled) return $this;
+
 		try {
 			$this->setResult('OK');
-			$this->callResponse = call_user_func_array($this->getCallback(), $this->getOptions());
+			$this->callResponse = $result = call_user_func_array($this->getCallback(), $this->getOptions());
 		} catch (Error $error) {
 			$this->setResult($error);
 		} catch (Warning $warning) {
 			$this->setResult($warning);
 		} catch (\Exception $e) {
 			$this->setResult($e);
+		}
+
+		//
+		if ($this->callResponse instanceof \Exception) {
+			$this->setResult($result);
 		}
 		return $this;
 	}
@@ -85,7 +92,7 @@ class Test {
 		if (is_scalar($this->getResult())) return (string)$this->getResult();
 
 		if ($this->isDisabled()) return 'DISABLED';
-		if ($this->isError()) return 'ERROR';
+		if ($this->isError()) return 'CRIT';
 		if ($this->isWarning()) return 'WARNING';
 		if ($this->isException()) return 'EXCEPTION';
 
@@ -101,8 +108,8 @@ class Test {
 	public function getStatusMessage() {
 		if ($this->isDisabled()) return null;
 		$message = (is_object($this->callback) && method_exists(
-			$this->callback, '__toString'
-		)) ? (string)$this->callback : $this->callResponse; // return response
+				$this->callback, '__toString'
+			)) ? (string)$this->callback : $this->callResponse; // return response
 		return ($this->result instanceof \Exception) ? $this->result->getMessage() : $message;
 	}
 
@@ -138,7 +145,7 @@ class Test {
 	}
 
 	/**
-	 * Oposit function for isOk
+	 * Opposite function for isOk
 	 *
 	 * @return bool
 	 */
@@ -179,7 +186,6 @@ class Test {
 	 * @return string
 	 */
 	public function __toString() {
-		echo 'ano';
 		$response = array(
 			'status' => str_pad($this->getStatus(), 10, ' '),
 			'name' => str_pad($this->getName(), 20, ' '),

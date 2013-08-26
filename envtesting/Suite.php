@@ -108,23 +108,6 @@ class Suite implements \ArrayAccess, \IteratorAggregate {
 		return $this->groups[$this->getCurrentGroupName()][] = $test;
 	}
 
-	/**
-	 * Autoload all PHP files from directory
-	 *
-	 * @param string $dir
-	 * @param string $type
-	 * @return Suite
-	 */
-	public function addFromDir($dir, $type = '') {
-		$iterator = new \RegexIterator(new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir)), '/\.php$/i');
-
-		foreach ($iterator as $filePath => $fileInfo/** @var SplFileInfo $fileInfo */) {
-			$this->addTest($fileInfo->getBasename('.php'), $filePath, $type); // add tests to test suit
-		}
-
-		return $this;
-	}
-
 	// -------------------------------------------------------------------------------------------------------------------
 
 	/**

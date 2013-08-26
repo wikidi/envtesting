@@ -2,4 +2,10 @@
 .project
 .settings
 /nbproject
-/.idea/
+/.idea
+conf/local.php
+vendor
+composer.lock
+
+node_modules
+Gruntfile.js

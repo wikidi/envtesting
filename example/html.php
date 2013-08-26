@@ -4,7 +4,7 @@
  *
  * @author Roman Ozana <ozana@omdesign.cz>
  */
-require_once __DIR__ . '/../envtesting/Autoloader.php';
+require_once dirname(__DIR__) . '/vendor/autoload.php';
 
 if (PHP_SAPI === 'cli') { // client
 	$_SERVER['REQUEST_URI'] = 'http://example.com/envtesting/';
