@@ -129,6 +129,7 @@ render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$s
 
 		footer {
 			padding-top: 1em;
+			padding-bottom: 4em;
 		}
 
 		footer .label {
