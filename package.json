@@ -1,6 +1,6 @@
 {
 	"name": "envtesting",
-	"version": "2.0.4",
+	"version": "2.0.5",
 	"description": "Fast simple and easy to use environment testing written in PHP. ",
 	"repository": {
 		"type": "git",
@@ -25,6 +25,11 @@
 			"name": "Jan Prachař",
 			"email": "jan@prachar.eu",
 			"homepage": "http://www.prachar.eu"
+		},
+		{
+			"name": "Lex Vjatkin",
+			"email": "lex@vjatkin.cz",
+			"homepage": "http://vjatkin.cz"
 		}
 	],
 	"license": "MIT",
