@@ -32,11 +32,11 @@ class Session {
 
 	public function tryConnectSession() {
 		try {
-			if (isset($config->handler)) {
-				session_set_save_handler($config->handler);
+			if (isset($this->config->save_handler)) {
+				if (ini_set('session.save_handler', $this->config->save_handler) === false) throw new Error('Session failed: cannot set save_handler');
 			}
-			if (isset($config->save_path)) {
-				session_save_path($config->save_path);
+			if (isset($this->config->save_path)) {
+				if (ini_set('session.save_path', $this->config->save_path) === false) throw new Error('Session failed: cannot set save_path');
 			}
 			if (!session_start()) throw new Error('Session failed: session was not created');
 		} catch (\Exception $e) {
