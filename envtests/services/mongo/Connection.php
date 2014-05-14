@@ -25,7 +25,7 @@ class Connection {
 	public $dbname;
 	/** @var array */
 	public $options = array();
-	/** @var Mongo */
+	/** @var MongoClient */
 	public $connection = null;
 
 	/**
@@ -55,7 +55,7 @@ class Connection {
 	}
 
 	/**
-	 * @return null|Mongo
+	 * @return null|MongoClient
 	 */
 	public function __invoke() {
 		return $this->getConnection();
@@ -68,15 +68,15 @@ class Connection {
 		if (!$this->dbname) throw new \envtesting\Warning('Database not selected.');
 
 		try {
-			if (!class_exists('Mongo')) throw new Error('PHP Mongo support is missing.');
-			$this->connection = new \Mongo($this->dsn, $this->options);
+			if (!class_exists('MongoClient')) throw new Error('PHP Mongo support is missing.');
+			$this->connection = new \MongoClient($this->dsn, $this->options);
 		} catch (\MongoConnectionException $e) {
 			throw new Error('Connection failed: ' . $e->getMessage());
 		}
 	}
 
 	/**
-	 * @return null|Mongo
+	 * @return null|MongoClient
 	 */
 	public function getConnection() {
 		if ($this->connection === null) $this->connect();
