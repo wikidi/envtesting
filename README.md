@@ -1,9 +1,11 @@
-# envtesting
+# Envtesting
 
 Fast simple and easy to use environment testing written in PHP. Can check library, services and services response.
 Produce console, HTML or CSV output.
 
 ![HTML output example](https://raw.github.com/wikidi/envtesting/master/doc/envtesting.png "HTML output")
+
+[![Latest Stable Version](https://poser.pugx.org/wikidi/envtesting/v/stable.svg)](https://packagist.org/packages/wikidi/envtesting) [![Total Downloads](https://poser.pugx.org/wikidi/envtesting/downloads.svg)](https://packagist.org/packages/wikidi/envtesting) [![Latest Unstable Version](https://poser.pugx.org/wikidi/envtesting/v/unstable.svg)](https://packagist.org/packages/wikidi/envtesting) [![License](https://poser.pugx.org/wikidi/envtesting/license.svg)](https://packagist.org/packages/wikidi/envtesting)
 
 ## How to use
 
