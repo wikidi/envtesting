@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta name="generator" content="ApiGen 2.8.0" />
-	<meta name="robots" content="noindex" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta name="generator" content="ApiGen 2.8.0">
+	<meta name="robots" content="noindex">
 
 	<title>File application/Session.php | Envtesting</title>
 
-	<script type="text/javascript" src="resources/combined.js?2115748074"></script>
-	<script type="text/javascript" src="elementlist.js?2505944537"></script>
-	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360" />
+	<script type="text/javascript" src="resources/combined.js?499627968"></script>
+	<script type="text/javascript" src="elementlist.js?2622367300"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="resources/style.css?3505392360">
 
 </head>
 
@@ -52,7 +52,7 @@
 			</ul>
 		</div>
 
-		<hr />
+		<hr>
 
 
 		<div id="elements">
@@ -77,10 +77,10 @@
 <div id="right">
 <div id="rightInner">
 	<form id="search">
-		<input type="hidden" name="cx" value="" />
-		<input type="hidden" name="ie" value="UTF-8" />
-		<input type="text" name="q" class="text" />
-		<input type="submit" value="Search" />
+		<input type="hidden" name="cx" value="">
+		<input type="hidden" name="ie" value="UTF-8">
+		<input type="text" name="q" class="text">
+		<input type="submit" value="Search">
 	</form>
 
 	<div id="navigation">
@@ -141,11 +141,11 @@
 </span><span id="32" class="l"><a class="l" href="#32">32: </a>
 </span><span id="33" class="l"><a class="l" href="#33">33: </a>    <span class="php-keyword1">public</span> <span class="php-keyword1">function</span> <a id="_tryConnectSession" href="#_tryConnectSession">tryConnectSession</a>() {
 </span><span id="34" class="l"><a class="l" href="#34">34: </a>        <span class="php-keyword1">try</span> {
-</span><span id="35" class="l"><a class="l" href="#35">35: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$config</span>-&gt;handler)) {
-</span><span id="36" class="l"><a class="l" href="#36">36: </a>                <span class="php-keyword2">session_set_save_handler</span>(<span class="php-var">$config</span>-&gt;handler);
+</span><span id="35" class="l"><a class="l" href="#35">35: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;config-&gt;save_handler)) {
+</span><span id="36" class="l"><a class="l" href="#36">36: </a>                <span class="php-keyword1">if</span> (<span class="php-keyword2">ini_set</span>(<span class="php-quote">'session.save_handler'</span>, <span class="php-var">$this</span>-&gt;config-&gt;save_handler) === <span class="php-keyword1">false</span>) <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> Error(<span class="php-quote">'Session failed: cannot set save_handler'</span>);
 </span><span id="37" class="l"><a class="l" href="#37">37: </a>            }
-</span><span id="38" class="l"><a class="l" href="#38">38: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$config</span>-&gt;save_path)) {
-</span><span id="39" class="l"><a class="l" href="#39">39: </a>                <span class="php-keyword2">session_save_path</span>(<span class="php-var">$config</span>-&gt;save_path);
+</span><span id="38" class="l"><a class="l" href="#38">38: </a>            <span class="php-keyword1">if</span> (<span class="php-keyword1">isset</span>(<span class="php-var">$this</span>-&gt;config-&gt;save_path)) {
+</span><span id="39" class="l"><a class="l" href="#39">39: </a>                <span class="php-keyword1">if</span> (<span class="php-keyword2">ini_set</span>(<span class="php-quote">'session.save_path'</span>, <span class="php-var">$this</span>-&gt;config-&gt;save_path) === <span class="php-keyword1">false</span>) <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> Error(<span class="php-quote">'Session failed: cannot set save_path'</span>);
 </span><span id="40" class="l"><a class="l" href="#40">40: </a>            }
 </span><span id="41" class="l"><a class="l" href="#41">41: </a>            <span class="php-keyword1">if</span> (!<span class="php-keyword2">session_start</span>()) <span class="php-keyword1">throw</span> <span class="php-keyword1">new</span> Error(<span class="php-quote">'Session failed: session was not created'</span>);
 </span><span id="42" class="l"><a class="l" href="#42">42: </a>        } <span class="php-keyword1">catch</span> (\Exception <span class="php-var">$e</span>) {

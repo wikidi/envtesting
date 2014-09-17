@@ -25,7 +25,7 @@
 		"php": ">=5.3.0"
 	},
 	"require-dev": {
-		"apigen/apigen": "2.8.0"
+		"apigen/apigen": "2.8.*"
 	},
 	"autoload": {
 		"classmap": ["envtests", "envtesting"]

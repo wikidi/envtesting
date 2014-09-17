@@ -72,7 +72,7 @@ render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$s
 <html lang="en-us" dir="ltr">
 <head>
 	<meta charset="UTF-8">
-	<title><?=$suite->getName()?></title>
+	<title><?php echo$suite->getName()?></title>
 	<meta name="robots" content="noindex, nofollow, noarchive, noodp"/>
 
 	<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet">
@@ -141,13 +141,14 @@ render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$s
 <body>
 <div class="container">
 	<header class="row">
-		<h3>Envtesting<?=$suite->getName()?' : '.$suite->getName():null;?></h3>
+		<h3>Envtesting<?php echo$suite->getName()?' : '.$suite->getName():null;?></h3>
 
-		<?if($filter->isActive()){?>
+		<?php if($filter->isActive()){?>
 			<div class="alert alert-info">
-				<a href="<?=Html::link()?>" class="close">&times;</a>Test results are filtered!
+				<a href="<?php echo
+Html::link()?>" class="close">&times;</a>Test results are filtered!
 			</div>
-		<?}?>
+		<?php }?>
 	</header>
 
 	<div class="row">
@@ -163,13 +164,13 @@ render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$s
 				<th></th>
 				<th title="Warning | Error | Ok or disabled">Result</th>
 				<th title="Unique test name">
-					Name<?=$filter->name?' = <span class="label label-default">'.$filter->name.'</span>':''?>
+					Name<?php echo$filter->name?' = <span class="label label-default">'.$filter->name.'</span>':''?>
 				</th>
 				<th title="Test group">
-					Group<?=$filter->group?' = <span class="label label-default">'.$filter->group.'</span>':''?>
+					Group<?php echo$filter->group?' = <span class="label label-default">'.$filter->group.'</span>':''?>
 				</th>
 				<th title="Test type">
-					Type<?=$filter->type?' = <span class="label label-default">'.$filter->type.'</span>':''?>
+					Type<?php echo$filter->type?' = <span class="label label-default">'.$filter->type.'</span>':''?>
 				</th>
 				<th title="Notice eg. stable server">Notice</th>
 				<th title="Response message">Message</th>
@@ -177,74 +178,82 @@ render(Suite$suite){$total=$error=$warning=$exception=$ok=$disabled=0;$filter=$s
 			</thead>
 
 			<tbody>
-			<?$total=$ok=$disabled=$error=$warning=0;?>
-			<?foreach($suite
+			<?php $total=$ok=$disabled=$error=$warning=0;?>
+			<?php foreach($suite
 as$group=>$tests){?>
-				<?foreach($tests
+				<?php foreach($tests
 as$order=>$test){?>
-					<?$total++;?>
-					<tr class="<?=Html::getStatusAsClass($test->getStatus())?>">
+					<?php $total++;?>
+					<tr class="<?php echo
+Html::getStatusAsClass($test->getStatus())?>">
 						<td>
-							<i class="icon-<?=$test->isOk()?'ok':'remove'?>"></i>
+							<i class="icon-<?php echo$test->isOk()?'ok':'remove'?>"></i>
 						</td>
-						<td><?=$test->getStatus();?></td>
-						<td><a href="<?=Html::link('name='.$test->getName())?>"><?=$test->getName();?></a></td>
-						<td><a href="<?=Html::link('group='.$group);?>"><?=$group?></a></td>
+						<td><?php echo$test->getStatus();?></td>
+						<td><a href="<?php echo
+Html::link('name='.$test->getName())?>"><?php echo$test->getName();?></a></td>
+						<td><a href="<?php echo
+Html::link('group='.$group);?>"><?php echo$group?></a></td>
 						<td>
-							<a href="<?=Html::link('type='.$test->getType())?>"><?=$test->getType();?></a>
+							<a href="<?php echo
+Html::link('type='.$test->getType())?>"><?php echo$test->getType();?></a>
 						</td>
-						<td><?=$test->getNotice();?></td>
+						<td><?php echo$test->getNotice();?></td>
 						<td>
-							<?=$test->getStatusMessage(true)?>
-							<?if($test->hasOptions()){?>
-								<br><code>Options: <?=json_encode((array)$test->getOptions());?></code>
-							<?}?>
+							<?php echo$test->getStatusMessage(true)?>
+							<?php if($test->hasOptions()){?>
+								<br><code>Options: <?php echo
+json_encode((array)$test->getOptions());?></code>
+							<?php }?>
 						</td>
 
 					</tr>
-					<?if($test->isOk()&&$test->isEnabled())$ok++;?>
-					<?if(!$test->isEnabled())$disabled++;?>
-					<?if($test->isError())$error++;?>
-					<?if($test->isWarning())$warning++;?>
-				<?}?>
+					<?php if($test->isOk()&&$test->isEnabled())$ok++;?>
+					<?php if(!$test->isEnabled())$disabled++;?>
+					<?php if($test->isError())$error++;?>
+					<?php if($test->isWarning())$warning++;?>
+				<?php }?>
 
-			<?}?>
-			<?$enabled=$total-$disabled;?>
+			<?php }?>
+			<?php $enabled=$total-$disabled;?>
 			</tbody>
 		</table>
 
 
 		<div class="btn-group">
-			<a href="<?=Html::link(null,true)?>" class="btn btn-primary" title="Refresh current tests"><i
+			<a href="<?php echo
+Html::link(null,true)?>" class="btn btn-primary" title="Refresh current tests"><i
 					class="icon-refresh icon-white"></i> Refresh</a>
-			<a href="<?=Html::link('output=csv',true)?>" class="btn btn-default" title="Download CSV output">CSV <i
+			<a href="<?php echo
+Html::link('output=csv',true)?>" class="btn btn-default" title="Download CSV output">CSV <i
 					class="icon-arrow-down"></i></a>
-			<?if($filter->isActive()){?>
-				<a href="<?=Html::link(null)?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
-			<?}?>
+			<?php if($filter->isActive()){?>
+				<a href="<?php echo
+Html::link(null)?>" class="btn btn-danger" title="Cancel filter">Cancel filter</a>
+			<?php }?>
 		</div>
 	</div>
 
 	<footer class="row">
-		<?if($disabled>0){?>
+		<?php if($disabled>0){?>
 			<span class="label label-default">
-					<?=$disabled?> DISABLED <?=$total?round(100*$disabled/$total):0?>%
+					<?php echo$disabled?> DISABLED <?php echo$total?round(100*$disabled/$total):0?>%
 				</span>
-		<?}?>
-		<?if($error>0){?>
+		<?php }?>
+		<?php if($error>0){?>
 			<span class="label label-danger">
-					<?=$error?> ERROR <?=$enabled?round(100*$error/$enabled):0?>%
+					<?php echo$error?> ERROR <?php echo$enabled?round(100*$error/$enabled):0?>%
 				</span>
-		<?}?>
-		<?if($warning>0){?>
+		<?php }?>
+		<?php if($warning>0){?>
 			<span class="label label-warning">
-					<?=$warning?> WARNING <?=$enabled?round(100*$warning/$enabled):0?>%
+					<?php echo$warning?> WARNING <?php echo$enabled?round(100*$warning/$enabled):0?>%
 				</span>
-		<?}?>
+		<?php }?>
 		<span class="label label-success">
-					<?=$ok?> OK <?=($total-$disabled)?round(100*$ok/($total-$disabled)):0?>%
+					<?php echo$ok?> OK <?php echo($total-$disabled)?round(100*$ok/($total-$disabled)):0?>%
 				</span>
-		<span class="label label-default"><?=$total?> TESTS</span>
+		<span class="label label-default"><?php echo$total?> TESTS</span>
 		<a data-toggle="modal" href="#about" class="glyphicon glyphicon-question-sign"></a>
 	</footer>
 
@@ -270,7 +279,7 @@ as$order=>$test){?>
 
 					<h4>Copyright & License</h4>
 
-					<pre><??>Copyright (c) 2012, Envtesting (Roman Ozana <ozana@omdesign.cz>) All rights reserved.
+					<pre><?php ?>Copyright (c) 2012, Envtesting (Roman Ozana <ozana@omdesign.cz>) All rights reserved.
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -297,7 +306,8 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js"></script>
 </body>
 <!--
-	Generated at <?=date('j.n.Y H:i:s')?> by Envtesting
+	Generated at <?php echo
+date('j.n.Y H:i:s')?> by Envtesting
 	https://github.com/wikidi/envtesting
 -->
 </html>
