@@ -38,6 +38,9 @@ class Operations extends Core {
 			$result = call_user_func_array(array($this, $name), $args);
 			$this->getConnection()->rollBack();
 			return $result;
+		} catch (\envtesting\Warning $e) {
+			$this->getConnection()->rollBack();
+			throw $e;
 		} catch (\envtesting\Error $e) {
 			$this->getConnection()->rollBack();
 			throw $e;
