@@ -13,13 +13,13 @@
 	],
 	"author": {
 		"name": "Devel lab s.r.o.",
-		"url": "http://www.wikidi.cz"
+		"url": "https://www.wikidi.cz"
 	},
 	"contributors": [
 		{
 			"name": "Roman Ožana",
-			"email": "ozana@omdesign.cz",
-			"homepage": "http://www.omdesign.cz"
+			"email": "roman@omdesign.cz",
+			"homepage": "https://omdesign.cz"
 		},
 		{
 			"name": "Jan Prachař",
