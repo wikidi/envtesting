@@ -142,10 +142,10 @@ grunt bump:major   # release major version
 
 ## Media
 
-- http://www.zdrojak.cz/clanky/envtesting-overujeme-nastaveni-prostredi/
+- https://www.zdrojak.cz/clanky/envtesting-overujeme-nastaveni-prostredi/
 
 ## Meta
 
-Author: [wikidi.com](http://wikidi.com) & [Roman Ožana](https://github.com/OzzyCzech)
+Author: [wikidi.cz](https://wikidi.cz) & [Roman Ožana](https://github.com/OzzyCzech)
 
 For the license terms see LICENSE.TXT files.
